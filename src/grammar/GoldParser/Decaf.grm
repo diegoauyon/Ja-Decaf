@@ -1,0 +1,122 @@
+﻿"Name"     = 'DECAF'
+"Author"   = 'Diego Auyón'
+"Version"  = 'Version 1.0'
+"About"    = 'Decaf'
+"Start Symbol" = <Program>
+"Case Sensitive" = True
+
+!------------------------------------------------------------------!
+!Lexer rules!
+!------------------------------------------------------------------!
+
+!{IDComienza} = {Letter} + [_]
+!{IDTermina} = {Alphanumeric} + [_]
+
+!id = {IDComienza}{IDTermina}*
+
+id = {Letter}{Alphanumeric}*
+
+num   = {Digit}{Digit}*
+
+character  = ''{AlphaNumeric}''
+
+! Comentarios
+
+Comment Start = '/*'
+Comment End   = '*/'
+
+Comment Line  = '//'
+
+!------------------------------------------------------------------
+!Parser Rules
+!------------------------------------------------------------------
+
+<Program>               ::= 'class' 'Program' '{' <declarationK> '}'
+
+<declarationK>          ::= <declaration> <declarationK> |
+<declaration>           ::= <structDeclaration> | <varDeclaration> | <methodDeclaration>
+
+<varDeclaration>        ::= <varmethodType> id <varDeclaration1>';'
+<varDeclaration1>       ::= '[' num ']' |
+
+<structDeclaration>     ::= 'struct' id '{' <varDeclarationK> '}'
+<varDeclarationK>       ::= <varDeclaration> <varDeclarationK> |
+
+<varmethodType>               ::= 'int' | 'char' | 'boolean' | 'void' | 'struct' id | <structDeclaration>
+
+<methodDeclaration>     ::= <varmethodType> id '(' <parameter1> ')' <block>
+
+!<methodType>            ::= 'int' | 'char' | 'boolean' | 'void' Comentada por conflicto reduccion-reduccion... se juntan estos dos tipos
+
+!methodType ID '(' (parameter (',' parameter)*)*   ')'  block; Basado en gramática hecha en ANTLR
+
+<parameter1>            ::= <parameter2> |                             !Kleene afuera (parameter (p2)*)*
+<parameter2>            ::= <parameter> | <parameter2> ',' <parameter> !Kleene adentro (',' parameter)*
+
+<parameter>             ::= <parameterType> id | <parameterType> id '[' ']'
+
+<parameterType>         ::= 'int' | 'char' | 'boolean'
+
+<block>                 ::= '{' <varDeclarationK> <statementK> '}'
+<statementK>            ::= <statement> <statementK> |
+
+<statement>             ::= <block>
+                        | 'if' '(' <expression> ')' <block> <blockL>
+                        | 'while' '(' <expression> ')' <block>
+                        | 'return' <expressionL> ';'
+                        |  <location> '=' <expression> 
+                        | <expressionL> ';'
+<blockL>                ::= 'else' <block> |
+<expressionL>           ::= <expression> |
+
+
+
+!Muchos cambios se basan en: http://www.devincook.com/goldparser/doc/grammars/index.htm y
+! http://www.devincook.com/goldparser/doc/engine-pseudo/trim-reductions.htm
+! La relación de precedencia es de abajo para arriba, entre más abajo, mas "importancia"
+! tiene.
+
+! Para entender también se puede ver de izquierda a derecha. El de lado hasta la izquierda tiene mas
+! procedencia si hablamos solo de una regla.
+
+<expression>            ::= <relExp> <cond_op> <expression> | <relExp>
+
+<relExp>               ::= <sumaExp> <rel_op> <relExp> | <sumaExp> 
+
+<sumaExp>               ::= <multiExp> <suma_op> <sumaExp> | <multiExp> 
+
+<multiExp>              ::= <negadorExp> <mul_op> <multiExp> | <negadorExp>
+
+<negadorExp>            ::= '-' <val> | '!' <val> | <val>
+
+<cond_op>               ::= '&&' | '||'
+
+<rel_op>                ::= '<=' | '<' | '>' | '>=' | <eq_op>
+
+<eq_op>                 ::= '==' | '!='
+
+<suma_op>               ::= '+' | '-'
+
+<mul_op>                ::= '*' | '/' | '%'
+
+<val>                   ::= <location> | <methodCall> | <literal> | '(' <expression> ')' ! Las opciones '-' '!' son tomadas en cuenta en negadorExp
+                                                                                       ! La relacion <op> es sustituida por la regla de precedencia
+
+<location>              ::= <location1> | <location1>'.'<location>
+<location1>             ::= id  <location2>
+<location2>             ::= '[' <expression> ']'|
+
+
+<methodCall>            ::= id '(' <arg1> ')'
+<arg1>                  ::= <arg2> |
+<arg2>                  ::= <arg> | <arg2> ',' <arg>
+
+<arg>                   ::= <expression>
+
+<literal>               ::= <int_literal> | <char_literal> | <bool_literal>
+
+<int_literal>           ::= num
+
+<char_literal>          ::= character
+
+<bool_literal>          ::= 'true' | 'false'

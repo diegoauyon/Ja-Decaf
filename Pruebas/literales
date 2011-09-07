@@ -1,0 +1,14 @@
+class Program
+{
+
+ int a;  boolean bbb;  char q;
+
+//boolean hola (){
+// bbb = 3;
+// q = 'c';
+//  }
+
+}
+
+
+

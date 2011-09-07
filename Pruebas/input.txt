@@ -1,0 +1,49 @@
+class Program{
+	int a;
+	boolean b[1];
+	char c;
+	struct s1{
+		int sa;
+		boolean sb[2];
+		 sc;
+		struct s3 prueba3;
+	} vs2;
+	struct s2{
+		int s2a;
+		struct s1 prueba;
+	} prueba2;
+	struct s3{
+		int s3a;
+	}
+	int d;
+	struct s1 vs1[0];
+	int tryout(int t1, int t3){
+		prueba2.prueba.sa = 1;
+		return 1;
+	}
+	char tryout(char t2){
+		return 'c';
+	}
+	boolean getBool(){
+		int methoda;
+		boolean methodb[2];
+		char methodc;
+		methoda = tryout(1+1,2);
+		methodc = 'c';
+		methodb[3] = getBool();
+		if(1 < 2){
+			methoda = 1;
+			return true;
+		}else{
+			return false;
+		}
+		while(1>2){
+			methodc = 'c';
+		}
+		return true;
+	}
+	void main (){
+		vs2.sb[1] = true;
+		vs1[1].sa = 1;
+	}
+}

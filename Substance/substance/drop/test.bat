@@ -1,0 +1,1 @@
+"%JAVA_HOME%/bin/java" -classpath "substance.jar;substance-tst.jar" test.Check
