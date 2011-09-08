@@ -1,10 +1,9 @@
 class Program
 {
  
-   void metodo()
-     {
-	
-     }
+
+	void metodo()
+	{}
 
 }
 

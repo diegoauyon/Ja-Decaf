@@ -9,7 +9,7 @@ public class Variable extends Declaracion
 	public Tipo tipo;
 	public Object valor;
 	
-	public Variable(Object valor, String nombre, Tipo tipo)
+	public Variable(Object valor, Tipo tipo, String nombre)
 	{
 		this.nombre = nombre;
 		this.valor = valor;

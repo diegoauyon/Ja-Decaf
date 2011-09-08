@@ -44,14 +44,14 @@ Comment Line  = '//'
 
 <varmethodType>               ::= 'int' | 'char' | 'boolean' | 'void' | 'struct' id | <structDeclaration>
 
-<methodDeclaration>     ::= <varmethodType> id '(' <parameters> ')' <block>
+<methodDeclaration>     ::= <varmethodType> id '(' <parameter1> ')' <block>
 
 !<methodType>            ::= 'int' | 'char' | 'boolean' | 'void' Comentada por conflicto reduccion-reduccion... se juntan estos dos tipos
 
 !methodType ID '(' (parameter (',' parameter)*)*   ')'  block; Basado en gramática hecha en ANTLR
 
-!<parameter1>            ::= <parameter2> |                             !Kleene afuera (parameter (p2)*)*
-<parameters>            ::= <parameter> | <parameters> ',' <parameter> !Kleene adentro (',' parameter)*
+<parameter1>            ::= <parameter2> |                             !Kleene afuera (parameter (p2)*)*
+<parameter2>            ::= <parameter> | <parameter2> ',' <parameter> !Kleene adentro (',' parameter)*
 
 <parameter>             ::= <parameterType> id | <parameterType> id '[' ']'
 

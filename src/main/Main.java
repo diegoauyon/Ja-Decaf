@@ -2,6 +2,7 @@ package main;
 import interfaz.IDecaf;
 
 import java.io.*;
+import java.util.LinkedList;
 import java.util.Stack;
 
 import javax.swing.JFrame;
@@ -259,6 +260,7 @@ public class Main implements GPMessageConstants
 
 	    
         parser = new GOLDParser();
+        boolean varDeclaration = false;
 
         try
         {
@@ -312,13 +314,15 @@ public class Main implements GPMessageConstants
 	                    //System.out.println("gpMsgTokenRead");
 	                    Token myTok = parser.currentToken();
 	                    int cos=myTok.getPSymbol().getTableIndex();
-	                    padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "\n",2);
+	                   // padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "\n",2);
 	                    switch (myTok.getPSymbol().getTableIndex())
 	                    {
 	                    	case SymbolConstants.SYMBOL_PROGRAM:
-	                    	case SymbolConstants.SYMBOL_ID:
-	                    	//System.out.println("Simbolo ID: "+myTok.getText());
+	                    	   	//System.out.println("Simbolo ID: "+myTok.getText());
 	                    		stack.push(myTok.getText());
+	                    		break;
+	                    	case SymbolConstants.SYMBOL_ID:
+	                    		stack.push(myTok.getData().toString());
 	                    		break;
 	                    	
 	                    }
@@ -339,17 +343,18 @@ public class Main implements GPMessageConstants
 	                    {
 	                       case RuleConstants.RULE_PROGRAM_CLASS_PROGRAM_LBRACE_RBRACE:
 	                          //<Program> ::= class Program '{' <declarationK> '}'
-	                    	 
-	                    	   // stack.push(new Clase((Declaracion)stack.pop(),(String)stack.pop()));
+	                    	   padre.imprimir("<Program> ::= class Program '{' <declarationK> '}'", 2);
+	                    	    stack.push(new Clase((Cuerpo)stack.pop(),(String)stack.pop()));
 	                    	   //padre.imprimir(parser.currentToken().getText(),2);
 	                          break;
 	                       case RuleConstants.RULE_DECLARATIONK:
 	                          //<declarationK> ::= <declaration> <declarationK>
+	                    	   
 	                          break;
 	                       case RuleConstants.RULE_DECLARATIONK2:
 	                          //<declarationK> ::= 
-	                    	   stack.push(new Declaracion());
-	                          break;
+	                    	   //stack.push(new LinkedList<Variable>());
+	                    	   break;
 	                       case RuleConstants.RULE_DECLARATION:
 	                          //<declaration> ::= <structDeclaration>
 	                          break;
@@ -361,33 +366,66 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATION_ID_SEMI:
 	                          //<varDeclaration> ::= <varmethodType> id <varDeclaration1> ';'
+	                    	   padre.imprimir("<varDeclaration> ::= <varmethodType> id <varDeclaration1> ';'", 2);
+	                    	   if (varDeclaration == false)
+	                    		   stack.push(new Variable(null,(Tipo)stack.pop(),(String) stack.pop()));
+	                    	   else
+	                    		   varDeclaration = true;
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATION1_LBRACKET_NUM_RBRACKET:
 	                          //<varDeclaration1> ::= '[' num ']'
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATION1:
 	                          //<varDeclaration1> ::= 
+	                    	   padre.imprimir("<varDeclaration1> ::=", 2);
+	                    	   stack.push(new Variable(null,(Tipo)stack.pop(),(String)stack.pop()));
+	                    	   varDeclaration = true;
 	                          break;
 	                       case RuleConstants.RULE_STRUCTDECLARATION_STRUCT_ID_LBRACE_RBRACE:
 	                          //<structDeclaration> ::= struct id '{' <varDeclarationK> '}'
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATIONK:
 	                          //<varDeclarationK> ::= <varDeclaration> <varDeclarationK>
+	                    	  try
+	                    	  {
+	                    		   Variable variable = (Variable)stack.peek();
+	                    		   stack.pop();
+	                    	  	   LinkedList<Variable> listaVar = new LinkedList<Variable>();
+	                    	       listaVar.add(variable);
+	                    	       stack.push(listaVar);
+	                    	  }
+	                    	  catch (Exception e)
+	                    	  {
+	                    		 LinkedList<Variable> listaVar = ((LinkedList<Variable>) stack.pop());
+	                    		 Variable variable = (Variable)stack.pop();
+	                    		 listaVar.add(variable);
+	                    		 stack.push(listaVar);
+	                    	  }   //inked
+	                    	   
+	                    	   
+	                    	   
+	                    	   
+	                    	   
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATIONK2:
 	                          //<varDeclarationK> ::= 
+	                    	   stack.push(new LinkedList<Variable>());
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_INT:
 	                          //<varmethodType> ::= int
+	                    	   stack.push(new Tipo(TipoPrimitivo.integer));
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_CHAR:
 	                          //<varmethodType> ::= char
+	                    	   stack.push(new Tipo(TipoPrimitivo.character));
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_BOOLEAN:
 	                          //<varmethodType> ::= boolean
+	                    	   stack.push(new Tipo(TipoPrimitivo.bool));
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_VOID:
 	                          //<varmethodType> ::= void
+	                    	   padre.imprimir("<varmethodType> ::= void",2);
 	                    	   stack.push(new Tipo(TipoPrimitivo.void_));
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_STRUCT_ID:
@@ -398,12 +436,15 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_METHODDECLARATION_ID_LPARAN_RPARAN:
 	                          //<methodDeclaration> ::= <varmethodType> id '(' <parameter1> ')' <block>
+	                    	   padre.imprimir("<methodDeclaration> ::= <varmethodType> id '(' <parameter1> ')' <block>",2);
+	                    	   stack.push(new Funcion((Cuerpo)stack.pop(),(LinkedList<Variable>)stack.pop(),(LinkedList<Parametro>)stack.pop(),(Tipo)stack.pop(),(String)stack.pop()));
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER1:
 	                          //<parameter1> ::= <parameter2>
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER12:
 	                          //<parameter1> ::= 
+	                    	  	stack.push((Parametro)null);
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER2:
 	                          //<parameter2> ::= <parameter>
@@ -428,12 +469,18 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_BLOCK_LBRACE_RBRACE:
 	                          //<block> ::= '{' <varDeclarationK> <statementK> '}'
+	                    	   padre.imprimir("<block> ::= '{' <varDeclarationK> <statementK> '}'", 2);
+	                    	   stack.push(new Cuerpo((LinkedList<Declaracion>)stack.pop()));
 	                          break;
 	                       case RuleConstants.RULE_STATEMENTK:
 	                          //<statementK> ::= <statement> <statementK>
 	                          break;
 	                       case RuleConstants.RULE_STATEMENTK2:
 	                          //<statementK> ::= 
+	                    	   padre.imprimir("<statementK> ::=", 2);
+	                    	   LinkedList<Declaracion> listaDeclaracion = new LinkedList<Declaracion>();
+	                    	   //listaDeclaracion.add((Declaracion)null);
+	                    	   stack.push(listaDeclaracion);
 	                          break;
 	                       case RuleConstants.RULE_STATEMENT:
 	                          //<statement> ::= <block>
@@ -630,8 +677,8 @@ public class Main implements GPMessageConstants
 	
 	                    // ************************************** log file
 	                   padre.imprimir(" El archivo dado fue parseado",1);
-	                 //  clase = (Clase)stack.pop();
-	                 //  System.out.println("Clase: "+clase.nombre+ "  Cuerpo:  "+clase.cuerpo);
+	                   clase = (Clase)stack.pop();
+	                   System.out.println("Clase: "+clase.nombre+ "  Cuerpo:  "+clase.cuerpo);
 	                    // ************************************** end log
 	                    huboErrores=false;
 	                    done = true;

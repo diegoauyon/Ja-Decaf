@@ -14,4 +14,11 @@ public class Parametro
 	{
 		this.nombre = nombre; this.tipo = tipo; this.metodoPaso = metodoPaso;
 	}
+	
+	public Parametro()
+	{
+		this.nombre = null;
+		this.tipo = null;
+		
+	}
 }

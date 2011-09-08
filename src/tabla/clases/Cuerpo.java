@@ -21,7 +21,7 @@ public class Cuerpo
 		}
 		funciones = new LinkedList<Funcion>();
 		estructura = new LinkedList<Estructura>();
-		declaraciones = new LinkedList<Declaracion>();
+		this.declaraciones = new LinkedList<Declaracion>();
 		
 		for (int cont = 0; cont<declaraciones.size(); cont++)
 		{
@@ -33,6 +33,10 @@ public class Cuerpo
 			else if (declaracion.getClass() == Estructura.class)
 			{
 				estructura.add((Estructura)declaracion);
+			}
+			else
+			{
+				this.declaraciones.add((Declaracion) declaracion);
 			}
 			
 			
