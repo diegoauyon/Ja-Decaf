@@ -10,6 +10,7 @@ public class Tipo
 	public String nombre;
 	public int tipoVariable = Const.TipoVariables.primitivo;
 	public int tipoPrimitivo = Const.TipoPrimitivo.void_;
+	public int tamanio = 0;
 	public boolean esRef = false;
 	
 //----------------------------------------------------------------------------------	
@@ -37,15 +38,17 @@ public class Tipo
 		this.nombre = nombre;
 	}
 	
-	public Tipo crearArregloDesdeTipo(Tipo tipo)
+	public Tipo crearArregloDesdeTipo(int tamanio,Tipo tipo)
 	{
 		if (tipo.tipoVariable == Const.TipoVariables.primitivo)
 		{
 			tipo.tipoVariable = Const.TipoVariables.arreglo;
+			tipo.tamanio = tamanio;
 		}
 		else if (tipo.tipoVariable == Const.TipoVariables.estructura)
 		{
 			tipo.tipoVariable = Const.TipoVariables.arreglo_Estructura;
+			tipo.tamanio = tamanio;
 		}
 		return tipo;
 	}

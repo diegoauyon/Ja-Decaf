@@ -10,7 +10,7 @@ public class Parametro
 	public Tipo tipo;
 	public int metodoPaso = Const.PasoMetodo.porValor;
 	
-	public Parametro(String nombre, Tipo tipo, int metodoPaso)
+	public Parametro( Tipo tipo, String nombre,int metodoPaso)
 	{
 		this.nombre = nombre; this.tipo = tipo; this.metodoPaso = metodoPaso;
 	}

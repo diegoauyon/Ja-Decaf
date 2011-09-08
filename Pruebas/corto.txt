@@ -1,9 +1,13 @@
 class Program
 {
- 
 
-	void metodo()
-	{}
+	int valor ()
+{
+int a;
+a = 1;
+
+}
+ 
 
 }
 

@@ -10,6 +10,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import tabla.Const;
+import tabla.Const.PasoMetodo;
+import tabla.Const.TipoLiteral;
 import tabla.Const.TipoPrimitivo;
 import tabla.Tipo;
 import tabla.clases.*;
@@ -261,6 +263,7 @@ public class Main implements GPMessageConstants
 	    
         parser = new GOLDParser();
         boolean varDeclaration = false;
+        boolean varVariable = false;
 
         try
         {
@@ -324,6 +327,9 @@ public class Main implements GPMessageConstants
 	                    	case SymbolConstants.SYMBOL_ID:
 	                    		stack.push(myTok.getData().toString());
 	                    		break;
+	                    	case SymbolConstants.SYMBOL_NUM:
+	                    		int numero = Integer.parseInt(myTok.getData().toString());
+	                    		stack.push(numero);
 	                    	
 	                    }
 
@@ -344,16 +350,35 @@ public class Main implements GPMessageConstants
 	                       case RuleConstants.RULE_PROGRAM_CLASS_PROGRAM_LBRACE_RBRACE:
 	                          //<Program> ::= class Program '{' <declarationK> '}'
 	                    	   padre.imprimir("<Program> ::= class Program '{' <declarationK> '}'", 2);
-	                    	    stack.push(new Clase((Cuerpo)stack.pop(),(String)stack.pop()));
+	                    	   // stack.push(new Clase(new Cuerpo((LinkedList<Declaracion>)stack.pop()),(String)stack.pop()));
+	                    	   while (stack.size()>0)
+	                    	   {
+	                    		   System.out.println("Stack: "+stack.pop());
+	                    	   }
 	                    	   //padre.imprimir(parser.currentToken().getText(),2);
 	                          break;
 	                       case RuleConstants.RULE_DECLARATIONK:
 	                          //<declarationK> ::= <declaration> <declarationK>
-	                    	   
+	                    	   try
+		                    	  {
+		                    		   Declaracion variable = (Declaracion)stack.peek();
+		                    		   stack.pop();
+		                    	  	   LinkedList<Declaracion> listaVar = new LinkedList<Declaracion>();
+		                    	       listaVar.add(variable);
+		                    	       stack.push(listaVar);
+		                    	  }
+		                    	  catch (Exception e)
+		                    	  {
+		                    		 LinkedList<Declaracion> listaVar = ((LinkedList<Declaracion>) stack.pop());
+		                    		 Declaracion variable = (Declaracion)stack.pop();
+		                    		 listaVar.add(variable);
+		                    		 stack.push(listaVar);
+		                    	  }   //inked
+		                    	   
 	                          break;
 	                       case RuleConstants.RULE_DECLARATIONK2:
 	                          //<declarationK> ::= 
-	                    	   //stack.push(new LinkedList<Variable>());
+	                    	   stack.push(new LinkedList<Declaracion>());
 	                    	   break;
 	                       case RuleConstants.RULE_DECLARATION:
 	                          //<declaration> ::= <structDeclaration>
@@ -366,23 +391,33 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATION_ID_SEMI:
 	                          //<varDeclaration> ::= <varmethodType> id <varDeclaration1> ';'
-	                    	   padre.imprimir("<varDeclaration> ::= <varmethodType> id <varDeclaration1> ';'", 2);
-	                    	   if (varDeclaration == false)
-	                    		   stack.push(new Variable(null,(Tipo)stack.pop(),(String) stack.pop()));
+	                    	   //padre.imprimir("<varDeclaration> ::= <varmethodType> id <varDeclaration1> ';'", 2);
+	                    	   if (varVariable == false)
+	                    		  stack.push(new Variable(null,(Tipo)stack.pop(),(String) stack.pop()));
 	                    	   else
-	                    		   varDeclaration = true;
+	                    		   varVariable = true;
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATION1_LBRACKET_NUM_RBRACKET:
 	                          //<varDeclaration1> ::= '[' num ']'
+	                    	   Tipo tip = new Tipo();
+	                    	   int numero = (Integer)stack.pop();
+	                    	   if (numero<1)
+	                    	   {
+	                    		   padre.imprimir("El numero del Array debe ser mayor a 1. Linea: "+parser.currentLineNumber(), 1);
+	                    		   done = true;
+	                    		   huboErrores = true;
+	                    	   }
+	                    	   stack.push(tip.crearArregloDesdeTipo(numero,(Tipo)stack.pop()));
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATION1:
 	                          //<varDeclaration1> ::= 
-	                    	   padre.imprimir("<varDeclaration1> ::=", 2);
+	                    	   //padre.imprimir("<varDeclaration1> ::=", 2);
 	                    	   stack.push(new Variable(null,(Tipo)stack.pop(),(String)stack.pop()));
-	                    	   varDeclaration = true;
+	                    	   varVariable = true;
 	                          break;
 	                       case RuleConstants.RULE_STRUCTDECLARATION_STRUCT_ID_LBRACE_RBRACE:
 	                          //<structDeclaration> ::= struct id '{' <varDeclarationK> '}'
+	                    	   stack.push(new Estructura((LinkedList<Variable>) stack.pop(),(String)stack.pop()));
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATIONK:
 	                          //<varDeclarationK> ::= <varDeclaration> <varDeclarationK>
@@ -425,47 +460,100 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_VOID:
 	                          //<varmethodType> ::= void
-	                    	   padre.imprimir("<varmethodType> ::= void",2);
+	                    	   //padre.imprimir("<varmethodType> ::= void",2);
 	                    	   stack.push(new Tipo(TipoPrimitivo.void_));
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_STRUCT_ID:
 	                          //<varmethodType> ::= struct id
+	                    	   
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE:
 	                          //<varmethodType> ::= <structDeclaration>
 	                          break;
 	                       case RuleConstants.RULE_METHODDECLARATION_ID_LPARAN_RPARAN:
 	                          //<methodDeclaration> ::= <varmethodType> id '(' <parameter1> ')' <block>
-	                    	   padre.imprimir("<methodDeclaration> ::= <varmethodType> id '(' <parameter1> ')' <block>",2);
+	                    	   //padre.imprimir("<methodDeclaration> ::= <varmethodType> id '(' <parameter1> ')' <block>",2);
 	                    	   stack.push(new Funcion((Cuerpo)stack.pop(),(LinkedList<Variable>)stack.pop(),(LinkedList<Parametro>)stack.pop(),(Tipo)stack.pop(),(String)stack.pop()));
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER1:
 	                          //<parameter1> ::= <parameter2>
+	                    	   //padre.imprimir("Entra aqui?",2);
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER12:
 	                          //<parameter1> ::= 
-	                    	  	stack.push((Parametro)null);
+	                    	  	stack.push(new LinkedList<Parametro>());
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER2:
 	                          //<parameter2> ::= <parameter>
+	                    	   padre.imprimir("Entra aqui? dfdfdfdf",2);
+	                    	   LinkedList<Parametro> listaParam =new LinkedList<Parametro>();
+	                    	   listaParam.add((Parametro)stack.pop());
+	                    	   stack.push(listaParam);
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER2_COMMA:
 	                          //<parameter2> ::= <parameter2> ',' <parameter>
+	                    	   LinkedList<Parametro> para=(LinkedList<Parametro>)stack.pop();
+	                    	   LinkedList<Parametro> para2= (LinkedList<Parametro>)stack.pop();
+	                    	   //System.out.println("Tama:"+para2.size());
+	                    	   for (int i=0; i<para.size();i++)
+	                    	   {
+	                    		   para2.add((Parametro)para.get(i));
+	                    	   }
+	                    	   //System.out.println("Tama:"+para2.size());
+	                    	   stack.push(para2);
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER_ID:
 	                          //<parameter> ::= <parameterType> id
+	                    	   try
+	                    	   {
+	                    		   LinkedList<Parametro> valor = (LinkedList<Parametro>) stack.peek();
+	                    		   stack.pop();
+	                    		   valor.add(new Parametro((Tipo)stack.pop(),(String)stack.pop(),PasoMetodo.porValor));
+	                    		   stack.push(valor);
+	                    	   }
+	                    	   catch (Exception ex)
+	                    	   {
+	                    	   	   LinkedList<Parametro> listaParam1 =new LinkedList<Parametro>();
+	                    	   	   listaParam1.add(new Parametro((Tipo)stack.pop(),(String)stack.pop(),PasoMetodo.porValor));
+	                    	   	   stack.push(listaParam1);
+	                    	   }
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER_ID_LBRACKET_RBRACKET:
 	                          //<parameter> ::= <parameterType> id '[' ']'
+	                    	   try
+	                    	   {
+	                    		   LinkedList<Parametro> valor = (LinkedList<Parametro>) stack.peek();
+	                    		   stack.pop();
+	                    		   Tipo tipo = (Tipo)stack.pop();
+		                    	   String id = (String)stack.pop();
+		                    	   
+		                    	   tipo = tipo.crearArregloTipo(tipo.tipoPrimitivo);
+	                    		   valor.add(new Parametro(tipo,id,PasoMetodo.porValor));
+	                    		   stack.push(valor);
+	                    	   }
+	                    	   catch (Exception ex)
+	                    	   {
+	                    	   	   LinkedList<Parametro> listaParam1 =new LinkedList<Parametro>();
+	                    	   	   Tipo tipo = (Tipo)stack.pop();
+		                    	   String id = (String)stack.pop();
+		                    	   tipo = tipo.crearArregloTipo(tipo.tipoPrimitivo);
+		                    	   listaParam1.add(new Parametro(tipo,id,PasoMetodo.porValor));
+	                    	   	   stack.push(listaParam1);
+	                    	   }
+	                    	   
+
 	                          break;
 	                       case RuleConstants.RULE_PARAMETERTYPE_INT:
 	                          //<parameterType> ::= int
+	                    	   stack.push(new Tipo(TipoPrimitivo.integer));
 	                          break;
 	                       case RuleConstants.RULE_PARAMETERTYPE_CHAR:
 	                          //<parameterType> ::= char
+	                    	   stack.push(new Tipo(TipoPrimitivo.character));
 	                          break;
 	                       case RuleConstants.RULE_PARAMETERTYPE_BOOLEAN:
 	                          //<parameterType> ::= boolean
+	                    	   stack.push(new Tipo(TipoPrimitivo.bool));
 	                          break;
 	                       case RuleConstants.RULE_BLOCK_LBRACE_RBRACE:
 	                          //<block> ::= '{' <varDeclarationK> <statementK> '}'
@@ -474,10 +562,26 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_STATEMENTK:
 	                          //<statementK> ::= <statement> <statementK>
+	                    	   try
+		                    	  {
+		                    		   Declaracion variable = (Declaracion)stack.peek();
+		                    		   stack.pop();
+		                    	  	   LinkedList<Declaracion> listaVar = new LinkedList<Declaracion>();
+		                    	       listaVar.add(variable);
+		                    	       stack.push(listaVar);
+		                    	  }
+		                    	  catch (Exception e)
+		                    	  {
+		                    		 LinkedList<Declaracion> listaVar = ((LinkedList<Declaracion>) stack.pop());
+		                    		 Declaracion variable = (Declaracion)stack.pop();
+		                    		 listaVar.add(variable);
+		                    		 stack.push(listaVar);
+		                    	  }   //inked
+		                    	   
 	                          break;
 	                       case RuleConstants.RULE_STATEMENTK2:
 	                          //<statementK> ::= 
-	                    	   padre.imprimir("<statementK> ::=", 2);
+	                    	  // padre.imprimir("<statementK> ::=", 2);
 	                    	   LinkedList<Declaracion> listaDeclaracion = new LinkedList<Declaracion>();
 	                    	   //listaDeclaracion.add((Declaracion)null);
 	                    	   stack.push(listaDeclaracion);
@@ -677,8 +781,8 @@ public class Main implements GPMessageConstants
 	
 	                    // ************************************** log file
 	                   padre.imprimir(" El archivo dado fue parseado",1);
-	                   clase = (Clase)stack.pop();
-	                   System.out.println("Clase: "+clase.nombre+ "  Cuerpo:  "+clase.cuerpo);
+	                  // clase = (Clase)stack.pop();
+	                   //System.out.println("Clase: "+clase.nombre+ "  Cuerpo:  "+clase.cuerpo);
 	                    // ************************************** end log
 	                    huboErrores=false;
 	                    done = true;
