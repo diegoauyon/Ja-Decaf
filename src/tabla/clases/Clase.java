@@ -5,9 +5,9 @@ package tabla.clases;
 public class Clase
 {
 	public String nombre;
-	public Cuerpo cuerpo;
+	public Declaracion cuerpo;
 	
-	public Clase(Cuerpo cuerpo, String nombre)
+	public Clase(Declaracion cuerpo, String nombre)
 	{
 		this.cuerpo = cuerpo; this.nombre = nombre;
 	}

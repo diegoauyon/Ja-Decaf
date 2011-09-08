@@ -1,7 +1,11 @@
 class Program
 {
+ 
+   void metodo()
+     {
+	
+     }
 
- int a;
 }
 
 

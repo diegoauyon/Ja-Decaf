@@ -5,7 +5,7 @@ class Program{
 	struct s1{
 		int sa;
 		boolean sb[2];
-		 sc;
+		int  sc;
 		struct s3 prueba3;
 	} vs2;
 	struct s2{

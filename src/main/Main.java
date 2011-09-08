@@ -9,6 +9,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import tabla.Const;
+import tabla.Const.TipoPrimitivo;
+import tabla.Tipo;
 import tabla.clases.*;
 
 
@@ -236,6 +238,7 @@ public class Main implements GPMessageConstants
     private String rutaGramatica= "src/grammar/GoldParser/Decaf.cgt";
     private boolean huboErrores= true;
     private IDecaf padre;
+    private Clase clase;
     
     private Stack stack = new Stack();
 
@@ -307,8 +310,19 @@ public class Main implements GPMessageConstants
 	
 	                    // ************************************** log file
 	                    //System.out.println("gpMsgTokenRead");
-	                    //Token myTok = parser.currentToken();
-	                    //padre.imprimir("gpMsgTokenRead:   "+(String)myTok.getData(),2);
+	                    Token myTok = parser.currentToken();
+	                    int cos=myTok.getPSymbol().getTableIndex();
+	                    padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "\n",2);
+	                    switch (myTok.getPSymbol().getTableIndex())
+	                    {
+	                    	case SymbolConstants.SYMBOL_PROGRAM:
+	                    	case SymbolConstants.SYMBOL_ID:
+	                    	//System.out.println("Simbolo ID: "+myTok.getText());
+	                    		stack.push(myTok.getText());
+	                    		break;
+	                    	
+	                    }
+
 	                    // ************************************** end log
 	
 	                    break;
@@ -325,15 +339,16 @@ public class Main implements GPMessageConstants
 	                    {
 	                       case RuleConstants.RULE_PROGRAM_CLASS_PROGRAM_LBRACE_RBRACE:
 	                          //<Program> ::= class Program '{' <declarationK> '}'
-	                    	  // stack.pop();
-	                    	   //stack.push(new Clase((Cuerpo)stack.pop(),(String)stack.pop()));
-	                    	   
+	                    	 
+	                    	   // stack.push(new Clase((Declaracion)stack.pop(),(String)stack.pop()));
+	                    	   //padre.imprimir(parser.currentToken().getText(),2);
 	                          break;
 	                       case RuleConstants.RULE_DECLARATIONK:
 	                          //<declarationK> ::= <declaration> <declarationK>
 	                          break;
 	                       case RuleConstants.RULE_DECLARATIONK2:
 	                          //<declarationK> ::= 
+	                    	   stack.push(new Declaracion());
 	                          break;
 	                       case RuleConstants.RULE_DECLARATION:
 	                          //<declaration> ::= <structDeclaration>
@@ -373,6 +388,7 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_VOID:
 	                          //<varmethodType> ::= void
+	                    	   stack.push(new Tipo(TipoPrimitivo.void_));
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_STRUCT_ID:
 	                          //<varmethodType> ::= struct id
@@ -614,7 +630,8 @@ public class Main implements GPMessageConstants
 	
 	                    // ************************************** log file
 	                   padre.imprimir(" El archivo dado fue parseado",1);
-	                   
+	                 //  clase = (Clase)stack.pop();
+	                 //  System.out.println("Clase: "+clase.nombre+ "  Cuerpo:  "+clase.cuerpo);
 	                    // ************************************** end log
 	                    huboErrores=false;
 	                    done = true;

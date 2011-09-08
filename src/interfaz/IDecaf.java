@@ -80,7 +80,8 @@ public class IDecaf extends javax.swing.JFrame
 	private JTextPane textPane ;//= new JTextPane(document);
 	private JMenuBar mb;
 	private JPanel botones;
-	public DefaultMutableTreeNode root,root1;
+	public DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
+	public DefaultMutableTreeNode root1 = new DefaultMutableTreeNode("");
 	public DefaultTreeModel tree,tree2;
 	private JTextArea terminal,notas;
 
@@ -152,7 +153,7 @@ public class IDecaf extends javax.swing.JFrame
         document.setHighlightStyle( HighlightedDocument.C_STYLE);
         
         //Set JTree
-        root = new DefaultMutableTreeNode("");
+        
         tree = new DefaultTreeModel(root);
         JTree jtree = new JTree(tree);
         jtree.setSize(50, 50);
@@ -163,7 +164,7 @@ public class IDecaf extends javax.swing.JFrame
         
         //Set JTree 2
         
-        root1 = new DefaultMutableTreeNode("");
+       //root1 = new DefaultMutableTreeNode("");
         tree2 = new DefaultTreeModel(root);
         JTree jtree2 = new JTree(tree2);
         
@@ -541,6 +542,7 @@ public class IDecaf extends javax.swing.JFrame
 	        else if( respuesta == JOptionPane.CANCEL_OPTION )
 	        {
 	            cerrar = false;
+	            System.out.println("Cierra Aplicacion");
 	        }
 
 	        return cerrar;
@@ -567,6 +569,7 @@ public class IDecaf extends javax.swing.JFrame
 
 	public static void crearArbol(DefaultTreeModel tree, DefaultMutableTreeNode root, Reduction reduccion){
         
+		
         for(int i=0; i<reduccion.getTokenCount(); i++)
         {
             if(reduccion.getToken(i).getKind()==0){
@@ -617,7 +620,7 @@ public class IDecaf extends javax.swing.JFrame
         }
         else
         {
-        	
+        	System.out.println("Hace nada");
         }
     }
     
@@ -639,8 +642,11 @@ public class IDecaf extends javax.swing.JFrame
     	if (ma!= null && darMotor().equalsIgnoreCase("GoldP"))
     		if (ma.huboErrores()==false)
     		{
-    		crearArbol(tree,root,ma.parser.currentReduction() );
-    		tree.reload();
+    			tree.reload();
+    			//root = new DefaultMutableTreeNode("");
+    			crearArbol(tree,root,ma.parser.currentReduction() );
+    			tree.reload();
+    		
     		}
     		else
     			imprimir(" (Método correr) ERROR Compilación: No se pudo crear el árbol porque hubo errores \n",1);
