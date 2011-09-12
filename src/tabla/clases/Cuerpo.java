@@ -31,19 +31,21 @@ public class Cuerpo
 			if (declaracion.getClass() == Funcion.class)
 			{
 				funciones.add((Funcion)declaracion);
+				System.out.println(""+cont+". Es una funcion");
 			}
 			else if (declaracion.getClass() == Estructura.class)
 			{
 				estructura.add((Estructura)declaracion);
+				System.out.println(""+cont+". Es una estructura");
 			}
 			else if (declaracion.getClass() == Variable.class)
 			{
 				variables.add((Variable)declaracion);
-				System.out.println(": D");
+				System.out.println(""+cont+". Es una variable");
 			}
 			else
 			{
-				System.out.println("Hay declaraciones y es lo mismo que variables");
+				System.out.println(""+cont+". Es una declaracion");
 				this.declaraciones.add((Declaracion) declaracion);
 			}
 			

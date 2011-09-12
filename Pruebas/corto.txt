@@ -1,14 +1,11 @@
 class Program
 {
 
-	void metodo()
+	void metodo(int a)
 	{
-		int a;
-		int b;
-		int c;
-		ff= 3;
-		gg = false;
-		
+		while (a > 1)
+{
+}
 	}
 
 }

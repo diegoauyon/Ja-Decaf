@@ -597,16 +597,30 @@ public class Main implements GPMessageConstants
 	                       case RuleConstants.RULE_BLOCK_LBRACE_RBRACE:
 	                          //<block> ::= '{' <varDeclarationK> <statementK> '}'
 	                    	   stackPruebas(stack.clone(), "En bloque");
+	                    	   boolean hizoBreak = false;
 	                    	   LinkedList<Declaracion> lista1 = (LinkedList<Declaracion>)stack.pop();
 	                    	   LinkedList<Declaracion> lista2 = (LinkedList<Declaracion>)stack.pop();
 	                    	   for (int i=0; i<lista2.size(); i++)
 	                    	   {
+	                    		   try
+	                    		   {
 	                    		   lista1.add(lista2.get(i));
+	                    		   }
+	                    		   catch (Exception ex)
+	                    		   {
+	                    			   hizoBreak = true;
+	                    			   break;
+	                    		   }
 	                    	   }
 	                    	   while ((stack.peek().getClass() == Variable.class) || (stack.peek().getClass() == Estructura.class) || (stack.peek().getClass() == Funcion.class))
 	                    	   {
 	                    		   lista1.add((Declaracion)stack.pop());
 	                    	   }
+	                    	   if (hizoBreak == true)
+	                    	   {
+	                    		   stack.push(lista2);
+	                    	   }
+	                    	   
 	                    	   stack.push(new Cuerpo(lista1));
 	                          break;
 	                       case RuleConstants.RULE_STATEMENTK:
@@ -654,32 +668,53 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_STATEMENT_WHILE_LPARAN_RPARAN:
 	                          //<statement> ::= while '(' <expression> ')' <block>
+	                    	   stack.push(new While( (Cuerpo)stack.pop(),(Expresion)stack.pop()));
+	                    	   stackPruebas(stack.clone(), "WHile entrada");
 	                          break;
 	                       case RuleConstants.RULE_STATEMENT_RETURN_SEMI:
 	                          //<statement> ::= return <expressionL> ';'
 	                          break;
 	                       case RuleConstants.RULE_STATEMENT_EQ:
 	                          //<statement> ::= <location> '=' <expression>
+	                    	   stackPruebas((Stack)stack.clone(),"Comienzo Asignacion");
 	                    	   Expresion valor = (Expresion)stack.pop();
-	                    	   try{  
+	                    		   System.out.println("Stack clase 0: "+stack.peek());
+	                    	   if (stack.peek().getClass() == Literal.class || stack.peek().getClass() == Expresion.class)
+	                    	   	{
 	                    		   Expresion indice = (Expresion)stack.pop();
-	                    		   System.out.println("Nombre: "+ (String)stack.peek()+ " Valor: "+((Literal)valor).valor);
+	                    		   System.out.println("0. Nombre: "+ (String)stack.peek()+ " Valor: "+((Literal)valor).valor);
 	                    		   stack.push( new Asignacion(valor,indice,(String)stack.pop()));
-	                    		   }
-	                    	   catch (Exception ex)
+	                    		}
+	                    	   
+	                    		else	
 	                    	   {
+	                    		   //ex.printStackTrace();
+	                    		   //stack.pop();
+	                    		   LinkedList listemp = null;
+	                    		   if (stack.peek().getClass() == LinkedList.class)
+	                    			   {
+	                    			   		listemp = ( LinkedList )stack.pop();
+	                    			   }
 	                    		   stackPruebas((Stack)stack.clone(),"asignacion antes");
+	                    		   System.out.println("Stack clase1: "+stack.peek());
 	                    		   if (stack.peek().getClass() != String.class)
 	                    		   {
-	                    			   System.out.println("Nombre: "+ nombreVarSig+ " Valor: "+((Literal)valor).valor);
+	                    			   System.out.println("1. Nombre: "+ nombreVarSig+ " Valor: "+((Literal)valor).valor);
 	                    			   stack.push(new Asignacion(valor,null,nombreVarSig));
 	                    		   }
 	                    		   else
 	                    		   {
-	                    			   System.out.println("Nombre: "+ (String)stack.peek()+ " Valor: "+((Literal)valor).valor);
+	                    			   System.out.println("2. Nombre: "+ (String)stack.peek()+ " Valor: "+((Literal)valor).valor);
 	                    			   stack.push(new Asignacion(valor,null,(String)stack.pop()));   
 	                    		   }
 	                    		   
+	                    		   if (listemp != null)
+	                    		   {
+	                    			   Asignacion asig = (Asignacion)stack.pop();
+	                    			   stack.push(listemp);
+	                    			   stack.push(asig);
+	                    		   }
+	                    		
 	                    	   }
 	                    	   
 	                    	   stackPruebas((Stack)stack.clone(),"asignacion despues");
@@ -707,6 +742,8 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_RELEXP:
 	                          //<relExp> ::= <sumaExp> <rel_op> <relExp>
+	                    	   stackPruebas(stack.clone(), "Rel Exp");
+	                    	   stack.push(new ExpresionBinaria((Expresion)stack.pop(),))
 	                          break;
 	                       case RuleConstants.RULE_RELEXP2:
 	                          //<relExp> ::= <sumaExp>
@@ -725,54 +762,69 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_NEGADOREXP_MINUS:
 	                          //<negadorExp> ::= '-' <val>
+	                    	   stack.push(Const.TipoOperadorUnario.negativo);
 	                          break;
 	                       case RuleConstants.RULE_NEGADOREXP_EXCLAM:
 	                          //<negadorExp> ::= '!' <val>
+	                    	   stack.push(Const.TipoOperadorUnario.negacion);
 	                          break;
 	                       case RuleConstants.RULE_NEGADOREXP:
 	                          //<negadorExp> ::= <val>
 	                          break;
 	                       case RuleConstants.RULE_COND_OP_AMPAMP:
 	                          //<cond_op> ::= '&&'
+	                    	   stack.push(Const.TipoOperadorBinario.and);
 	                          break;
 	                       case RuleConstants.RULE_COND_OP_PIPEPIPE:
 	                          //<cond_op> ::= '||'
+	                    	   stack.push(Const.TipoOperadorBinario.or);
 	                          break;
 	                       case RuleConstants.RULE_REL_OP_LTEQ:
 	                          //<rel_op> ::= '<='
+	                    	   stack.push(Const.TipoOperadorBinario.menorIgual);
 	                          break;
 	                       case RuleConstants.RULE_REL_OP_LT:
 	                          //<rel_op> ::= '<'
+	                    	   stack.push(Const.TipoOperadorBinario.menor);
 	                          break;
 	                       case RuleConstants.RULE_REL_OP_GT:
 	                          //<rel_op> ::= '>'
+	                    	   stack.push(Const.TipoOperadorBinario.mayor);
 	                          break;
 	                       case RuleConstants.RULE_REL_OP_GTEQ:
 	                          //<rel_op> ::= '>='
+	                    	   stack.push(Const.TipoOperadorBinario.mayorIgual);
 	                          break;
 	                       case RuleConstants.RULE_REL_OP:
 	                          //<rel_op> ::= <eq_op>
 	                          break;
 	                       case RuleConstants.RULE_EQ_OP_EQEQ:
 	                          //<eq_op> ::= '=='
+	                    	   stack.push(Const.TipoOperadorBinario.igual);
 	                          break;
 	                       case RuleConstants.RULE_EQ_OP_EXCLAMEQ:
 	                          //<eq_op> ::= '!='
+	                    	   stack.push(Const.TipoOperadorBinario.noIgual);
 	                          break;
 	                       case RuleConstants.RULE_SUMA_OP_PLUS:
 	                          //<suma_op> ::= '+'
+	                    	   stack.push(Const.TipoOperadorBinario.suma);
 	                          break;
 	                       case RuleConstants.RULE_SUMA_OP_MINUS:
 	                          //<suma_op> ::= '-'
+	                    	   stack.push(Const.TipoOperadorBinario.resta);
 	                          break;
 	                       case RuleConstants.RULE_MUL_OP_TIMES:
 	                          //<mul_op> ::= '*'
+	                    	   stack.push(Const.TipoOperadorBinario.multiplicacion);
 	                          break;
 	                       case RuleConstants.RULE_MUL_OP_DIV:
 	                          //<mul_op> ::= '/'
+	                    	   stack.push(Const.TipoOperadorBinario.division);
 	                          break;
 	                       case RuleConstants.RULE_MUL_OP_PERCENT:
 	                          //<mul_op> ::= '%'
+	                    	   stack.push(Const.TipoOperadorBinario.modulo);
 	                          break;
 	                       case RuleConstants.RULE_VAL:
 	                          //<val> ::= <location>
@@ -791,6 +843,33 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_LOCATION_DOT:
 	                          //<location> ::= <location1> '.' <location>
+	                    	   stackPruebas(stack.clone(), "RULE_LOCATION_DOT");
+	                    	   String id = "";
+	                    	   //boolean alrevez = false;
+                    		   id = (String)stack.pop();
+                    		   if ((!nombreVarSig.isEmpty() || nombreVarSig.equalsIgnoreCase("") ) && stack.peek().getClass() != String.class)
+	                    	   {
+	                    		   System.out.println("Entra aqui alguna vez<?");
+	                    		   String nombre = nombreVarSig;
+	                    		   System.out.println(nombre+"."+id);
+	                    		   stack.push(nombre + "." + id);
+	                    		   nombreVarSig = "";
+	                    	   }
+                    		   else
+                    		   {
+	                    	   if (stack.peek().getClass() == LinkedList.class)
+	                    	   {
+	                    	   LinkedList lis = (LinkedList)stack.pop();
+	                    	   String nombre = (String)stack.pop();
+	                    	   stack.push(lis);
+	                    	   stack.push(nombre + "." + id);
+	                    	   }
+	                    	   else
+	                    	   {
+	                    		   String nombre = (String)stack.pop();
+                    			   stack.push(nombre + "." + id);
+	                    	   }
+                    		   }
 	                          break;
 	                       case RuleConstants.RULE_LOCATION1_ID:
 	                          //<location1> ::= id <location2>
@@ -802,7 +881,7 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_LOCATION2:
 	                          //<location2> ::=
-	                    	   stack.push(null);
+	                    	 //  stack.push(null);
 	                          break;
 	                       case RuleConstants.RULE_METHODCALL_ID_LPARAN_RPARAN:
 	                          //<methodCall> ::= id '(' <arg1> ')'
