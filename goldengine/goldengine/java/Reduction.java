@@ -36,7 +36,8 @@ import java.util.*;
  */
 public class Reduction
 {
-    private Vector pTokens = new Vector();
+    @SuppressWarnings("rawtypes")
+	private Vector pTokens = new Vector();
     private int pTokenCount;
     private Rule pParentRule;
     private int pTag;
@@ -50,7 +51,8 @@ public class Reduction
      * in this reduction and set the number of tokens to 0.
  	 * @param value The number of tokens in this reduction.
  	 ***************************************************************/
-    public void setTokenCount(int value)
+    @SuppressWarnings("unchecked")
+	public void setTokenCount(int value)
     {
         if(value < 1)
         {
@@ -145,7 +147,8 @@ public class Reduction
  	 * @param index The index to place the token at.
      * @param value The token to set at the index.
  	 ***************************************************************/
-    public void setToken(int index, Token value)
+    @SuppressWarnings("unchecked")
+	public void setToken(int index, Token value)
     {
         if((index >= 0) & (index < pTokenCount))
         {

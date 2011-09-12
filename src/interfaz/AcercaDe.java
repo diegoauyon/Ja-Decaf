@@ -10,7 +10,6 @@ import javax.swing.JDialog;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 
 public class AcercaDe 
 {

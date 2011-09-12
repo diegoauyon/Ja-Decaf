@@ -35,6 +35,8 @@ import com.Ostermiller.Syntax.Lexer.Token;
  * Run the Syntax Highlighting as a separate thread. Things that need to be
  * colored are messaged to the thread and put in a list.
  */
+
+@SuppressWarnings({"rawtypes","unchecked"})
 class Colorer extends Thread {
 	/**
 	 * A simple wrapper representing something that needs to be colored. Placed
@@ -56,6 +58,7 @@ class Colorer extends Thread {
 	 * it is no longer being used. At that point, this thread will
 	 * shut down itself.
 	 */
+
 	private WeakReference document;
 
 	/**
@@ -65,6 +68,7 @@ class Colorer extends Thread {
 	 * we need to be able to retrieve ranges from it, it is stored in a
 	 * balanced tree.
 	 */
+
 	private TreeSet iniPositions = new TreeSet(DocPositionComparator.instance);
 
 	/**

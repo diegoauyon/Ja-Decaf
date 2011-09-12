@@ -1,22 +1,15 @@
 package main;
 import interfaz.IDecaf;
 
-import java.io.*;
+
 import java.util.LinkedList;
 import java.util.Stack;
 
-import javax.swing.JFrame;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-
 import tabla.Const;
 import tabla.Const.PasoMetodo;
-import tabla.Const.TipoLiteral;
 import tabla.Const.TipoPrimitivo;
 import tabla.Tipo;
 import tabla.clases.*;
-
-
 import goldengine.java.*;
 
 /*
@@ -53,10 +46,10 @@ import goldengine.java.*;
  */
 public class Main implements GPMessageConstants
 {
-	
+	@SuppressWarnings("unused")
 	private interface SymbolConstants 
     {
-       final int SYMBOL_EOF               =  0;  // (EOF)
+	   final int SYMBOL_EOF               =  0;  // (EOF)
        final int SYMBOL_ERROR             =  1;  // (Error)
        final int SYMBOL_WHITESPACE        =  2;  // (Whitespace)
        final int SYMBOL_COMMENTEND        =  3;  // (Comment End)
@@ -236,14 +229,14 @@ public class Main implements GPMessageConstants
        final int RULE_BOOL_LITERAL_FALSE                        = 87;  // <bool_literal> ::= false
     };
 
-	
+
     public GOLDParser parser;
     private String rutaGramatica= "src/grammar/GoldParser/Decaf.cgt";
     private boolean huboErrores= true;
     private IDecaf padre;
-    private Clase clase;
     
-    private Stack stack = new Stack();
+    @SuppressWarnings("rawtypes")
+	private Stack stack = new Stack();
 
     /***************************************************************
  	 * This class will run the engine, and needs a file called config.dat
@@ -252,7 +245,9 @@ public class Main implements GPMessageConstants
      * should be the source file you wish to parse.
  	 * @param args Array of arguments.
  	 ***************************************************************/
-    public Main(String textToParse, IDecaf padre)
+    
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Main(String textToParse, IDecaf padre)
     {
     	this.padre=padre;
         String compiledGrammar = "";
@@ -260,10 +255,11 @@ public class Main implements GPMessageConstants
             compiledGrammar = rutaGramatica;
     		//textToParse = buffR.readLine();
 
-	    
-        parser = new GOLDParser();
-        boolean varDeclaration = false;
-        boolean varVariable = false;
+
+            parser = new GOLDParser();
+           // boolean varDeclaration = false;
+           // boolean varVariable = false;
+           // Literal lit = null;
 
         try
         {
@@ -290,8 +286,11 @@ public class Main implements GPMessageConstants
 
         boolean done = false;
         int response = -1;
+        String nombreVarSig = "";
         if ( (textToParse != null))  
         {
+
+        	padre.imprimir("-------------------- Proceso Lectura --------------------",2);
 	        while(!done)
 	        {
 	            try
@@ -306,37 +305,41 @@ public class Main implements GPMessageConstants
 	            	imprimirErrores();
 	                System.exit(1);
 	            }
-	
+
 	            switch(response)
 	            {
 	                case gpMsgTokenRead:
 	                    /* A token was read by the parser. The Token Object can be accessed 
 						   through the CurrentToken() property:  Parser.CurrentToken */
-	
+
+	                	
 	                    // ************************************** log file
 	                    //System.out.println("gpMsgTokenRead");
-	                    Token myTok = parser.currentToken();
-	                    int cos=myTok.getPSymbol().getTableIndex();
-	                   // padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "\n",2);
+	                    //Token myTok = parser.currentToken();
+	                    //padre.imprimir("gpMsgTokenRead:   "+(String)myTok.getData(),2);
+	                    // ************************************** end log
+	                	Token myTok = parser.currentToken();
+	                   // int cos=myTok.getPSymbol().getTableIndex();
+	                    //padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "\n",2);
 	                    switch (myTok.getPSymbol().getTableIndex())
 	                    {
 	                    	case SymbolConstants.SYMBOL_PROGRAM:
-	                    	   	//System.out.println("Simbolo ID: "+myTok.getText());
 	                    		stack.push(myTok.getText());
 	                    		break;
 	                    	case SymbolConstants.SYMBOL_ID:
+	                    	case SymbolConstants.SYMBOL_TRUE:
+	                    	case SymbolConstants.SYMBOL_FALSE:
+	                    	case SymbolConstants.SYMBOL_CHARACTER:
 	                    		stack.push(myTok.getData().toString());
 	                    		break;
 	                    	case SymbolConstants.SYMBOL_NUM:
 	                    		int numero = Integer.parseInt(myTok.getData().toString());
 	                    		stack.push(numero);
-	                    	
+	                    		break;
 	                    }
 
-	                    // ************************************** end log
-	
 	                    break;
-	
+
 	                case gpMsgReduction:
 	                    /* This message is returned when a rule was reduced by the parse engine.
 	                    The CurrentReduction property is assigned a Reduction object
@@ -344,58 +347,73 @@ public class Main implements GPMessageConstants
 	                    property to your own customized class. If this is not the case,
 	                    this message can be ignored and the Reduction object will be used
 	                    to store the parse tree.  */
-	
+
 	                    switch(parser.currentReduction().getParentRule().getTableIndex())
 	                    {
 	                       case RuleConstants.RULE_PROGRAM_CLASS_PROGRAM_LBRACE_RBRACE:
 	                          //<Program> ::= class Program '{' <declarationK> '}'
-	                    	   padre.imprimir("<Program> ::= class Program '{' <declarationK> '}'", 2);
-	                    	   // stack.push(new Clase(new Cuerpo((LinkedList<Declaracion>)stack.pop()),(String)stack.pop()));
-	                    	   while (stack.size()>0)
+	                    	   System.out.println("Tamaño: "+stack.size());
+	                    	   LinkedList<Declaracion> listaDeclaraciones = (LinkedList<Declaracion>)stack.pop();
+	                    	   while ((stack.peek().getClass() == Variable.class) || (stack.peek().getClass() == Estructura.class) || (stack.peek().getClass() == Funcion.class))
 	                    	   {
-	                    		   System.out.println("Stack: "+stack.pop());
+	                    		   listaDeclaraciones.add((Declaracion)stack.pop());
 	                    	   }
-	                    	   //padre.imprimir(parser.currentToken().getText(),2);
+	                    	   stack.push(listaDeclaraciones);
+	                    	   stackPruebas((Stack)stack.clone(), "En el main");
+	                    	// stack.push(new Clase(new Cuerpo((LinkedList<Declaracion>)stack.pop()),(String)stack.pop()));
 	                          break;
 	                       case RuleConstants.RULE_DECLARATIONK:
 	                          //<declarationK> ::= <declaration> <declarationK>
-	                    	   try
-		                    	  {
-		                    		   Declaracion variable = (Declaracion)stack.peek();
-		                    		   stack.pop();
+	                    	   if (stack.peek().getClass() == Declaracion.class)
+	                    	   {
+	                    		   	   //No existe una lista donde guardar las variables	
+		                    		   Declaracion variable = (Declaracion)stack.pop();
+		                    		   //stack.pop();
 		                    	  	   LinkedList<Declaracion> listaVar = new LinkedList<Declaracion>();
 		                    	       listaVar.add(variable);
 		                    	       stack.push(listaVar);
 		                    	  }
-		                    	  catch (Exception e)
+	                    	   else
 		                    	  {
-		                    		 LinkedList<Declaracion> listaVar = ((LinkedList<Declaracion>) stack.pop());
-		                    		 Declaracion variable = (Declaracion)stack.pop();
-		                    		 listaVar.add(variable);
-		                    		 stack.push(listaVar);
-		                    	  }   //inked
-		                    	   
+	                    		   		//Ya existe una lista donde guardar la variable
+	                    		   		stackPruebas(stack.clone(), "Declaracionk");
+	                    		   		LinkedList<Declaracion> listaVar = ((LinkedList<Declaracion>) stack.pop());
+	                    		   		Declaracion variable = (Declaracion)stack.pop();
+	                    		   		listaVar.add(variable);
+	                    		   		stack.push(listaVar);
+		                    	  } 
 	                          break;
 	                       case RuleConstants.RULE_DECLARATIONK2:
-	                          //<declarationK> ::= 
+	                          //<declarationK> ::=
+	                    	   	// Caso vacio
 	                    	   stack.push(new LinkedList<Declaracion>());
-	                    	   break;
+	                          break;
 	                       case RuleConstants.RULE_DECLARATION:
 	                          //<declaration> ::= <structDeclaration>
+	                    	   		//	Caso abajo se ocupa
 	                          break;
 	                       case RuleConstants.RULE_DECLARATION2:
 	                          //<declaration> ::= <varDeclaration>
+	                    	   		//	Caso abajo se ocupa
 	                          break;
 	                       case RuleConstants.RULE_DECLARATION3:
 	                          //<declaration> ::= <methodDeclaration>
+	                    	   		//	Caso abajo se ocupa
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATION_ID_SEMI:
 	                          //<varDeclaration> ::= <varmethodType> id <varDeclaration1> ';'
-	                    	   //padre.imprimir("<varDeclaration> ::= <varmethodType> id <varDeclaration1> ';'", 2);
-	                    	   if (varVariable == false)
-	                    		  stack.push(new Variable(null,(Tipo)stack.pop(),(String) stack.pop()));
+	                    	   stackPruebas(stack.clone(),"VarDeclarationID_SEMI");
+	                    	   if (stack.peek().getClass() == String.class)
+	                    	   {
+	                    		   String nombreVariableSig = (String)stack.pop();
+	                    		   stack.push(new Variable(null,(Tipo)stack.pop(),(String) stack.pop()));
+	                    		   stack.push(nombreVariableSig);
+	                    	   }
 	                    	   else
-	                    		   varVariable = true;
+	                    	   {
+	                    		   stack.push(new Variable(null,(Tipo)stack.pop(),(String) stack.pop()));
+	                    	   }
+	                    	    
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATION1_LBRACKET_NUM_RBRACKET:
 	                          //<varDeclaration1> ::= '[' num ']'
@@ -408,42 +426,66 @@ public class Main implements GPMessageConstants
 	                    		   huboErrores = true;
 	                    	   }
 	                    	   stack.push(tip.crearArregloDesdeTipo(numero,(Tipo)stack.pop()));
+	                    	   
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATION1:
 	                          //<varDeclaration1> ::= 
-	                    	   //padre.imprimir("<varDeclaration1> ::=", 2);
-	                    	   stack.push(new Variable(null,(Tipo)stack.pop(),(String)stack.pop()));
-	                    	   varVariable = true;
+	                    	   	// No es necesario, RULE_VARDECLARATION_ID_SEMI: se encarga
 	                          break;
 	                       case RuleConstants.RULE_STRUCTDECLARATION_STRUCT_ID_LBRACE_RBRACE:
 	                          //<structDeclaration> ::= struct id '{' <varDeclarationK> '}'
-	                    	   stack.push(new Estructura((LinkedList<Variable>) stack.pop(),(String)stack.pop()));
+	                    	   if (stack.peek().getClass() == String.class)
+	                    	   {
+	                    		   
+	                    		   String nombreVar =(String) stack.pop();
+	                    		   LinkedList<Variable> lista = (LinkedList<Variable>) stack.pop();
+	                    		   String nombreEstructura = (String)stack.pop();
+	                    		   stack.push(new Estructura(lista,nombreEstructura));
+	                    		   stack.push(nombreVar);
+	                    		   stack.push(new Tipo(nombreEstructura));
+	                    	   }
+	                    	   else
+	                    	   {
+	                    		   stack.push(new Estructura((LinkedList<Variable>) stack.pop(),(String)stack.pop()));
+	                    	   }
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATIONK:
 	                          //<varDeclarationK> ::= <varDeclaration> <varDeclarationK>
-	                    	  try
-	                    	  {
-	                    		   Variable variable = (Variable)stack.peek();
-	                    		   stack.pop();
-	                    	  	   LinkedList<Variable> listaVar = new LinkedList<Variable>();
-	                    	       listaVar.add(variable);
-	                    	       stack.push(listaVar);
-	                    	  }
-	                    	  catch (Exception e)
-	                    	  {
-	                    		 LinkedList<Variable> listaVar = ((LinkedList<Variable>) stack.pop());
-	                    		 Variable variable = (Variable)stack.pop();
-	                    		 listaVar.add(variable);
-	                    		 stack.push(listaVar);
-	                    	  }   //inked
-	                    	   
-	                    	   
-	                    	   
-	                    	   
-	                    	   
+	                    	   if (stack.peek().getClass() == Variable.class)
+		                    	  {
+		                    		  stackPruebas(stack.clone(),"Variables antes if");
+		                    		   Variable variable = (Variable)stack.pop();
+		                    		   //stack.pop();
+		                    	  	   LinkedList<Variable> listaVar = new LinkedList<Variable>();
+		                    	       listaVar.add(variable);
+		                    	       stack.push(listaVar);
+		                    	       stackPruebas(stack.clone(),"Variables despues if");
+		                    	  }
+	                    	   else
+		                    	  {
+		                    		 stackPruebas(stack.clone(),"Variables antes else");
+			                    	 if (stack.peek().getClass() == String.class)
+			                    	 {
+			                    		 nombreVarSig = (String)stack.pop();
+			                    	 }
+			                    	 LinkedList<Variable> listaVar = ((LinkedList<Variable>) stack.pop());
+			                    	 if (stack.peek().getClass() == String.class)
+			                    	 {
+			                    		 nombreVarSig = (String)stack.pop();
+			                    	 }
+			                    	 else
+			                    	 {
+			                    		 Variable variable = (Variable)stack.pop();
+			                    		 listaVar.add(variable);
+			                    		 stack.push(listaVar);
+			                    	 }
+		                    		 
+		                    		 stackPruebas(stack.clone(),"Variables despues else");
+		                    	  } 
 	                          break;
 	                       case RuleConstants.RULE_VARDECLARATIONK2:
 	                          //<varDeclarationK> ::= 
+	                    	   	// Caso vacio
 	                    	   stack.push(new LinkedList<Variable>());
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_INT:
@@ -460,32 +502,31 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_VOID:
 	                          //<varmethodType> ::= void
-	                    	   //padre.imprimir("<varmethodType> ::= void",2);
 	                    	   stack.push(new Tipo(TipoPrimitivo.void_));
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE_STRUCT_ID:
 	                          //<varmethodType> ::= struct id
-	                    	   
+	                    	   stack.push(new Tipo((String)stack.pop()));
 	                          break;
 	                       case RuleConstants.RULE_VARMETHODTYPE:
 	                          //<varmethodType> ::= <structDeclaration>
+	                    	   	// Se encarga mas abajo structDeclaration
 	                          break;
 	                       case RuleConstants.RULE_METHODDECLARATION_ID_LPARAN_RPARAN:
 	                          //<methodDeclaration> ::= <varmethodType> id '(' <parameter1> ')' <block>
-	                    	   //padre.imprimir("<methodDeclaration> ::= <varmethodType> id '(' <parameter1> ')' <block>",2);
-	                    	   stack.push(new Funcion((Cuerpo)stack.pop(),(LinkedList<Variable>)stack.pop(),(LinkedList<Parametro>)stack.pop(),(Tipo)stack.pop(),(String)stack.pop()));
+	                    	   stackPruebas(stack.clone(), "EN funcion");
+	                    	   stack.push(new Funcion((Cuerpo)stack.pop(),(LinkedList<Parametro>)stack.pop(),(Tipo)stack.pop(),(String)stack.pop()));
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER1:
 	                          //<parameter1> ::= <parameter2>
-	                    	   //padre.imprimir("Entra aqui?",2);
+	                    	    //Se encargan los siguientes <parameter>
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER12:
 	                          //<parameter1> ::= 
-	                    	  	stack.push(new LinkedList<Parametro>());
+	                    	   stack.push(new LinkedList<Parametro>());
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER2:
 	                          //<parameter2> ::= <parameter>
-	                    	   padre.imprimir("Entra aqui? dfdfdfdf",2);
 	                    	   LinkedList<Parametro> listaParam =new LinkedList<Parametro>();
 	                    	   listaParam.add((Parametro)stack.pop());
 	                    	   stack.push(listaParam);
@@ -504,14 +545,13 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER_ID:
 	                          //<parameter> ::= <parameterType> id
-	                    	   try
+	                    	   if (stack.peek().getClass() == LinkedList.class)
 	                    	   {
-	                    		   LinkedList<Parametro> valor = (LinkedList<Parametro>) stack.peek();
-	                    		   stack.pop();
+	                    		   LinkedList<Parametro> valor = (LinkedList<Parametro>) stack.pop();
 	                    		   valor.add(new Parametro((Tipo)stack.pop(),(String)stack.pop(),PasoMetodo.porValor));
 	                    		   stack.push(valor);
 	                    	   }
-	                    	   catch (Exception ex)
+	                    	   else
 	                    	   {
 	                    	   	   LinkedList<Parametro> listaParam1 =new LinkedList<Parametro>();
 	                    	   	   listaParam1.add(new Parametro((Tipo)stack.pop(),(String)stack.pop(),PasoMetodo.porValor));
@@ -520,7 +560,7 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_PARAMETER_ID_LBRACKET_RBRACKET:
 	                          //<parameter> ::= <parameterType> id '[' ']'
-	                    	   try
+	                    	   if (stack.peek().getClass() == LinkedList.class)
 	                    	   {
 	                    		   LinkedList<Parametro> valor = (LinkedList<Parametro>) stack.peek();
 	                    		   stack.pop();
@@ -531,7 +571,7 @@ public class Main implements GPMessageConstants
 	                    		   valor.add(new Parametro(tipo,id,PasoMetodo.porValor));
 	                    		   stack.push(valor);
 	                    	   }
-	                    	   catch (Exception ex)
+	                    	   else
 	                    	   {
 	                    	   	   LinkedList<Parametro> listaParam1 =new LinkedList<Parametro>();
 	                    	   	   Tipo tipo = (Tipo)stack.pop();
@@ -541,7 +581,6 @@ public class Main implements GPMessageConstants
 	                    	   	   stack.push(listaParam1);
 	                    	   }
 	                    	   
-
 	                          break;
 	                       case RuleConstants.RULE_PARAMETERTYPE_INT:
 	                          //<parameterType> ::= int
@@ -549,7 +588,7 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_PARAMETERTYPE_CHAR:
 	                          //<parameterType> ::= char
-	                    	   stack.push(new Tipo(TipoPrimitivo.character));
+	                    	   stack.push(new Tipo(TipoPrimitivo.character)); 
 	                          break;
 	                       case RuleConstants.RULE_PARAMETERTYPE_BOOLEAN:
 	                          //<parameterType> ::= boolean
@@ -557,33 +596,54 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_BLOCK_LBRACE_RBRACE:
 	                          //<block> ::= '{' <varDeclarationK> <statementK> '}'
-	                    	   padre.imprimir("<block> ::= '{' <varDeclarationK> <statementK> '}'", 2);
-	                    	   stack.push(new Cuerpo((LinkedList<Declaracion>)stack.pop()));
+	                    	   stackPruebas(stack.clone(), "En bloque");
+	                    	   LinkedList<Declaracion> lista1 = (LinkedList<Declaracion>)stack.pop();
+	                    	   LinkedList<Declaracion> lista2 = (LinkedList<Declaracion>)stack.pop();
+	                    	   for (int i=0; i<lista2.size(); i++)
+	                    	   {
+	                    		   lista1.add(lista2.get(i));
+	                    	   }
+	                    	   while ((stack.peek().getClass() == Variable.class) || (stack.peek().getClass() == Estructura.class) || (stack.peek().getClass() == Funcion.class))
+	                    	   {
+	                    		   lista1.add((Declaracion)stack.pop());
+	                    	   }
+	                    	   stack.push(new Cuerpo(lista1));
 	                          break;
 	                       case RuleConstants.RULE_STATEMENTK:
 	                          //<statementK> ::= <statement> <statementK>
-	                    	   try
+	                    	   if (stack.peek().getClass() == Declaracion.class)
 		                    	  {
+	                    		   stackPruebas((Stack)stack.clone(),"entra a try?");
 		                    		   Declaracion variable = (Declaracion)stack.peek();
 		                    		   stack.pop();
 		                    	  	   LinkedList<Declaracion> listaVar = new LinkedList<Declaracion>();
 		                    	       listaVar.add(variable);
 		                    	       stack.push(listaVar);
 		                    	  }
-		                    	  catch (Exception e)
+	                    	   else
 		                    	  {
+		                    		  stackPruebas((Stack)stack.clone(),"antes");
 		                    		 LinkedList<Declaracion> listaVar = ((LinkedList<Declaracion>) stack.pop());
-		                    		 Declaracion variable = (Declaracion)stack.pop();
+		                    		 try{
+		                    		 Declaracion variable = (Declaracion)stack.peek();
+		                    		 stack.pop();
 		                    		 listaVar.add(variable);
 		                    		 stack.push(listaVar);
-		                    	  }   //inked
-		                    	   
+		                    		 stackPruebas((Stack)stack.clone(),"Despues");
+		                    		 }
+		                    		 catch (Exception ex)
+		                    		 {
+		                    			 
+		                    			 //stackPruebas((Stack)stack.clone(),"antes 1");
+		                    			 stack.push(listaVar);
+		                    			 stackPruebas((Stack)stack.clone(),"antes 2");
+		                    		 }
+		                    		 
+		                    	  } 
 	                          break;
 	                       case RuleConstants.RULE_STATEMENTK2:
 	                          //<statementK> ::= 
-	                    	  // padre.imprimir("<statementK> ::=", 2);
 	                    	   LinkedList<Declaracion> listaDeclaracion = new LinkedList<Declaracion>();
-	                    	   //listaDeclaracion.add((Declaracion)null);
 	                    	   stack.push(listaDeclaracion);
 	                          break;
 	                       case RuleConstants.RULE_STATEMENT:
@@ -600,6 +660,29 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_STATEMENT_EQ:
 	                          //<statement> ::= <location> '=' <expression>
+	                    	   Expresion valor = (Expresion)stack.pop();
+	                    	   try{  
+	                    		   Expresion indice = (Expresion)stack.pop();
+	                    		   System.out.println("Nombre: "+ (String)stack.peek()+ " Valor: "+((Literal)valor).valor);
+	                    		   stack.push( new Asignacion(valor,indice,(String)stack.pop()));
+	                    		   }
+	                    	   catch (Exception ex)
+	                    	   {
+	                    		   stackPruebas((Stack)stack.clone(),"asignacion antes");
+	                    		   if (stack.peek().getClass() != String.class)
+	                    		   {
+	                    			   System.out.println("Nombre: "+ nombreVarSig+ " Valor: "+((Literal)valor).valor);
+	                    			   stack.push(new Asignacion(valor,null,nombreVarSig));
+	                    		   }
+	                    		   else
+	                    		   {
+	                    			   System.out.println("Nombre: "+ (String)stack.peek()+ " Valor: "+((Literal)valor).valor);
+	                    			   stack.push(new Asignacion(valor,null,(String)stack.pop()));   
+	                    		   }
+	                    		   
+	                    	   }
+	                    	   
+	                    	   stackPruebas((Stack)stack.clone(),"asignacion despues");
 	                          break;
 	                       case RuleConstants.RULE_STATEMENT_SEMI:
 	                          //<statement> ::= <expressionL> ';'
@@ -711,12 +794,15 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_LOCATION1_ID:
 	                          //<location1> ::= id <location2>
+	                    	 //tampoco se encarga este, falta el valor de la variable, se va para arriba
 	                          break;
 	                       case RuleConstants.RULE_LOCATION2_LBRACKET_RBRACKET:
 	                          //<location2> ::= '[' <expression> ']'
+	                    	   	//--> Lo va a controlar location1 con un peek en el stack. 
 	                          break;
 	                       case RuleConstants.RULE_LOCATION2:
-	                          //<location2> ::= 
+	                          //<location2> ::=
+	                    	   stack.push(null);
 	                          break;
 	                       case RuleConstants.RULE_METHODCALL_ID_LPARAN_RPARAN:
 	                          //<methodCall> ::= id '(' <arg1> ')'
@@ -738,82 +824,85 @@ public class Main implements GPMessageConstants
 	                          break;
 	                       case RuleConstants.RULE_LITERAL:
 	                          //<literal> ::= <int_literal>
-	                    	 //  stack.push(new Literal((String)stack.pop(),Const.TipoLiteral.integer));
+	                    	   // Se encarga los de abajo
 	                          break;
 	                       case RuleConstants.RULE_LITERAL2:
 	                          //<literal> ::= <char_literal>
-	                    	 //  stack.push(new Literal((String)stack.pop(),Const.TipoLiteral.character));
+	                    	   // Se encarga los de abajo
 	                          break;
 	                       case RuleConstants.RULE_LITERAL3:
 	                          //<literal> ::= <bool_literal>
-	                    	 //  stack.push(new Literal((String)stack.pop(),Const.TipoLiteral.bool));
+	                    	   // Se encarga los de abajo
 	                          break;
 	                       case RuleConstants.RULE_INT_LITERAL_NUM:
 	                          //<int_literal> ::= num
+	                    	   stack.push(new Literal(""+(Integer)stack.pop(),Const.TipoLiteral.integer));
 	                          break;
 	                       case RuleConstants.RULE_CHAR_LITERAL_CHARACTER:
 	                          //<char_literal> ::= character
+	                    	   stack.push(new Literal((String)stack.pop(),Const.TipoLiteral.character));
 	                          break;
 	                       case RuleConstants.RULE_BOOL_LITERAL_TRUE:
 	                          //<bool_literal> ::= true
+	                    	   stack.push(new Literal((String)stack.pop(),Const.TipoLiteral.bool));
 	                          break;
 	                       case RuleConstants.RULE_BOOL_LITERAL_FALSE:
+	                    	   stack.push(new Literal((String)stack.pop(),Const.TipoLiteral.bool));
 	                          //<bool_literal> ::= false
-	                  
+
 	                          break;
 	                    }
-	
+
 	                        //Parser.Reduction = //Object you created to store the rule
-	
+
 	                  // ************************************** log file
-	                  
+
 	                  Reduction myRed = parser.currentReduction();
 	                  //Token tok = parser.currentToken();
 	                  //String info = (String)tok.getData();
 	                  String info = "  ---> Linea:  "+parser.currentLineNumber();
 	                  padre.imprimir("gpMsgReduction:   "+myRed.getParentRule().getText()+info,2);
 	                  // ************************************** end log
-	
+
 	                  break;
-	
+
 	                case gpMsgAccept:
 	                    /* The program was accepted by the parsing engine */
-	
+
 	                    // ************************************** log file
 	                   padre.imprimir(" El archivo dado fue parseado",1);
-	                  // clase = (Clase)stack.pop();
-	                   //System.out.println("Clase: "+clase.nombre+ "  Cuerpo:  "+clase.cuerpo);
+
 	                    // ************************************** end log
 	                    huboErrores=false;
 	                    done = true;
-	
+
 	                    break;
-	
+
 	                case gpMsgLexicalError:
 	                    /* Place code here to handle a illegal or unrecognized token
 			               To recover, pop the token from the stack: Parser.PopInputToken */
-	
+
 	                    // ************************************** log file
 	                   padre.imprimir("gpMsgLexicalError",1);
 	                   imprimirErrores();
 	                    // ************************************** end log
-	
+
 	                    parser.popInputToken();
-	
+
 	                    break;
-	
+
 	                case gpMsgNotLoadedError:
 	                    /* Load the Compiled Grammar Table file first. */
-	
+
 	                    // ************************************** log file
 	                	padre.imprimir("gpMsgNotLoadedError",1);
 	                	imprimirErrores();
 	                    // ************************************** end log
-	
+
 	                    done = true;
-	
+
 	                    break;
-	
+
 	                case gpMsgSyntaxError:
 	                    /* This is a syntax error: the source has produced a token that was
 	        		       not expected by the LALR State Machine. The expected tokens are stored
@@ -821,43 +910,43 @@ public class Main implements GPMessageConstants
 	   		               expected tokens onto the parser's input queue (the first in this case):
 	        		       You should limit the number of times this type of recovery can take
 			               place. */
-	
+
 	                    done = true;
-	
+
 	                    Token theTok = parser.currentToken();
-	                    
+
 	                    padre.imprimir("gp-Msg-SyntaxError: Token not expected: " + (String)theTok.getData(),1);
 	                    //padre.imprimir("Tipo token: "+theTok.getText());
 	                    //padre.imprimir("" +parser.currentLineNumber());
 	                    // ************************************** log file
 	                    imprimirErrores();
 	                    // ************************************** end log
-	
+
 	                    break;
-	
+
 	                case gpMsgCommentError:
 	                    /* The end of the input was reached while reading a comment.
 				           This is caused by a comment that was not terminated */
-	
+
 	                    // ************************************** log file
 	                	padre.imprimir("gpMsgCommentError",1);
 	                	imprimirErrores();
 	                    // ************************************** end log
-	
+
 	                    done = true;
-	
+
 						break;
-	
+
 	                case gpMsgInternalError:
 	                    /* Something horrid happened inside the parser. You cannot recover */
-	
+
 	                    // ************************************** log file
 	                	padre.imprimir("gpMsgInternalError",1);
 	                	imprimirErrores();
 	                    // ************************************** end log
-	
+
 	                    done = true;
-	
+
 	                    break;
 	            }
 	        }
@@ -906,6 +995,18 @@ public class Main implements GPMessageConstants
     public boolean huboErrores()
     {
     	return huboErrores;
+    }
+    
+    public void stackPruebas(Object stack,String estado)
+    {
+    	@SuppressWarnings("rawtypes")
+		Stack stack1 = (Stack)stack;
+    	System.out.println("--------------------------------"+ " "+estado+" -------------------------");
+    	while (stack1.size()>0)
+    	{
+    		System.out.println("Stack: "+stack1.pop());
+    	}
+    	System.out.println("--------------------------------");
     }
     
     

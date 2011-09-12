@@ -587,7 +587,7 @@ public class ColorSliderUI extends BasicSliderUI implements TransitionAwareUI {
 					break;
 				}
 
-				// FIXME:
+				// :
 				// We should set isDragging to false here. Unfortunately,
 				// we can not access this variable in class BasicSliderUI.
 			}

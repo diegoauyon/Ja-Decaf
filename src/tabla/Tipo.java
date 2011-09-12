@@ -1,8 +1,6 @@
 package tabla;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+
 
 public class Tipo 
 {
@@ -71,7 +69,7 @@ public class Tipo
 	
 	public String tipo()
 	{
-		String tipo = "";
+		//String tipo = "";
 		if (!esRef)
 		{
 			if (tipoVariable == Const.TipoVariables.primitivo)

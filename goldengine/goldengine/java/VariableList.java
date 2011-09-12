@@ -35,7 +35,8 @@ import java.util.*;
  */
 public class VariableList
 {
-    private Vector memberList = new Vector();
+    @SuppressWarnings("rawtypes")
+	private Vector memberList = new Vector();
     private int memberCount = 0;
 
     /***************************************************************
@@ -52,7 +53,8 @@ public class VariableList
  	 * @return Will return true if the variable was not found, false
      *              if it was.
  	 ***************************************************************/
-    public boolean add(String name, String value, String comment)
+    @SuppressWarnings("unchecked")
+	public boolean add(String name, String value, String comment)
     {
         int n = 0;
         boolean found = false;
@@ -80,7 +82,8 @@ public class VariableList
  	 *
  	 * This method will set the name of each variable to "".
  	 ***************************************************************/
-    public void clearValues()
+    @SuppressWarnings("rawtypes")
+	public void clearValues()
     {
         Enumeration enumA = memberList.elements();
         while(enumA.hasMoreElements())

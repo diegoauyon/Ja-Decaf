@@ -292,9 +292,10 @@ public class LookAheadStream
      ***************************************************************/
     public String readLine() throws ParserException
     {
-        int charSpace = 0, cr = 0;
+        int charSpace = 0;
         boolean endReached = false;
-        boolean crPresent = false;
+        @SuppressWarnings("unused")
+		boolean crPresent = false;
         String text = "", ch;
 
         while(!endReached & !done())

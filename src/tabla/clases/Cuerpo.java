@@ -10,6 +10,7 @@ public class Cuerpo
 	public LinkedList<Funcion> funciones = null;
 	public LinkedList<Estructura> estructura = null;
 	public LinkedList<Declaracion> declaraciones = null;
+	public LinkedList<Variable> variables = null;
 	
 	public TablaSimbolos  tablaSimbolos = null;
 	
@@ -22,6 +23,7 @@ public class Cuerpo
 		funciones = new LinkedList<Funcion>();
 		estructura = new LinkedList<Estructura>();
 		this.declaraciones = new LinkedList<Declaracion>();
+		variables = new LinkedList<Variable>();
 		
 		for (int cont = 0; cont<declaraciones.size(); cont++)
 		{
@@ -34,8 +36,14 @@ public class Cuerpo
 			{
 				estructura.add((Estructura)declaracion);
 			}
+			else if (declaracion.getClass() == Variable.class)
+			{
+				variables.add((Variable)declaracion);
+				System.out.println(": D");
+			}
 			else
 			{
+				System.out.println("Hay declaraciones y es lo mismo que variables");
 				this.declaraciones.add((Declaracion) declaracion);
 			}
 			

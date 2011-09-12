@@ -24,6 +24,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+@SuppressWarnings("unused")
 class TokenStyles {
 	private TokenStyles() { } // disable constructor
 	
@@ -31,6 +32,7 @@ class TokenStyles {
 	 * A hash table containing the text styles. Simple attribute sets are hashed
 	 * by name (String)
 	 */
+	@SuppressWarnings("rawtypes")
 	private static HashMap styles = new HashMap();
 
 	/**
@@ -68,6 +70,7 @@ class TokenStyles {
 		addStyle("grayedOut", background, Color.GRAY, false, false);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void addStyle(String name, Color bg, Color fg, boolean bold,
 			boolean italic) {
 		SimpleAttributeSet style = new SimpleAttributeSet();

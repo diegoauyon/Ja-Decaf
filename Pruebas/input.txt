@@ -4,8 +4,8 @@ class Program{
 	char c;
 	struct s1{
 		int sa;
-		boolean sb[2];
-		int  sc;
+		boolean sb[5];
+		char sc;
 		struct s3 prueba3;
 	} vs2;
 	struct s2{
@@ -16,12 +16,14 @@ class Program{
 		int s3a;
 	}
 	int d;
-	struct s1 vs1[0];
+	struct s1 vs1;
+	struct s1 array[3];
 	int tryout(int t1, int t3){
 		prueba2.prueba.sa = 1;
 		return 1;
 	}
 	char tryout(char t2){
+		array[1].sa = 2;
 		return 'c';
 	}
 	boolean getBool(){
@@ -30,7 +32,7 @@ class Program{
 		char methodc;
 		methoda = tryout(1+1,2);
 		methodc = 'c';
-		methodb[3] = getBool();
+		methodb[1] = getBool();
 		if(1 < 2){
 			methoda = 1;
 			return true;
@@ -43,7 +45,5 @@ class Program{
 		return true;
 	}
 	void main (){
-		vs2.sb[1] = true;
-		vs1[1].sa = 1;
 	}
 }

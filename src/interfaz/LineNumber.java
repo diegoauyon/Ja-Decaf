@@ -2,11 +2,15 @@ package interfaz;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.text.*;
 
 public class LineNumber extends JComponent
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6291188920752821727L;
+
+
 	//private final static Color DEFAULT_BACKGROUND = new Color(233, 232, 226);
 	//private final static Color DEFAULT_FOREGROUND = Color.black;
 //	private final static Font DEFAULT_FONT = new Font("monospaced", Font.PLAIN, 12);

@@ -1,6 +1,6 @@
 package grammar.Antlr;
 
-import java.io.*;
+
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.ANTLRFileStream;
 /*

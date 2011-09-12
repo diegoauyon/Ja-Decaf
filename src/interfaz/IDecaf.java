@@ -392,7 +392,7 @@ public class IDecaf extends javax.swing.JFrame
 			    
 			} 
 			catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 				
 			}
@@ -417,7 +417,6 @@ public class IDecaf extends javax.swing.JFrame
 					pw = new PrintWriter(fichero);
 	        		pw.write(textPane.getText());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} finally
 				{
@@ -573,7 +572,7 @@ public class IDecaf extends javax.swing.JFrame
         for(int i=0; i<reduccion.getTokenCount(); i++)
         {
             if(reduccion.getToken(i).getKind()==0){
-                 Reduction red = (Reduction)reduccion.getToken(i).getData();
+                // Reduction red = (Reduction)reduccion.getToken(i).getData();
                /**String rule = red.getParentRule().definition();
                 String rules_d = red.getParentRule().getText();
                 String rule_name = reduccion.getToken(i).getName();

@@ -4,7 +4,7 @@ import tabla.clases.*;
 
 public class Verificador 
 {
-	private Clase clase = null;
+	public Clase clase = null;
 	
 	public Verificador (Clase clase)
 	{

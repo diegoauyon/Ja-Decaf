@@ -1,26 +1,14 @@
 package interfaz;
 
-import java.awt.BasicStroke;
+
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
-import javax.swing.border.TitledBorder;
-
-import main.Main;
 
 
 
@@ -33,7 +21,12 @@ public class PanelBotones extends JPanel implements ActionListener
     // Constantes
     // -----------------------------------------------------------------
 
-    private static final String ABRIR = "Abrir";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4160189527033951610L;
+
+	private static final String ABRIR = "Abrir";
 
     private static final String GUARDAR = "Guardar";
 
@@ -60,23 +53,6 @@ public class PanelBotones extends JPanel implements ActionListener
 
     private JButton botonCorrer;
 
-   
-    private JComboBox cbbTipoLinea;
-
-    /**
-    private JButton botonColorLinea;
-
-    private JButton botonColorFondo;
-
-    private JButton botonBorrar;
-
-    private ButtonGroup grupo;
-    
-    */
-
-    private JLabel etiquetaColorLinea;
-
-    private JLabel etiquetaColorFondo;
 
     // -----------------------------------------------------------------
     // Constructores

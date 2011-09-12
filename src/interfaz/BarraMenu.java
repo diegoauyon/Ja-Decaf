@@ -34,6 +34,10 @@ public class BarraMenu extends JMenuBar implements ActionListener
     // Constantes
     // -----------------------------------------------------------------
     
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -599391809040429048L;
 	// Constantes para Menu Archivo
     private static final String NUEVO = "Nuevo";
     private static final String ABRIR = "Abrir";
@@ -48,7 +52,7 @@ public class BarraMenu extends JMenuBar implements ActionListener
  // Constantes para Menu Opciondx
     private static final String OPCIONES = "Opciones";
     private static final String ACERCA = "Acerca";
-    private static final String CORRER = "Correr";
+   // private static final String CORRER = "Correr";
     private static final String LIMPIAR1 = "Limpiar1";
     private static final String LIMPIAR2 = "Limpiar2";
 
@@ -78,14 +82,14 @@ public class BarraMenu extends JMenuBar implements ActionListener
     private JMenu menuGramatica;
     private JRadioButtonMenuItem itemANT;
     private JRadioButtonMenuItem itemGoldP;
-    private JMenuItem escogerGoldP;
+   // private JMenuItem escogerGoldP;
     
     // Menu Opciones
     
    private JMenu menuOpciones,submenu;
    private JMenuItem itemOp;
    private JMenuItem itemAcercaDe;
-   private JMenuItem itemCorrer;
+  // private JMenuItem itemCorrer;
    private JMenuItem itemLimpiar1;
    private JMenuItem itemLimpiar2;
 
@@ -277,7 +281,7 @@ public class BarraMenu extends JMenuBar implements ActionListener
         }
         else if (ACERCA.equals(comando))
         {
-        	AcercaDe aD = new AcercaDe(principal);
+        	new AcercaDe(principal);
         	
         }
         else if (LIMPIAR1.equals(comando))

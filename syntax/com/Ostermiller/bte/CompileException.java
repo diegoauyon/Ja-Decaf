@@ -23,6 +23,11 @@ package com.Ostermiller.bte;
  */
 public class CompileException extends Exception {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8058021213178230190L;
+
+	/**
      * Create a new compile exception.
      */
     public CompileException(){

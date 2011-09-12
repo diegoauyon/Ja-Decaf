@@ -23,6 +23,7 @@ import java.util.Comparator;
  * A comparator appropriate for use with Collections of
  * DocPositions.
  */
+@SuppressWarnings("rawtypes")
 class DocPositionComparator implements Comparator {
 	public static final DocPositionComparator instance = new DocPositionComparator();
 	

@@ -64,7 +64,7 @@ public class ColorWheel extends JPanel {
             model.setValue(0, 180 + (int) (theta / Math.PI * 180d));
             model.setValue(1, (int) (Math.min(1f, (float) r / colorWheelProducer.getRadius()) * 100f));
             
-            // FIXME - We should only repaint the damaged area
+            // - We should only repaint the damaged area
             repaint();
         }
     }

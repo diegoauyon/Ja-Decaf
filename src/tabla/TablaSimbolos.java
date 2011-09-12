@@ -8,6 +8,7 @@ public class TablaSimbolos
 
 	
 	private TablaSimbolos padre = null;
+	@SuppressWarnings("rawtypes")
 	private HashMap tablahash = new HashMap();
 	
 	
@@ -36,6 +37,7 @@ public class TablaSimbolos
 		return agregar(estructura.nombre,Const.TipoSimbolo.estructura,estructura,null);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Simbolo agregar(String nombre, int tipo, Object syntaxObject, Object codeObject) //throws SimboloException
 	{
 		String prefix = prefixDeTipo(tipo);
@@ -45,7 +47,7 @@ public class TablaSimbolos
 			try {
 				throw new SimboloException("Simbolo ya existe en la tabla de simbolos: "+ prefix+nombre);
 			} catch (SimboloException e) {
-				// TODO Auto-generated catch block
+				//  Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

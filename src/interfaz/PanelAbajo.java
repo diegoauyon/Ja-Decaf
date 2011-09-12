@@ -3,7 +3,6 @@ package interfaz;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
@@ -16,10 +15,10 @@ import javax.swing.text.BadLocationException;
 
 public class PanelAbajo extends JPanel 
 {
-	private String numeroLineas;
-	private String numeroColumnas;
-	private JLabel texto;
-	private int numColumna,numFila,numColumnasTotales,sel;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2255553675805409353L;
 	private String newline = "\n";
 	private JTextPane panel;
 	public CaretListenerLabel caret;
@@ -37,7 +36,12 @@ public class PanelAbajo extends JPanel
 	//This listens for and reports caret movements.
     protected class CaretListenerLabel extends JLabel
                                        implements CaretListener {
-        public CaretListenerLabel(String label) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -6209220266081592787L;
+
+		public CaretListenerLabel(String label) {
             super(label);
         }
 

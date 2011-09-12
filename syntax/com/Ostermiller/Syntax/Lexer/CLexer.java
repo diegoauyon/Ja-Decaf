@@ -1293,18 +1293,21 @@ public class CLexer implements Lexer {
    * the number of characters from the last newline up to the start of the 
    * matched text
    */
-  private int yycolumn;
+  @SuppressWarnings("unused")
+private int yycolumn;
 
   /** 
    * zzAtBOL == true <=> the scanner is currently at the beginning of a line
    */
-  private boolean zzAtBOL = true;
+  @SuppressWarnings("unused")
+private boolean zzAtBOL = true;
 
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
 
   /** denotes if the user-EOF-code has already been executed */
-  private boolean zzEOFDone;
+  @SuppressWarnings("unused")
+private boolean zzEOFDone;
 
   /* user code: */
     private int lastToken;

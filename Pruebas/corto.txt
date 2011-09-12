@@ -1,15 +1,14 @@
 class Program
 {
 
-	int valor ()
-{
-int a;
-a = 1;
+	void metodo()
+	{
+		int a;
+		int b;
+		int c;
+		ff= 3;
+		gg = false;
+		
+	}
 
 }
- 
-
-}
-
-
-

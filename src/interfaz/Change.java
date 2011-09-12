@@ -1,7 +1,6 @@
 package interfaz;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 public class Change{
@@ -11,7 +10,7 @@ public class Change{
   JTextField field;
   JScrollPane spane;
   public static void main(String[] args) {
-  Change v = new Change();
+  new Change();
   }
 
   public Change(){

@@ -30,6 +30,10 @@ import com.Ostermiller.Syntax.Lexer.*;
  * editor</a> that uses syntax highlighting.
  */
 public class HighlightedDocument extends DefaultStyledDocument {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2789061310185736547L;
 	public static final Object C_STYLE = CLexer.class;
 	public static final Object GRAYED_OUT_STYLE = new Object();
 
@@ -96,13 +100,15 @@ public class HighlightedDocument extends DefaultStyledDocument {
 		globalStyle = value;
 		colorAll();
 	}
-
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setHighlightStyle(Object value) {
 		if (value == HighlightedDocument.GRAYED_OUT_STYLE) {
 			setGlobalStyle(TokenStyles.getStyle("grayedOut"));
 			return;
 		}
 
+		
 		Class source = (Class) value;
 		Class[] parms = { Reader.class };
 		Object[] args = { documentReader };
