@@ -1,0 +1,8 @@
+class Program{
+
+	void main()
+	{
+		zzzz = ffff(wwww,fdsdsd);
+		aaa = holo(adf,cadf);
+	}
+}

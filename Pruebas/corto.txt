@@ -1,46 +1,29 @@
 class Program{
-
-	int tryout(){
-		int b;
-		int c;
-		int d;
-		int daad;
-		vvvv= 22332;
-		aaa = 22;
-
-		if (true == false)
-		{
-			int a;
-			vcads= 32232;
-		}
-
-		if (3 >= 3)
-		{
-			era= 3433;
-		}
-
-		if ( 2232 != 3343)
-		{
-			eer=3434;
-		} else
-		{
-			int a;
-			aaa=445;
-		}
-	
-
-		return 3;
+	int a;
+	boolean b[1];
+	char c;
+	struct s1{
+		int sa;
+		boolean sb[5];
+		char sc;
+	} vs2;
+	struct s2{
+		int s2a;
+		struct s1 prueba;
+	} prueba2;
+	struct s3{
+		int s3a;
 	}
 
-
-	void main()
-	{ 	
-		metodo(hola, como, estas);
-		miau();
-		if (!true == false)
-		{}
-		while (-5 != 4){}
-		return;
+	void metodo (int aa)
+	{
+	//	s1.sa = 32;
+		
+	}
+	
+	void main ()
+	{
+		return 'c'
 	}
 
 }

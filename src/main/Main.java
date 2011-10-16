@@ -528,7 +528,6 @@ public class Main implements GPMessageConstants
 	                        	 Tipo tipo = (Tipo)stack.pop();
 		                    	 tipo = tipo.crearArregloTipo(tipo.tipoPrimitivo);
 	                    		 stack.push(new Parametro(tipo,(String)stack.pop(),PasoMetodo.porValor));
-	                        	 
 	                            break;
 	                         case RuleConstants.RULE_BLOQUE_LBRACE_RBRACE:
 	                            //<bloque> ::= '{' <Kleene variable Declaracion> <Kleene statement> '}'
@@ -576,7 +575,12 @@ public class Main implements GPMessageConstants
 	                            break;
 	                         case RuleConstants.RULE_STATEMENT_SEMI3:
 	                            //<statement> ::= <Des expresion> ';'
-	                        	//!!! NO HACE NADA
+	                        	//!!! SOLO SE ENCARGA SI UNA EXPRESION LLEGA COMO DECLARACION
+	                        	 if (stack.peek().getClass() == Llamada.class)
+	                        	 {
+	                        		 Llamada llamadita = (Llamada)stack.pop();
+	                        		 stack.push(new LlamadaDeclaracion(llamadita.argumentos,llamadita.nombre));
+	                        	 }
 	                            break;
 	                         case RuleConstants.RULE_SELECCION_IF_LPARAN_RPARAN:
 	                            //<seleccion> ::= if '(' <expresion> ')' <bloque> <Des bloque>
@@ -605,13 +609,14 @@ public class Main implements GPMessageConstants
 	                         case RuleConstants.RULE_ASIGNACION_EQ:
 	                            //<asignacion> ::= <locacion> '=' <expresion>
 	                        	 stackPruebas(stack.clone(),"RULE_ASIGNACION_EQ I");
-	                        	 Literal indice = (Literal)expLo;
+	                        	/**Literal indice = (Literal)expLo;
 	                        	 Literal valor = (Literal)stack.peek();
 	                        	 if (indice != null)
 	                        	 {
 	                        	 System.out.println("Valor de indice = "+indice.valor);
 	                        	 }
 	                        	 System.out.println("Valor de valor  = "+valor.valor);
+	                        	 **/
 	                        	 if (expLo != null)
 	                        	 {
 	                        		 stack.push( new Asignacion((Expresion)stack.pop(),expLo,(String)stack.pop()));
@@ -698,7 +703,11 @@ public class Main implements GPMessageConstants
 	                            break;
 	                         case RuleConstants.RULE_CONDICIONALDES_AMPAMP:
 	                            //<Condicional Des> ::= '&&'
+	                        	 stackPruebas(stack.clone(), "RULE_CONDICIONALDES_AMPAMP I");
+	                        	 antesdeSigno = (Object) stack.pop();
 	                        	 stack.push(Const.TipoOperadorBinario.and);
+	                        	 stack.push(antesdeSigno);
+	                        	 stackPruebas(stack.clone(), "RULE_CONDICIONALDES_AMPAMP F");
 	                            break;
 	                         case RuleConstants.RULE_CONDICIONALDES_PIPEPIPE:
 	                            //<Condicional Des> ::= '||'
@@ -822,7 +831,24 @@ public class Main implements GPMessageConstants
 	                         case RuleConstants.RULE_LLAMADAMETODO_ID_LPARAN_RPARAN:
 	                            //<llamada metodo> ::= id '(' <arg Des> ')'
 	                        	 stackPruebas(stack.clone(), "RULE_LLAMADAMETODO_ID_LPARAN_RPARAN I");
+	                        	 if (stack.peek().getClass() == String.class)
 	                        	 stack.push(new Llamada((LinkedList<Argumento>)stack.pop(),(String)stack.pop()));
+	                        	 else
+	                        	 {
+	                        		 LinkedList<Argumento> arglistt = (LinkedList<Argumento>)stack.pop();
+	                        		 if (stack.peek().getClass() !=String.class)
+	                        		 {
+	                        		 LinkedList<Parametro> paramlistt = (LinkedList<Parametro>)stack.pop();
+	                        		 String nombredeArg = (String)stack.pop();
+	                        		 stack.push(paramlistt);
+	                        		 stack.push(new Llamada(arglistt,nombredeArg));
+	                        		 }
+	                        		 else
+	                        		 {
+	                        			 String nombredeArg = (String)stack.pop();
+		                        		 stack.push(new Llamada(arglistt,nombredeArg));
+	                        		 }
+	                        	 }
 	                        	 stackPruebas(stack.clone(), "RULE_LLAMADAMETODO_ID_LPARAN_RPARAN F");
 	                            break;
 	                         case RuleConstants.RULE_ARGDES:
@@ -839,7 +865,6 @@ public class Main implements GPMessageConstants
 	                        	 arg.add((Argumento)stack.pop());
 	                        	 stack.push(arg);
 	                        	 stackPruebas(stack.clone(), "RULE_MULTIPLESARGS F");
-	                         	                        	 
 	                            break;
 	                         case RuleConstants.RULE_MULTIPLESARGS_COMMA:
 	                            //<multiples args> ::= <multiples args> ',' <arg>
@@ -851,13 +876,17 @@ public class Main implements GPMessageConstants
 	                         case RuleConstants.RULE_ARG:
 	                            //<arg> ::= <expresion>
 	                        	 stackPruebas(stack.clone(), "RULE_ARG I");
+	                        	 if (stack.peek().getClass() == String.class)
+	                        	 {
+	                        		 Location local = new Location((String)stack.pop());
+	                        		 stack.push(local);
+	                        	 }
 	                        	 stack.push(new Argumento((Expresion)stack.pop(), Const.PasoMetodo.porValor));
 	                        	 stackPruebas(stack.clone(), "RULE_ARG F");
 	                            break;
 	                         case RuleConstants.RULE_LITERAL:
 	                            //<literal> ::= <int_literal>
 	                        	 //stackPruebas(stack.clone(),"<RULE_LITERAL>1");
-	                        	 
 	                        	 stack.push(new Literal(""+(Integer)stack.pop(),Const.TipoLiteral.integer));
 	                        	 //stackPruebas(stack.clone(),"<RULE_LITERAL>2");
 	                            break;

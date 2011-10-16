@@ -76,7 +76,7 @@ Comment Line  = '//'
 <seleccion>             ::= 'if' '(' <expresion> ')' <bloque> <Des bloque>
 <Des bloque>            ::= 'else' <bloque> |
 <iteracion>             ::= 'while' '(' <expresion> ')' <bloque>
-<retorno>               ::= 'return' <Des expresion>
+<retorno>               ::= 'retorno' <Des expresion>
 <asignacion>            ::= <locacion> '=' <expresion>
 <Des expresion>         ::= <expresion> |
 
