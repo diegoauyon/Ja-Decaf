@@ -1,4 +1,7 @@
 class Program{
-	int a;
 
+	void main()
+	{
+		hola(como, estas);
+	}
 }

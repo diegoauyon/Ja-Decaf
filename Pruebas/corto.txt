@@ -1,10 +1,46 @@
 class Program{
 
 	int tryout(){
-		while ( 2 > 3 ) 
+		int b;
+		int c;
+		int d;
+		int daad;
+		vvvv= 22332;
+		aaa = 22;
+
+		if (true == false)
 		{
-			a = 3;
+			int a;
+			vcads= 32232;
 		}
+
+		if (3 >= 3)
+		{
+			era= 3433;
+		}
+
+		if ( 2232 != 3343)
+		{
+			eer=3434;
+		} else
+		{
+			int a;
+			aaa=445;
+		}
+	
+
+		return 3;
+	}
+
+
+	void main()
+	{ 	
+		metodo(hola, como, estas);
+		miau();
+		if (!true == false)
+		{}
+		while (-5 != 4){}
+		return;
 	}
 
 }

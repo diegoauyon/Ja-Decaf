@@ -1,10 +1,8 @@
 class Program{
-	int a;
-	boolean b[1];
-	char c;
-
 	
-		vs2.sb[1] = true;
-		vs1[1].sa = 1;
+
+	void main()
+	{
+		locacion = 33;
 	}
 }

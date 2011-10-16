@@ -241,7 +241,8 @@ public class Main implements GPMessageConstants
     
     @SuppressWarnings("rawtypes")
 	private Stack stack = new Stack();
-    
+    @SuppressWarnings("rawtypes")
+	private Stack stackTokens = new Stack();
 
     /***************************************************************
  	 * This class will run the engine, and needs a file called config.dat
@@ -336,19 +337,19 @@ public class Main implements GPMessageConstants
 	                    {
 	                    	case SymbolConstants.SYMBOL_PROGRAM:
 	                    		padre.imprimir("TokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "   Text:  "+myTok.getData().toString()+"\n",2);
-	                    		stack.push(myTok.getText());
+	                    		stackTokens.push(myTok.getText());
 	                    		break;
 	                    	case SymbolConstants.SYMBOL_ID:
 	                    	case SymbolConstants.SYMBOL_TRUE:
 	                    	case SymbolConstants.SYMBOL_FALSE:
 	                    	case SymbolConstants.SYMBOL_CHARACTER:
 	                    		padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "   Text:  "+myTok.getData().toString()+"\n",2);
-	                    		stack.push(myTok.getData().toString());
+	                    		stackTokens.push(myTok.getData().toString());
 	                    		break;
 	                    	case SymbolConstants.SYMBOL_NUM:
 	                    		padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "   Text:  "+myTok.getData().toString()+"\n",2);
 	                    		int numero = Integer.parseInt(myTok.getData().toString());
-	                    		stack.push(numero);
+	                    		stackTokens.push(numero);
 	                    		break;
 	                    }
 
@@ -377,16 +378,16 @@ public class Main implements GPMessageConstants
 		                    	   }
 		                    	   stack.push(listaDeclaraciones);
 		                    	   stackPruebas((Stack)stack.clone(), "En el main");
-		                    	   stack.push(new Clase(new Cuerpo((LinkedList<Declaracion>)stack.pop()),(String)stack.pop()));
+		                    	   stack.push(new Clase(new Cuerpo((LinkedList<Declaracion>)stack.pop()),(String)stackTokens.pop()));
 	                            break;
 	                         case RuleConstants.RULE_DECLARACIONKLEENE:
 	                            //<Declaracion Kleene> ::= <Declaracion> <Declaracion Kleene>
-	                        	stackPruebas(stack.clone(), "RULE_DECLARACIONKLEENE I");
+	                        	stackPruebas(stack.clone(), "Declaracionk");
 	                 	   		LinkedList<Declaracion> listaVar1 = ((LinkedList<Declaracion>) stack.pop());
                 		   		Declaracion variable = (Declaracion)stack.pop();
                 		   		listaVar1.add(variable);
                 		   		stack.push(listaVar1);
-                		   		stackPruebas(stack.clone(), "RULE_DECLARACIONKLEENE F");
+                		   		stackPruebas(stack.clone(), "Declaracionk");
 	                        	 
 	                            break;
 	                         case RuleConstants.RULE_DECLARACIONKLEENE2:
@@ -409,13 +410,13 @@ public class Main implements GPMessageConstants
 	                            break;
 	                         case RuleConstants.RULE_VARIABLEDECLARACION_ID_SEMI:
 	                            //<variable Declaracion> ::= <Tipo> id <var Array Decision> ';'
-	                        	 stackPruebas(stack.clone(),"RULE_VARIABLEDECLARACION_ID_SEMI I");
+	                        	 stackPruebas(stack.clone(),"VarDeclarationID_SEMI");
 	                        	 if (stack.peek().getClass() == String.class)
 	                        	 {
 	                        		 nombreAsig = (String)stack.pop();
 	                        	 }
 	                        	 stack.push(new Variable(null,(Tipo)stack.pop(),(String) stack.pop()));
-	                        	 stackPruebas(stack.clone(),"RULE_VARIABLEDECLARACION_ID_SEMI F");
+	                        	 stackPruebas(stack.clone(),"VarDeclarationID_SEMI");
 	                            break;
 	                         case RuleConstants.RULE_VARARRAYDECISION_LBRACKET_NUM_RBRACKET:
 	                            //<var Array Decision> ::= '[' num ']'
@@ -444,7 +445,7 @@ public class Main implements GPMessageConstants
 	                            break;
 	                         case RuleConstants.RULE_STRUCTDECLARACION_STRUCT_ID_LBRACE_RBRACE:
 	                            //<struct Declaracion> ::= struct id '{' <Kleene variable Declaracion> '}'
-	                        	 stackPruebas(stack.clone(),"RULE_STRUCTDECLARACION_STRUCT_ID_LBRACE_RBRACE I");
+	                        	 stackPruebas(stack.clone(),"Creacion struct");
 	                        	 if (stack.peek().getClass() == String.class)
 	                        	 {
 	                        		String nombreVar = (String) stack.pop();
@@ -458,15 +459,15 @@ public class Main implements GPMessageConstants
 	                        	 {
 	                        	 stack.push(new Estructura((LinkedList<Variable>) stack.pop(),(String)stack.pop()));
 	                        	 }
-	                        	 stackPruebas(stack.clone(),"RULE_STRUCTDECLARACION_STRUCT_ID_LBRACE_RBRACE F");
+	                        	 stackPruebas(stack.clone(),"Creacion struct");
 	                            break;
 	                         case RuleConstants.RULE_KLEENEVARIABLEDECLARACION:
 	                            //<Kleene variable Declaracion> ::= <variable Declaracion> <Kleene variable Declaracion>
-	                        	 stackPruebas(stack.clone(),"RULE_KLEENEVARIABLEDECLARACION I");
+	                        	 stackPruebas(stack.clone(),"Variables antes if 1");
 	                        	 LinkedList<Variable> listaVar2 = (LinkedList<Variable>)stack.pop();
 	                        	 listaVar2.add((Variable)stack.pop());
 	                    	     stack.push(listaVar2);
-	                    	     stackPruebas(stack.clone(),"RULE_KLEENEVARIABLEDECLARACION F");
+	                    	     stackPruebas(stack.clone(),"Variables despues if 2");
 	                            break;
 	                         case RuleConstants.RULE_KLEENEVARIABLEDECLARACION2:
 	                            //<Kleene variable Declaracion> ::= 
@@ -532,7 +533,7 @@ public class Main implements GPMessageConstants
 	                            break;
 	                         case RuleConstants.RULE_BLOQUE_LBRACE_RBRACE:
 	                            //<bloque> ::= '{' <Kleene variable Declaracion> <Kleene statement> '}'
-	                        	 stackPruebas(stack.clone(),"RULE_BLOQUE_LBRACE_RBRACE I");
+	                        	 stackPruebas(stack.clone(),"EnBLoque1");
 	                        	 LinkedList<Declaracion> lista1 = (LinkedList<Declaracion>)stack.pop();
 		                    	   LinkedList<Declaracion> lista2 = (LinkedList<Declaracion>)stack.pop();
 		                    	   for (int i=0; i<lista2.size(); i++)
@@ -540,15 +541,15 @@ public class Main implements GPMessageConstants
 		                    		   lista1.add(lista2.get(i));
 		                    	   }	   
 		                    	   stack.push(new Cuerpo(lista1));
-	                        	 stackPruebas(stack.clone(),"RULE_BLOQUE_LBRACE_RBRACE F");
+	                        	 stackPruebas(stack.clone(),"EnBLoque2");
 	                            break;
 	                         case RuleConstants.RULE_KLEENESTATEMENT:
 	                            //<Kleene statement> ::= <statement> <Kleene statement>
-	                        	 stackPruebas(stack.clone(),"RULE_KLEENESTATEMENT I");
+	                        	 stackPruebas(stack.clone(),"Kleene statement1");
 	                        	 LinkedList<Declaracion> listaDec = (LinkedList<Declaracion>)stack.pop();
 	                        	 listaDec.add((Declaracion)stack.pop());
 	                    	     stack.push(listaDec);
-	                    	     stackPruebas(stack.clone(),"RULE_KLEENESTATEMENT F");
+	                    	     stackPruebas(stack.clone(),"Kleene statement2");
 	                            break;
 	                         case RuleConstants.RULE_KLEENESTATEMENT2:
 	                            //<Kleene statement> ::= 
@@ -584,15 +585,13 @@ public class Main implements GPMessageConstants
 	                            break;
 	                         case RuleConstants.RULE_DESBLOQUE_ELSE:
 	                            //<Des bloque> ::= else <bloque>
-	                        	 stackPruebas(stack.clone(),"RULE_DESBLOQUE_ELSE I");
+	                        	 stackPruebas(stack.clone(),"If con else");
 	                        	 stack.push(new If((Cuerpo)stack.pop(),(Cuerpo)stack.pop(),(Expresion)stack.pop()));
-	                        	 stackPruebas(stack.clone(),"RULE_DESBLOQUE_ELSE F");
 	                            break;
 	                         case RuleConstants.RULE_DESBLOQUE:
 	                            //<Des bloque> ::=
-	                        	 stackPruebas(stack.clone(),"RULE_DESBLOQUE I");
+	                        	 stackPruebas(stack.clone(),"If sin else");
 	                        	 stack.push(new If(null,(Cuerpo)stack.pop(),(Expresion)stack.pop()));
-	                        	 stackPruebas(stack.clone(),"RULE_DESBLOQUE F");
 	                            break;
 	                         case RuleConstants.RULE_ITERACION_WHILE_LPARAN_RPARAN:
 	                            //<iteracion> ::= while '(' <expresion> ')' <bloque>
@@ -604,7 +603,7 @@ public class Main implements GPMessageConstants
 	                            break;
 	                         case RuleConstants.RULE_ASIGNACION_EQ:
 	                            //<asignacion> ::= <locacion> '=' <expresion>
-	                        	 stackPruebas(stack.clone(),"RULE_ASIGNACION_EQ I");
+	                        	 stackPruebas(stack.clone(),"<asignacion 1");
 	                        	 Literal indice = (Literal)expLo;
 	                        	 Literal valor = (Literal)stack.peek();
 	                        	 if (indice != null)
@@ -619,44 +618,16 @@ public class Main implements GPMessageConstants
 	                        	 else
 	                        	 {
 	                        		 Expresion enAsignaEx = (Expresion)stack.pop();
-	                        		 if (stack.peek().getClass() != LinkedList.class)
-	                        		 {
-	                        		 stack.push( new Asignacion(enAsignaEx,null,(String)stack.pop()));
-	                        		 }
-	                        		 else
-	                        		 {
-	                        			 LinkedList le = (LinkedList)stack.pop();
-	                        			 stackPruebas(stack.clone(),"RULE_ASIGNACION_EQ EN COSO");
-	                        			 if (stack.peek().getClass() == String.class)
-	                        			 {
-		                        			 Asignacion asi = new Asignacion(enAsignaEx,null,(String)stack.pop());
-		                        			 stack.push(le );
-		                        			 stack.push(asi);
-	                        			 }
-	                        			 else
-	                        			 {
-	                        				 if (nombreAsig == null|| nombreAsig.isEmpty()  || nombreAsig.contentEquals("")	)
-	                        				 {
-	                        					 done = true;
-	                        					 huboErrores= true;
-	                        				 }
-	                        				 Asignacion asi = new Asignacion(enAsignaEx,null,nombreAsig);
-	                        				 nombreAsig = null;
-	                        				 stack.push(le );
-		                        			 stack.push(asi);
-	                        			 }
-	                        			 
-	                        			 
-	                        		 }
+	                        		 //if (stack.peek().getClass())
+	                        		 stack.push( new Asignacion((Expresion)stack.pop(),null,(String)stack.pop()));
 	                        	 }
-	                        	 stackPruebas(stack.clone(),"RULE_ASIGNACION_EQ F");
+	                        	 stackPruebas(stack.clone(),"<asignacion 2");
 	                            break;
 	                         case RuleConstants.RULE_DESEXPRESION:
 	                            //<Des expresion> ::= <expresion>
 	                            break;
 	                         case RuleConstants.RULE_DESEXPRESION2:
 	                            //<Des expresion> ::= 
-	                        	 stack.push(null);
 	                            break;
 	                         case RuleConstants.RULE_EXPRESION:
 	                            //<expresion> ::= <Relacion Exp> <Condicional Des> <expresion>
@@ -728,7 +699,6 @@ public class Main implements GPMessageConstants
 	                            //<Relacion Des> ::= '>='
 	                        	 antesdeSigno = (Object) stack.pop();
 	                        	 stack.push(Const.TipoOperadorBinario.mayorIgual);
-	                        	 stack.push(antesdeSigno);
 	                            break;
 	                         case RuleConstants.RULE_RELACIONDES_EQEQ:
 	                            //<Relacion Des> ::= '=='
@@ -780,7 +750,7 @@ public class Main implements GPMessageConstants
 	                            break;
 	                         case RuleConstants.RULE_LOCACION_DOT:
 	                            //<locacion> ::= <locacion Array Des> '.' <locacion>
-	                        	  stackPruebas(stack.clone(), "RULE_LOCATION_DOT I");
+	                        	  stackPruebas(stack.clone(), "RULE_LOCATION_DOT1");
 		                    	   String id = (String)stack.pop();
 		                    	   LinkedList<Variable> lk = null;
 		                    	   if (stack.peek().getClass() == LinkedList.class)
@@ -804,55 +774,35 @@ public class Main implements GPMessageConstants
 		                    	   {
 		                    	   stack.push(id+"."+(String)stack.pop());
 		                    	   }
-		                    	  stackPruebas(stack.clone(), "RULE_LOCATION_DOT F");
+		                    	  stackPruebas(stack.clone(), "RULE_LOCATION_DOT2");
 	                            break;
 	                         case RuleConstants.RULE_LOCACION:
 	                            //<locacion> ::= <locacion Array Des>
 	                            break;
 	                         case RuleConstants.RULE_LOCACIONARRAYDES_ID_LBRACKET_RBRACKET:
 	                            //<locacion Array Des> ::= id '[' <expresion> ']'
-	                        	 stackPruebas(stack.clone(), "RULE_LOCACIONARRAYDES_ID_LBRACKET_RBRACKET I");
 	                        	 expLo = (Expresion)stack.pop();
-	                        	 stackPruebas(stack.clone(), "RULE_LOCACIONARRAYDES_ID_LBRACKET_RBRACKET F");
 	                            break;
 	                         case RuleConstants.RULE_LOCACIONARRAYDES_ID:
 	                            //<locacion Array Des> ::= id
-	                        	 //!!! NO HACE NADA
 	                            break;
 	                         case RuleConstants.RULE_LLAMADAMETODO_ID_LPARAN_RPARAN:
 	                            //<llamada metodo> ::= id '(' <arg Des> ')'
-	                        	 stackPruebas(stack.clone(), "RULE_LLAMADAMETODO_ID_LPARAN_RPARAN I");
-	                        	 stack.push(new Llamada((LinkedList<Argumento>)stack.pop(),(String)stack.pop()));
-	                        	 stackPruebas(stack.clone(), "RULE_LLAMADAMETODO_ID_LPARAN_RPARAN F");
 	                            break;
 	                         case RuleConstants.RULE_ARGDES:
 	                            //<arg Des> ::= <multiples args>
 	                            break;
 	                         case RuleConstants.RULE_ARGDES2:
 	                            //<arg Des> ::= 
-	                        	 stack.push(new LinkedList<Parametro>());
 	                            break;
 	                         case RuleConstants.RULE_MULTIPLESARGS:
 	                            //<multiples args> ::= <arg>
-	                        	 stackPruebas(stack.clone(), "RULE_MULTIPLESARGS I");
-	                        	 LinkedList<Argumento> arg = new LinkedList<Argumento>();
-	                        	 arg.add((Argumento)stack.pop());
-	                        	 stack.push(arg);
-	                        	 stackPruebas(stack.clone(), "RULE_MULTIPLESARGS F");
-	                         	                        	 
 	                            break;
 	                         case RuleConstants.RULE_MULTIPLESARGS_COMMA:
 	                            //<multiples args> ::= <multiples args> ',' <arg>
-	                        	 stackPruebas(stack.clone(), "RULE_MULTIPLESARGS_COMMA I");
-	                        	 Argumento argu = (Argumento)stack.pop();
-	                        	 ((LinkedList<Argumento>)stack.peek()).add(argu);
-	                        	 stackPruebas(stack.clone(), "RULE_MULTIPLESARGS_COMMA F");
 	                            break;
 	                         case RuleConstants.RULE_ARG:
 	                            //<arg> ::= <expresion>
-	                        	 stackPruebas(stack.clone(), "RULE_ARG I");
-	                        	 stack.push(new Argumento((Expresion)stack.pop(), Const.PasoMetodo.porValor));
-	                        	 stackPruebas(stack.clone(), "RULE_ARG F");
 	                            break;
 	                         case RuleConstants.RULE_LITERAL:
 	                            //<literal> ::= <int_literal>
@@ -867,9 +817,7 @@ public class Main implements GPMessageConstants
 	                            break;
 	                         case RuleConstants.RULE_LITERAL3:
 	                            //<literal> ::= <bool_literal>
-	                        	 stackPruebas(stack.clone(), "RULE_LITERAL3 I");
 	                        	 stack.push(new Literal((String)stack.pop(),Const.TipoLiteral.bool));
-	                        	 stackPruebas(stack.clone(), "RULE_LITERAL3 F");
 	                            break;
 	                         case RuleConstants.RULE_INT_LITERAL_NUM:
 	                            //<int_literal> ::= num
@@ -1040,7 +988,14 @@ public class Main implements GPMessageConstants
     	{
     		System.out.println("Stack: "+stack1.pop());
     	}
-    	System.out.println("-------------------------------------------------------------------------");
+    	System.out.println("######################################################");
+    	@SuppressWarnings("rawtypes")
+		Stack stacktok = (Stack)stackTokens.clone();
+    	while (stacktok.size()>0)
+    	{
+    		System.out.println("StackTok: "+stacktok.pop());
+    	}
+    	System.out.println("--------------------------------");
     }
     
     
