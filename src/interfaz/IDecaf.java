@@ -63,9 +63,7 @@ public class IDecaf extends javax.swing.JFrame
     // Constantes
     // -----------------------------------------------------------------
 	
-//	protected UndoAction undoAction;
- //   protected RedoAction redoAction;
- //   protected UndoManager undo = new UndoManager();
+
 	
     // -----------------------------------------------------------------
     // Atributos

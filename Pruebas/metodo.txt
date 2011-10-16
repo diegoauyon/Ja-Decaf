@@ -1,0 +1,6 @@
+class Program {
+
+	 void main (int a, char c, int b, int j){}
+
+}
+

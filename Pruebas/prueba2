@@ -1,0 +1,24 @@
+class Program{
+	int a;
+	boolean b[1];
+	char c;
+	struct s3{
+		int s3a;
+	}
+	struct s1{
+		int sa;
+		boolean sb[5];
+		char sc;
+		struct s3 prueba3;
+	} vs2;
+	struct s2{
+		int s2a;
+		struct s1 prueba;
+	} prueba2;
+	int d;
+	struct s1 vs1;
+	struct s1 array[3];
+
+
+
+}

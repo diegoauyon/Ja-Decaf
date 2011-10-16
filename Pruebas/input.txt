@@ -2,6 +2,9 @@ class Program{
 	int a;
 	boolean b[1];
 	char c;
+	struct s3{
+		int s3a;
+	}
 	struct s1{
 		int sa;
 		boolean sb[5];
@@ -12,9 +15,6 @@ class Program{
 		int s2a;
 		struct s1 prueba;
 	} prueba2;
-	struct s3{
-		int s3a;
-	}
 	int d;
 	struct s1 vs1;
 	struct s1 array[3];
@@ -39,11 +39,8 @@ class Program{
 		}else{
 			return false;
 		}
-		while(1>2){
-			methodc = 'c';
-		}
-		return true;
 	}
 	void main (){
 	}
+
 }

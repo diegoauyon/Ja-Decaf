@@ -1,0 +1,130 @@
+"Name"     = 'DECAF grammar'
+"Author"   = 'MARTIN GUZMAN'
+"Version"  = 'Version 1.0'
+"About"    = 'Similar to the grammar of C'
+
+"Start Symbol" = <Program>
+
+! -----------------------------------------------------------------------------
+! Terminals
+! -----------------------------------------------------------------------------
+id    = {Letter}({AlphaNumeric}|'_')*
+
+num   = {Digit}{Digit}*
+
+character  = ''{AlphaNumeric}''
+
+Comment Start = '/*'
+Comment End   = '*/'
+Comment Line  = '//'
+
+! -----------------------------------------------------------------------------
+! Rules - Productions
+! -----------------------------------------------------------------------------
+
+! #############################################################################
+! Some transformations needed:
+! - Kleene Closure:     (<a>)* -> <kleene_a> ::= <a> <kleene_a> |
+! - Optional:           (<a>)? -> <opt_a> ::= <a> |
+! - Separated by ","    (<a>)*, -> (<a> (',' <a>)* )? ->
+!                               <opt_a_sep> ::= <a list> |
+!                               <a list>   ::= <a> | <a list> ',' <a>
+! #############################################################################
+
+<Program>               ::= 'class' 'Program' '{' <kleene_declaration> '}'
+
+<kleene_declaration>    ::= <declaration> <kleene_declaration> |
+
+<declaration>           ::= <structDeclaration> | <varDeclaration> | <methodDeclaration>
+
+<varDeclaration>        ::= <Type> id <varDecl 1> ';'
+
+<varDecl 1>             ::= '[' num ']' |
+
+<structDeclaration>     ::= 'struct' id '{' <kleene_varDeclaration> '}'
+
+<kleene_varDeclaration> ::= <varDeclaration> <kleene_varDeclaration> |
+
+<methodDeclaration>     ::= <Type> id '(' <opt_parameter> ')' <block>
+
+<opt_parameter>         ::= <parameter list> |
+
+<parameter list>        ::= <parameter> | <parameter list> ',' <parameter>
+
+<Type>               ::= 'int' | 'char' | 'boolean' | 'void' | 'struct' id | <structDeclaration>
+!<varType>               ::= <methodType> | 'struct' id | <structDeclaration>
+!<methodType>            ::= 'int' | 'char' | 'boolean' | 'void'
+!<parameterType>         ::= 'int' | 'char' | 'boolean'
+
+<parameter>             ::= <Type> id | <Type> id '[' ']'
+
+<block>                 ::= '{' <kleene_varDeclaration> <kleene_statement> '}'
+
+<kleene_statement>      ::= <statement> <kleene_statement> |
+
+!##############################################################################
+<statement>             ::= <block>
+                        | <selection>
+                        | <iteration>
+                        | <return> ';'
+                        | <assign> ';' ! I added the ';' because it makes sense
+                        | <opt_expression> ';'
+! <methodCall> ',' was ignored because one can be a <expression> <statement>, which in turn can be <methodCall>
+
+<selection>             ::= 'if' '(' <expression> ')' <block> <opt_else_block>
+
+<opt_else_block>        ::= 'else' <block> |
+
+<iteration>             ::= 'while' '(' <expression> ')' <block>
+
+<return>                ::= 'return' <opt_expression>
+
+<assign>                ::= <location> '=' <expression>
+
+<opt_expression>        ::= <expression> |
+
+!##############################################################################
+<expression>            ::= <Rel Exp> <conditionalop> <expression> | <Rel Exp>
+
+<Rel Exp>               ::= <Add Exp> <relop> <Rel Exp> | <Add Exp> 
+
+<Add Exp>               ::= <Mult Exp> <addop> <Add Exp> | <Mult Exp> 
+
+<Mult Exp>              ::= <Negate Exp> <mulop> <Mult Exp> | <Negate Exp>
+
+<Negate Exp>            ::= '-' <Value> | '!' <Value> | <Value>
+
+<conditionalop>         ::= '&&' | '||'
+
+<relop>                 ::= '<=' | '<' | '>' | '>=' | '==' | '!='
+
+<addop>                 ::= '+' | '-'
+
+<mulop>                 ::= '*' | '/' | '%'
+
+<Value>                 ::= <literal> | '(' <expression> ')' | <methodCall> | <location>
+!##############################################################################
+
+!<location>             ::= <location_part_1> <opt_location_part_2>
+!<location_part_1>      ::= id '[' <expression> ']' | id
+!<opt_location_part_2>  ::= '.' <location> |
+
+<location>              ::= <simpleLocation>'.'<location> | <simpleLocation>
+
+<simpleLocation>        ::= id '[' <expression> ']' | id
+
+<methodCall>            ::= id '(' <opt_arg_separated> ')'
+
+<opt_arg_separated>     ::= <arg list> |
+
+<arg list>              ::= <arg> | <arg list> ',' <arg>
+
+<arg>                   ::= <expression>
+
+<literal>               ::= <int_literal> | <char_literal> | <bool_literal>
+
+<int_literal>           ::= num
+
+<char_literal>          ::= character
+
+<bool_literal>          ::= 'true' | 'false'

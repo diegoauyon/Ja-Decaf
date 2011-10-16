@@ -37,19 +37,17 @@ import java.util.*;
  *
  *-------------------------------------------------------------------------------------------<br>
  */
-@SuppressWarnings({"unused","unchecked"})
 public class SimpleDatabase implements EntryContentConstants
 {
     private File database = null;
     private boolean bFileOpen = false;
-	private int fileNumber = 0;
+    private int fileNumber = 0;
     private BufferedInputStream buff = null;
     private String fileType = "";
     private final int RecordContentMulti = 77;
 
     private int entryReadPosition = 0;
-    @SuppressWarnings("rawtypes")
-	private Vector entryList = null;
+    private Vector entryList = null;
 
     /***************************************************************
      *
@@ -523,8 +521,7 @@ public class SimpleDatabase implements EntryContentConstants
      *
      * This method will reset all the currently read fields.
      ***************************************************************/
-    @SuppressWarnings("rawtypes")
-	public void clear()
+    public void clear()
     {
         entryReadPosition = 0;
         entryList = new Vector();

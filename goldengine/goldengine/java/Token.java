@@ -33,9 +33,16 @@ package goldengine.java;
 public class Token
 {
     private int pState;
-	private Object pData;
-	private Symbol pParentSymbol;
+    private Object pData;
+    private Symbol pParentSymbol;
+    private int lineNumber;
 
+    public void setLineNumber(int lineNumber){
+        this.lineNumber = lineNumber;
+    }
+    public int getLineNumber(){
+        return this.lineNumber;
+    }
     /***************************************************************
  	 *
  	 * Token

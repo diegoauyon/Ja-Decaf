@@ -1,11 +1,10 @@
-class Program
-{
+class Program{
 
-	void metodo(int a)
-	{
-		while (a > 1)
-{
-}
+	int tryout(){
+		while ( 2 > 3 ) 
+		{
+			a = 3;
+		}
 	}
 
 }

@@ -3,16 +3,12 @@
 "Version"  = 'Version 1.0'
 "About"    = 'Decaf'
 "Start Symbol" = <Program>
-"Case Sensitive" = True
+
+! "Case Sensitive" = True
 
 !------------------------------------------------------------------!
 !Lexer rules!
 !------------------------------------------------------------------!
-
-!{IDComienza} = {Letter} + [_]
-!{IDTermina} = {Alphanumeric} + [_]
-
-!id = {IDComienza}{IDTermina}*
 
 id = {Letter}{Alphanumeric}*
 
@@ -24,7 +20,6 @@ character  = ''{AlphaNumeric}''
 
 Comment Start = '/*'
 Comment End   = '*/'
-
 Comment Line  = '//'
 
 !------------------------------------------------------------------
@@ -36,36 +31,46 @@ Comment Line  = '//'
 <declarationK>          ::= <declaration> <declarationK> |
 <declaration>           ::= <structDeclaration> | <varDeclaration> | <methodDeclaration>
 
-<varDeclaration>        ::= <varmethodType> id <varDeclaration1>';'
+<varDeclaration>        ::= <Type> id <varDeclaration1>';'
 <varDeclaration1>       ::= '[' num ']' |
 
 <structDeclaration>     ::= 'struct' id '{' <varDeclarationK> '}'
-<varDeclarationK>       ::= <varDeclaration> <varDeclarationK> | <varDeclaration> |
+<varDeclarationK>       ::= <varDeclaration> <varDeclarationK> |
 
-<varmethodType>               ::= 'int' | 'char' | 'boolean' | 'void' | 'struct' id | <structDeclaration>
 
-<methodDeclaration>     ::= <varmethodType> id '(' <parameter1> ')' <block>
+
+<methodDeclaration>     ::= <Type> id '(' <parameter1> ')' <block>
 
 !<methodType>            ::= 'int' | 'char' | 'boolean' | 'void' Comentada por conflicto reduccion-reduccion... se juntan estos dos tipos
+!<parameterType>         ::= 'int' | 'char' | 'boolean'
+!<varmethodType>         ::= 'int' | 'char' | 'boolean' | 'void' | 'struct' id | <structDeclaration>
+
+<Type>                   ::= 'int' | 'char' | 'boolean' | 'void' | 'struct' id | <structDeclaration>
 
 !methodType ID '(' (parameter (',' parameter)*)*   ')'  block; Basado en gramática hecha en ANTLR
 
 <parameter1>            ::= <parameter2> |                             !Kleene afuera (parameter (p2)*)*
 <parameter2>            ::= <parameter> | <parameter2> ',' <parameter> !Kleene adentro (',' parameter)*
 
-<parameter>             ::= <parameterType> id | <parameterType> id '[' ']'
+<parameter>             ::= <Type> id | <Type> id '[' ']'
 
-<parameterType>         ::= 'int' | 'char' | 'boolean'
+
 
 <block>                 ::= '{' <varDeclarationK> <statementK> '}'
 <statementK>            ::= <statement> <statementK> |
 
 <statement>             ::= <block>
-                        | 'if' '(' <expression> ')' <block> <blockL>
-                        | 'while' '(' <expression> ')' <block>
-                        | 'return' <expressionL> ';'
-                        |  <location> '=' <expression> 
+                        | <seleccion>
+                        | <iteracion>
+                        | <retorno> ';'
+                        | <asignacion> ';'
                         | <expressionL> ';'
+                        
+<seleccion>             ::= 'if' '(' <expression> ')' <block> <blockL>
+<iteracion>				::= 'while' '(' <expression> ')' <block>
+<retorno>				::= 'return' <expressionL> ';'
+<asignacion>				::= <location> '=' <expression> 
+                        
 <blockL>                ::= 'else' <block> |
 <expressionL>           ::= <expression> |
 
@@ -91,20 +96,17 @@ Comment Line  = '//'
 
 <cond_op>               ::= '&&' | '||'
 
-<rel_op>                ::= '<=' | '<' | '>' | '>=' | <eq_op>
-
-<eq_op>                 ::= '==' | '!='
+<rel_op>                ::= '<=' | '<' | '>' | '>=' | '==' | '!='
 
 <suma_op>               ::= '+' | '-'
 
 <mul_op>                ::= '*' | '/' | '%'
 
-<val>                   ::= <location> | <methodCall> | <literal> | '(' <expression> ')' ! Las opciones '-' '!' son tomadas en cuenta en negadorExp
+<val>                   ::= <methodCall> | <literal> | '(' <expression> ')' | <location> ! Las opciones '-' '!' son tomadas en cuenta en negadorExp
                                                                                        ! La relacion <op> es sustituida por la regla de precedencia
 
-<location>              ::= <location1> | <location1>'.'<location>
-<location1>             ::= id  <location2>
-<location2>             ::= '[' <expression> ']'|
+<location>              ::=  <location1>'.'<location> | <location1>
+<location1>             ::= id '[' <expression> ']'| id
 
 
 <methodCall>            ::= id '(' <arg1> ')'

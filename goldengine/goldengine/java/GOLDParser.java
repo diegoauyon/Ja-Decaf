@@ -1,5 +1,6 @@
 package goldengine.java;
 
+import java.io.*;
 import java.util.*;
 
 /*
@@ -34,7 +35,6 @@ import java.util.*;
  *
  *-------------------------------------------------------------------------------------------<br>
  */
-@SuppressWarnings({"unused","rawtypes", "unchecked"})
 public class GOLDParser implements GPMessageConstants,
 								   SymbolTypeConstants,
                                    ActionConstants,
@@ -44,8 +44,7 @@ public class GOLDParser implements GPMessageConstants,
     private final String fileHeader = "GOLD Parser Tables/v1.0";
 
     //================================== Public Properties
-
-	private boolean pSimplifyReductions;        //Automatically
+    private boolean pSimplifyReductions;        //Automatically
     private final int gpReportModeAll = 1001;
     private final int gpReportReductionsOnly = 1002;
 

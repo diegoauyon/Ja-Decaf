@@ -33,12 +33,7 @@ package goldengine.java;
  */
 public class ParserException extends Exception
 {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 3355434196396122829L;
-
-	/***************************************************************
+    /***************************************************************
  	 *
  	 * ParserException
  	 *

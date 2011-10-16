@@ -82,10 +82,10 @@ public class VariableList
  	 *
  	 * This method will set the name of each variable to "".
  	 ***************************************************************/
-    @SuppressWarnings("rawtypes")
-	public void clearValues()
+    public void clearValues()
     {
-        Enumeration enumA = memberList.elements();
+        @SuppressWarnings("rawtypes")
+		Enumeration enumA = memberList.elements();
         while(enumA.hasMoreElements())
         {
             VariableType varType = (VariableType)enumA.nextElement();

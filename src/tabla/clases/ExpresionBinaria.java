@@ -8,7 +8,7 @@ public class ExpresionBinaria extends Expresion
 	public Expresion izquierda = null;
 	public int operador = Const.TipoOperadorBinario.none;
 
-	public ExpresionBinaria(Expresion derecha, Expresion izquierda, int operador)
+	public ExpresionBinaria(Expresion derecha, int operador,Expresion izquierda )
 	{
 		this.derecha = derecha; this.izquierda = izquierda; this.operador = operador;
 	}

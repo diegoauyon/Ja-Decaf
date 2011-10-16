@@ -1,0 +1,127 @@
+﻿"Name"     = 'DECAF'
+"Author"   = 'Diego Auyón'
+"Version"  = 'Version 2.0'
+"About"    = 'Decaf'
+"Start Symbol" = <Program>
+
+! "Case Sensitive" = True
+
+! -----------------------------------------------------------------------------
+! Lexer Rules
+! -----------------------------------------------------------------------------
+id    = {Letter}({AlphaNumeric}|'_')*
+
+num   = {Digit}{Digit}*
+
+character  = ''{AlphaNumeric}''
+
+    !Comentarios
+
+Comment Start = '/*'
+Comment End   = '*/'
+Comment Line  = '//'
+
+! -----------------------------------------------------------------------------
+! Parser / Productions Rules
+! Des: Desicion
+! -----------------------------------------------------------------------------
+
+<Program>               ::= 'class' 'Program' '{' <Declaracion Kleene> '}'
+
+<Declaracion Kleene>    ::= <Declaracion> <Declaracion Kleene> |
+
+<Declaracion>           ::= <struct Declaracion> | <variable Declaracion> | <metodo Declaracion>
+
+<variable Declaracion>        ::= <Tipo> id <var Array Decision> ';'
+
+<var Array Decision>             ::= '[' num ']' |
+
+<struct Declaracion>     ::= 'struct' id '{' <Kleene variable Declaracion> '}'
+
+<Kleene variable Declaracion> ::= <variable Declaracion> <Kleene variable Declaracion> |
+
+<metodo Declaracion>     ::= <Tipo> id '(' <Des parametro> ')' <bloque>
+
+<Des parametro>         ::= <multiple parametros> |
+<multiple parametros>   ::= <parametro> | <multiple parametros> ',' <parametro>
+
+
+!???????????????????????????????????????????????????????????????????????????????
+!<methodTipo>            ::= 'int' | 'char' | 'boolean' | 'void' Comentada por conflicto reduccion-reduccion... se juntan estos dos tipos
+!<parametroTipo>         ::= 'int' | 'char' | 'boolean'
+!<varmethodTipo>         ::= 'int' | 'char' | 'boolean' | 'void' | 'struct' id | <structDeclaration>
+!???????????????????????????????????????????????????????????????????????????????
+
+<Tipo>               ::= 'int' | 'char' | 'boolean' | 'void' | 'struct' id | <struct Declaracion>
+
+!methodType ID '(' (parameter (',' parameter)*)*   ')'  block; Basado en gramática hecha en ANTLR
+
+<parametro>             ::= <Tipo> id | <Tipo> id '[' ']'
+
+<bloque>                 ::= '{' <Kleene variable Declaracion> <Kleene statement> '}'
+
+! statement lo dejé en ingles porque no sabía como traducirlo sin confundirme 
+
+<Kleene statement>      ::= <statement> <Kleene statement> |
+
+!------------------------------------------------------------------!
+
+<statement>             ::= <bloque>
+                        | <seleccion>
+                        | <iteracion>
+                        | <retorno> ';'
+                        | <asignacion> ';' 
+                        | <Des expresion> ';'
+                        
+<seleccion>             ::= 'if' '(' <expresion> ')' <bloque> <Des bloque>
+<Des bloque>            ::= 'else' <bloque> |
+<iteracion>             ::= 'while' '(' <expresion> ')' <bloque>
+<retorno>               ::= 'retorno' <Des expresion>
+<asignacion>            ::= <locacion> '=' <expresion>
+<Des expresion>         ::= <expresion> |
+
+!Muchos cambios se basan en: http://www.devincook.com/goldparser/doc/grammars/index.htm y
+! http://www.devincook.com/goldparser/doc/engine-pseudo/trim-reductions.htm
+! La relación de precedencia es de abajo para arriba, entre más abajo, mas "importancia"
+! tiene.
+
+! Para entender también se puede ver de izquierda a derecha. El de lado hasta la izquierda tiene mas
+! procedencia si hablamos solo de una regla.
+
+<expresion>            ::= <Relacion Exp> <Condicional Des> <expresion> | <Relacion Exp>
+
+<Relacion Exp>         ::= <suma Exp> <Relacion Des> <Relacion Exp> | <suma Exp> 
+
+<suma Exp>             ::= <Multi Exp> <suma Des> <suma Exp> | <Multi Exp> 
+
+<Multi Exp>            ::= <Negacion Exp> <multi Des> <Multi Exp> | <Negacion Exp>
+
+<Negacion Exp>         ::= '-' <Valor> | '!' <Valor> | <Valor>
+
+<Condicional Des>      ::= '&&' | '||'
+
+<Relacion Des>         ::= '<=' | '<' | '>' | '>=' | '==' | '!='
+
+<suma Des>             ::= '+' | '-'
+
+<multi Des>            ::= '*' | '/' | '%'
+
+<Valor>                ::= <literal> | '(' <expresion> ')' | <llamada metodo> | <locacion>
+
+
+<locacion>             ::= <locacion Array Des>'.'<locacion> | <locacion Array Des>
+<locacion Array Des>   ::= id '[' <expresion> ']' | id
+
+<llamada metodo>       ::= id '(' <arg Des> ')'
+<arg Des>              ::= <multiples args> |
+<multiples args>       ::= <arg> | <multiples args> ',' <arg>
+
+<arg>                   ::= <expresion>
+
+<literal>               ::= <int_literal> | <char_literal> | <bool_literal>
+
+<int_literal>           ::= num
+
+<char_literal>          ::= character
+
+<bool_literal>          ::= 'true' | 'false'

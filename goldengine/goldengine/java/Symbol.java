@@ -34,10 +34,8 @@ package goldengine.java;
 public class Symbol implements SymbolTypeConstants
 {
     private String pName;
-	@SuppressWarnings("unused")
 	private String pPattern;
     private int pKind;
-	@SuppressWarnings("unused")
 	private boolean pVariableLength;
     private int pTableIndex;
     private final String kQuotedChars = "|-+*?()[]{}<>!";
