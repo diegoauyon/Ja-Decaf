@@ -38,6 +38,10 @@ import tabla.clases.*;
 import interfaz.IDecaf;
 import goldengine.java.*;
 
+import org.jdom.Comment;
+
+
+
 import java.util.LinkedList;
 
 
@@ -233,6 +237,7 @@ public class Main implements GPMessageConstants
     private IDecaf padre;
     private String textToParse = "";
     private boolean error = true;
+    private boolean comentarios=false;
     
     private TablaSimbolos tablaSimbolos = new TablaSimbolos();
     private MetodoTabla tablaMetodos = new MetodoTabla();
@@ -241,6 +246,10 @@ public class Main implements GPMessageConstants
     private String tipoRetorno = "";
     private boolean methodAmbit = false;
     private LinkedList<IGeneracionCodigo> codigoX = new LinkedList<IGeneracionCodigo>();
+    
+    //------------------------------------------------
+    
+    private LinkedList<org.jdom.Content> elementos = new LinkedList<org.jdom.Content>();
 
     
     public Main(){}
@@ -277,19 +286,26 @@ public class Main implements GPMessageConstants
                 //resetear para obtener hijo
                 this.ambitoActual.resetearAHijo();
 
-
-                codigoX.add(new Comentario("*******************************************"));
+                //Element varGlobales = new Element("VariablesGlobales");
+                elementos.add(new Comment("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
+                codigoX.add(new Comentario("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
+                
                 codigoX.add(new Comentario("               Ámbito global"));
+                elementos.add(new Comment("Ambito Global"));
                 for(tabla.Simbolo a : this.darTablaSimbolos().darTodosSimbolosGlobales(ambitoActual)){
                     String [] b = GenCodigo.darDesplazamiento(a,this,this.ambitoActual);
                     codigoX.add(new Comentario(a.darId()+" = "+b[0]+"["+b[1]+"]"));
+                    elementos.add(new Comment(a.darId()+" = "+b[0]+"["+b[1]+"]"));
                 }
-                codigoX.add(new Comentario("*******************************************\n\n"));
+                codigoX.add(new Comentario("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n"));
+                elementos.add(new Comment("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
 
                 padre.imprimir("\n--------------------------------------------\n", 2);
                 
                 //generación de código intermedio
+                //elementos.add(varGlobales);
                 generarCodigo(parser.currentReduction(),0);
+                new GenXml(elementos);
                 
                 for(String a : darCodigoString()){
 
@@ -1632,9 +1648,10 @@ public void parsea(){
                 padre.imprimir("Método: "+met.darFirmaMetodo()+" - Ambito: "+ambito_metodo.darNombre(),2);
 
 
-                GenCodigo method_code = new GenCodigo(met, ambito_metodo, methodDeclaration,this);
-                method_code.generar();
-                this.codigoX.addAll(method_code.darCodigo());
+                GenCodigo codigoMetodo = new GenCodigo(met, ambito_metodo, methodDeclaration,this);
+                codigoMetodo.generar();
+                this.codigoX.addAll(codigoMetodo.darCodigo());
+                this.elementos.addAll(codigoMetodo.darElementos());
 
                 retorno++;
                 break;
@@ -1649,6 +1666,20 @@ public void parsea(){
     public LinkedList<String> darCodigoString(){
         LinkedList<String> retorno = new LinkedList<String>();
         for(IGeneracionCodigo a : this.codigoX){
+        	if (a instanceof Comentario | a.getClass() == Comentario.class)
+        	{
+        		if (comentarios == true)
+        		{
+        			
+        			retorno.add(a.darCodigo()+"");
+        			continue;
+        		}
+        		else
+        		{
+        			continue;
+        		}
+        			
+        	}
             retorno.add(a.darCodigo()+"");
         }
         return retorno;

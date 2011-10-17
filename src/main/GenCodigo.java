@@ -18,6 +18,9 @@ import java.util.LinkedList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import org.jdom.Comment;
+import org.jdom.Element;
+
 
 public class GenCodigo {
 
@@ -34,6 +37,9 @@ public class GenCodigo {
     private int inicio_dir_temp = 0;
     private int numEtiqueta = 0;
     private int numTemp = 1;
+    
+    private LinkedList<org.jdom.Content> elementos = new LinkedList<org.jdom.Content>();
+    Element op,elePlano,cond,salto,retorno,asignacion,llamada,param;
 
     public GenCodigo(Metodo met, Verificador verificador, Reduction red, Main parser){
 
@@ -49,6 +55,12 @@ public class GenCodigo {
     public LinkedList<IGeneracionCodigo> darCodigo(){
         return this.codigo;
     }
+    
+    public LinkedList<org.jdom.Content> darElementos()
+    {
+    
+    	return this.elementos;
+    }
 
     public String nuevaEtiqueta(){
         //E_main|0_1
@@ -57,7 +69,7 @@ public class GenCodigo {
 
     public String darFinalEtiqueta(){
         //E__main|0__$
-        return "L_"+this.metodo.darSubNombre()+"_$";
+        return "E_"+this.metodo.darSubNombre()+"_$";
     }
 
 
@@ -88,11 +100,18 @@ public class GenCodigo {
 
    public void generar(){
         //<metodoDeclaration> ::= <Type> id '(' <opt_parameter> ')' <block>
+	    
         String nombre = this.metodo.darSubNombre();
+        elePlano = new Element("Funcion");
+        elePlano.setAttribute("nombre", nombre.replace('|', '_'));
+       // Element plano = new Element("Plano");
 
         this.agregarACodigo(new Comentario("*******************************************"));
         this.agregarACodigo(new Comentario("Método: "+nombre));
         this.agregarACodigo(new Comentario("Tipo de retorno: "+this.metodo.darRet().darNombreTipo()));
+        
+        this.elementos.add(new Comment("Método:"+nombre));
+        this.elementos.add(new Comment("Tipo de retorno: "+this.metodo.darRet().darNombreTipo()));
 
         int suma=0;
 
@@ -104,6 +123,7 @@ public class GenCodigo {
             @SuppressWarnings("static-access")
 			String [] b = this.darDesplazamiento(a,parser,this.verificador);
             this.agregarACodigo(new Comentario(param+a.darId()+" = "+b[0]+"["+b[1]+"]"));
+            this.elementos.add(new Comment(param+a.darId()+" = "+b[0]+"["+b[1]+"]"));
 
             suma += a.darTipo().darTamanioTipo();
         }
@@ -111,14 +131,22 @@ public class GenCodigo {
         
         this.agregarACodigo(new Comentario("*******************************************"));
         this.agregarACodigo(new Plano(nombre+" proc far"));
+        
+        
+        
 
         primerBloque = true;
         this.generarStatement((Reduction)red.getToken(5).getData());
 
 
         this.agregarACodigo(new Etiqueta(this.darFinalEtiqueta()));
+        elePlano.addContent(new Element("Etiqueta").setAttribute("nombre",this.darFinalEtiqueta()));
         this.agregarACodigo(new Plano("\tret"));
+       // plano.addContent(new Element("ret"));
+       // plano.addContent(new Element(nombre.replace('|', '_')+ "endp"));
+       // elePlano.addContent(plano);
         this.agregarACodigo(new Plano(nombre+" endp"));
+        
         this.agregarACodigo(new Comentario("*******************************************\n\n"));
 
 
@@ -129,9 +157,11 @@ public class GenCodigo {
 
         for(int i = 1; i < this.numTemp; i++){
             this.codigo.add(cont+i+2,new Comentario(("t|_"+i)+" = "+"stack["+(i*tamnioIndice-tamnioIndice+this.inicio_dir_temp)+"]"));
+            elePlano.addContent(new Comment(("t|_"+i)+" = "+"stack["+(i*tamnioIndice-tamnioIndice+this.inicio_dir_temp)+"]"));
         }
 
-
+        //plano.addContent(elePlano);
+        elementos.add(elePlano);
     }
 
 
@@ -209,16 +239,25 @@ public class GenCodigo {
                     -------------------------------------------------------------------------*/
 
                     this.agregarACodigo(new Comentario(" if(<exp>) <block1> ",false,'#',40));
+                    elePlano.addContent(new Comment("if (exp) bloque1"));
+                   // this.elementos.add(new Comment("if(expresion) bloque1"));
 
                     L1 = new Etiqueta(this.nuevaEtiqueta());
 
                     t1 = this.generarExpresion((Reduction)reduccion.getToken(2).getData());
 
                     this.agregarACodigo(new Condicional(t1,"==",0+"",L1.etiqueta));
+                    cond = new Element("Condicional");
+                    cond.setAttribute("nombre", L1.etiqueta);
+                    cond.setAttribute("dir1",t1);
+                    cond.setAttribute("operador","==");
+                    cond.setAttribute("dir2","0");
+                    elePlano.addContent(cond);
 
                     this.generarStatement((Reduction)reduccion.getToken(4).getData());
 
                     this.agregarACodigo(L1);
+                    elePlano.addContent(new Element("Etiqueta").setAttribute("nombre",L1.etiqueta));
 
                     this.agregarACodigo(new Comentario("",false,'#',40));
 
@@ -240,27 +279,39 @@ public class GenCodigo {
                 -------------------------------------------------------------------------*/
 
                 this.agregarACodigo(new Comentario(" if(<exp>) <block1> else <block2> ",false,'#',40));
-
+                elePlano.addContent(new Comment("if (exp) bloque1 else bloque2"));
                 L1 = new Etiqueta(this.nuevaEtiqueta());
                 L2 = new Etiqueta(this.nuevaEtiqueta());
 
                 t1 = this.generarExpresion((Reduction)reduccion.getToken(2).getData());
 
                 this.agregarACodigo(new Condicional(t1,"==",0+"",L1.etiqueta));
+                cond = new Element("Condicional");
+                cond.setAttribute("nombre", L1.etiqueta);
+                cond.setAttribute("dir1",t1);
+                cond.setAttribute("operador","==");
+                cond.setAttribute("dir2","0");
+                elePlano.addContent(cond);
+                
 
                 this.agregarACodigo(new Comentario(" <block1> ",false,'#',40));
 
                 this.generarStatement((Reduction)reduccion.getToken(4).getData());
 
                 this.agregarACodigo(new Jmp(L2.etiqueta));
+                salto = new Element("Jmp");
+                salto.setAttribute("nombre",L2.etiqueta);
+                elePlano.addContent(salto);
 
                 this.agregarACodigo(L1);
+                elePlano.addContent(new Element("Etiqueta").setAttribute("nombre",L1.etiqueta));
 
                 this.agregarACodigo(new Comentario(" <block2> - else ",false,'#',40));
 
                 this.generarStatement((Reduction)opt_else_block.getToken(1).getData());
 
                 this.agregarACodigo(L2);
+                elePlano.addContent(new Element("Etiqueta").setAttribute("nombre",L2.etiqueta));
 
                 this.agregarACodigo(new Comentario("",false,'#',40));
 
@@ -285,22 +336,33 @@ public class GenCodigo {
                 -------------------------------------------------------------------------*/
 
                 this.agregarACodigo(new Comentario(" while (<exp>) <block> ",false,'#',40));
-
+                elePlano.addContent(new Comment("while (exp) bloque"));
                 L1 = new Etiqueta(this.nuevaEtiqueta());
                 L2 = new Etiqueta(this.nuevaEtiqueta());
 
 
                 this.agregarACodigo(L1);
+                elePlano.addContent(new Element("Etiqueta").setAttribute("nombre",L1.etiqueta));
 
                 t1 = this.generarExpresion((Reduction)reduccion.getToken(2).getData());
 
                 this.agregarACodigo(new Condicional(t1,"==",0+"",L2.etiqueta));
+                cond = new Element("Condicional");
+                cond.setAttribute("nombre", L2.etiqueta);
+                cond.setAttribute("dir1",t1);
+                cond.setAttribute("operador","==");
+                cond.setAttribute("dir2","0");
+                elePlano.addContent(cond);
 
                 this.generarStatement((Reduction)reduccion.getToken(4).getData());
 
                 this.agregarACodigo(new Jmp(L1.etiqueta));
+                salto = new Element("Jmp");
+                salto.setAttribute("nombre",L1.etiqueta);
+                elePlano.addContent(salto);
 
                 this.agregarACodigo(L2);
+                elePlano.addContent(new Element("Etiqueta").setAttribute("nombre",L2.etiqueta));
 
                 this.agregarACodigo(new Comentario("",false,'#',40));
 
@@ -319,6 +381,9 @@ public class GenCodigo {
                             goto L_metodo_end
                     -------------------------------------------------------------------------*/
                     this.agregarACodigo(new Jmp(this.darFinalEtiqueta()));
+                    salto = new Element("Jmp");
+                    salto.setAttribute("nombre",this.darFinalEtiqueta());
+                    elePlano.addContent(salto);
 
                     break;
                 }
@@ -334,8 +399,14 @@ public class GenCodigo {
                 t1 = this.generarExpresion((Reduction)opt_expression.getToken(0).getData());
 
                 this.agregarACodigo(new Retorno(t1));
+                retorno = new Element("Retorno");
+                retorno.setAttribute("t1",t1);
+                elePlano.addContent(retorno);
 
                 this.agregarACodigo(new Jmp(this.darFinalEtiqueta()));
+                salto = new Element("Jmp");
+                salto.setAttribute("nombre",this.darFinalEtiqueta());
+                elePlano.addContent(salto);
 
                 this.sacarTemp(t1);
                 
@@ -352,12 +423,17 @@ public class GenCodigo {
                 -------------------------------------------------------------------------*/
                 
                 this.agregarACodigo(new Comentario(" <assign> ",false,'-',40));
+                elePlano.addContent(new Comment("assign"));
 
                 t1 = this.generarExpresion((Reduction)reduccion.getToken(2).getData());
 
                 t2 = this.generarLocacion((Reduction)reduccion.getToken(0).getData());
 
                 this.agregarACodigo(new Asignacion(t2,t1));
+                asignacion = new Element("Asignacion");
+                asignacion.setAttribute("dir2",t2);
+                asignacion.setAttribute("dir1",t1);
+                elePlano.addContent(asignacion);
 
                 this.sacarTemp(t1);
 
@@ -419,7 +495,8 @@ public class GenCodigo {
                     operando = "or";
                 }
 
-                this.agregarACodigo(new Comentario(" <boolean exp> ("+operando+") ",true,'=',30));//=====
+                this.agregarACodigo(new Comentario(" <boolean exp> ("+operando+") ",true,'=',30));
+                elePlano.addContent(new Comment("boolean exp ("+operando+")"));
 
                 t1 = this.generarExpresion((Reduction)reduccion.getToken(0).getData());
 
@@ -431,6 +508,12 @@ public class GenCodigo {
                 t3 = this.getTemporal();
 
                 this.agregarACodigo(new OperacionBinaria(t3,t1,operando,t2));
+                op = new Element("OB");
+                op.setAttribute("t3", t3);
+                op.setAttribute("t1",t1);
+                op.setAttribute("operando",operando);
+                op.setAttribute("t2",t2);
+                elePlano.addContent(op);
                 
                 retorno = t3;
 
@@ -477,16 +560,35 @@ public class GenCodigo {
                 operando = (String)((Reduction)reduccion.getToken(1).getData()).getToken(0).getData();
 
                 this.agregarACodigo(new Condicional(t1,operando,t2,L1.etiqueta));
+                cond = new Element("Condicional");
+                cond.setAttribute("nombre", L1.etiqueta);
+                cond.setAttribute("dir1",t1);
+                cond.setAttribute("operador",operando);
+                cond.setAttribute("dir2",t2);
+                elePlano.addContent(cond);
 
                 this.agregarACodigo(new Asignacion(t3,"0"));
+                asignacion = new Element("Asignacion");
+                asignacion.setAttribute("dir1",t3);
+                asignacion.setAttribute("dir2","0");
+                elePlano.addContent(asignacion);
 
                 this.agregarACodigo(new Jmp(L2.etiqueta));
+                salto = new Element("Jmp");
+                salto.setAttribute("nombre",L2.etiqueta);
+                elePlano.addContent(salto);
 
                 this.agregarACodigo(L1);
+                elePlano.addContent(new Element("Etiqueta").setAttribute("nombre",L1.etiqueta));
 
                 this.agregarACodigo(new Asignacion(t3,"1"));
+                asignacion = new Element("Asignacion");
+                asignacion.setAttribute("dir1",t3);
+                asignacion.setAttribute("dir2","1");
+                elePlano.addContent(asignacion);
 
                 this.agregarACodigo(L2);
+                elePlano.addContent(new Element("Etiqueta").setAttribute("nombre",L2.etiqueta));
 
                 retorno = t3;
 
@@ -525,6 +627,12 @@ public class GenCodigo {
                 operando = (String)((Reduction)reduccion.getToken(1).getData()).getToken(0).getData();
 
                 this.agregarACodigo(new OperacionBinaria(t3,t1,operando,t2));
+                op = new Element("OB");
+                op.setAttribute("t3", t3);
+                op.setAttribute("t1",t1);
+                op.setAttribute("operando",operando);
+                op.setAttribute("t2",t2);
+                elePlano.addContent(op);
 
                 retorno = t3;
 
@@ -562,6 +670,12 @@ public class GenCodigo {
                 operando = (String)((Reduction)reduccion.getToken(1).getData()).getToken(0).getData();
 
                 this.agregarACodigo(new OperacionBinaria(t3,t1,operando,t2));
+                op = new Element("OB");
+                op.setAttribute("t3", t3);
+                op.setAttribute("t1",t1);
+                op.setAttribute("operando",operando);
+                op.setAttribute("t2",t2);
+                elePlano.addContent(op);
 
                 retorno = t3;
 
@@ -594,6 +708,12 @@ public class GenCodigo {
                 t2 = this.getTemporal();
 
                 this.agregarACodigo(new OperacionBinaria(t2,"0","-",t1));
+                op = new Element("OB");
+                op.setAttribute("t1", t2);
+                op.setAttribute("t2","0");
+                op.setAttribute("operando","-");
+                op.setAttribute("t3",t1);
+                elePlano.addContent(op);
 
                 retorno = t2;
 
@@ -630,8 +750,20 @@ public class GenCodigo {
                 t2 = this.getTemporal();
 
                 this.agregarACodigo(new OperacionUnaria(t2,"not",t1));
+                op = new Element("OU");
+                op.setAttribute("t1",t2);
+                op.setAttribute("operando","not");
+                op.setAttribute("t2",t1);
+                elePlano.addContent(op);
 
                 this.agregarACodigo(new OperacionBinaria(t2,"1","and",t2));
+                op = new Element("OB");
+                op.setAttribute("t3", t2);
+                op.setAttribute("t1",t2);
+                op.setAttribute("operando","and");
+                op.setAttribute("t2","1");
+                elePlano.addContent(op);
+
                 
                 retorno = t2;
 
@@ -666,6 +798,11 @@ public class GenCodigo {
                 t1 = this.getTemporal();
 
                 this.agregarACodigo(new Asignacion(t1,t2));
+                asignacion = new Element("Asignacion");
+                asignacion.setAttribute("dir1",t1);
+                asignacion.setAttribute("dir2",t2);
+                elePlano.addContent(asignacion);
+
 
                 retorno = t1;
 
@@ -730,6 +867,13 @@ public class GenCodigo {
                 String t3 = this.getTemporal();
 
                 this.agregarACodigo(new OperacionBinaria(t3,t1,"+",t2));
+                op = new Element("OB");
+                op.setAttribute("t3", t2);
+                op.setAttribute("t1",t3);
+                op.setAttribute("operando","+");
+                op.setAttribute("t2",t1);
+                elePlano.addContent(op);
+
 
                 retorno = t3;
                 
@@ -762,7 +906,21 @@ public class GenCodigo {
                 t2 = this.getTemporal();
 
                 this.agregarACodigo(new OperacionBinaria(t2,t1,"*",tam_ind+""));
+                op = new Element("OB");
+                op.setAttribute("t3", tam_ind+"");
+                op.setAttribute("t1",t2);
+                op.setAttribute("operando","*");
+                op.setAttribute("t2",t1);
+                elePlano.addContent(op);
+
                 this.agregarACodigo(new OperacionBinaria(t2,t2,"+",cont+""));
+                op = new Element("OB");
+                op.setAttribute("t1", t2);
+                op.setAttribute("t2",t2);
+                op.setAttribute("operando","+");
+                op.setAttribute("t3",cont+"");
+                elePlano.addContent(op);
+
 
                 retorno = t2;
 
@@ -812,6 +970,7 @@ public class GenCodigo {
                 a = this.darDesplazamiento(simbolo,parser,this.verificador);
 
                 this.agregarACodigo(new Comentario(" <location> - structure ",true,'°',30));//°°°°°°
+                elePlano.addContent(new Comment("locacion -> estructura"));
 
                 if(simpleLoc.getParentRule().getTableIndex() == Main.RuleConstants.RULE_SIMPLELOCATION_ID){
 
@@ -836,7 +995,20 @@ public class GenCodigo {
 
                     tam = simbolo.darTipo().darTamanioTipoSimple();
                     this.agregarACodigo(new OperacionBinaria(t2,tam+"","*",t1));
+                    op = new Element("OB");
+                    op.setAttribute("t1", t2);
+                    op.setAttribute("t2",tam+"");
+                    op.setAttribute("operando","*");
+                    op.setAttribute("t3",t1);
+                    elePlano.addContent(op);
+                    
                     this.agregarACodigo(new OperacionBinaria(t2,t2,"+",a[1]));
+                    op = new Element("OB");
+                    op.setAttribute("t1", t2);
+                    op.setAttribute("t2",t2);
+                    op.setAttribute("operando","+");
+                    op.setAttribute("t3",a[1]);
+                    elePlano.addContent(op);
                     despl_inicial = t2;
 
                     this.sacarTemp(t1);
@@ -848,6 +1020,12 @@ public class GenCodigo {
                 t3 = this.getTemporal();
 
                 this.agregarACodigo(new OperacionBinaria(t3,despl_inicial,"+",t1));
+                op = new Element("OB");
+                op.setAttribute("t1", t3);
+                op.setAttribute("t2",despl_inicial);
+                op.setAttribute("operando","+");
+                op.setAttribute("t3",t1);
+                elePlano.addContent(op);
 
                 retorno = base+"["+t3+"]";
 
@@ -878,6 +1056,7 @@ public class GenCodigo {
                 -------------------------------------------------------------------------*/
 
                 this.agregarACodigo(new Comentario(" <location> - array ",true,'°',30));//°°°°°°
+                elePlano.addContent(new Comment("locacion -> arreglo"));
 
                 id = (String)reduccion.getToken(0).getData();
                 simbolo = this.parser.darTablaSimbolos().darSimbolo(id, this.ambitoActual);
@@ -893,7 +1072,20 @@ public class GenCodigo {
                 tam = simbolo.darTipo().darTamanioTipoSimple();
 
                 this.agregarACodigo(new OperacionBinaria(t2,tam+"","*",t1));
+                op = new Element("OB");
+                op.setAttribute("t1", t2);
+                op.setAttribute("t2",tam+"");
+                op.setAttribute("operando","*");
+                op.setAttribute("t3",t1);
+                elePlano.addContent(op);
+                
                 this.agregarACodigo(new OperacionBinaria(t2,t2,"+",a[1]));
+                op = new Element("OB");
+                op.setAttribute("t1", t2);
+                op.setAttribute("t2",t2);
+                op.setAttribute("operando","+");
+                op.setAttribute("t3",a[1]);
+                elePlano.addContent(op);
 
                 retorno = a[0]+"["+t2+"]";
 
@@ -993,6 +1185,7 @@ public class GenCodigo {
                 //System.out.println("--------------------------------"+ llamado.getMethodSignature()+"\n"+llamado.getSubname());
 
                 this.agregarACodigo(new Comentario(" <metodoCall> ",true,'+',30));//++++++++++
+                elePlano.addContent(new Comment("LlamadaMetodo"));
 
                 if(  llamado.darRet().darNombreTipo().equals("void") ){
 
@@ -1005,6 +1198,10 @@ public class GenCodigo {
                     this.generarLlamada((Reduction)reduccion.getToken(2).getData());
 
                     this.agregarACodigo(new Llamada(llamado.darSubNombre(),llamado.darParametros().size()+""));
+                    llamada = new Element("Llamada");
+                    llamada.setAttribute("dir2",llamado.darSubNombre());
+                    llamada.setAttribute("dir3",llamado.darParametros().size()+"");
+                    elePlano.addContent(llamada);
 
                     this.agregarACodigo(new Comentario("",true,'+',30));//++++++++++++++++++++++++
                     break;
@@ -1023,6 +1220,11 @@ public class GenCodigo {
                 this.generarLlamada((Reduction)reduccion.getToken(2).getData());
 
                 this.agregarACodigo(new Llamada(t1,llamado.darSubNombre(),llamado.darParametros().size()+""));
+                llamada = new Element("Llamada");
+                llamada.setAttribute("dir1",t1);
+                llamada.setAttribute("dir2",llamado.darSubNombre());
+                llamada.setAttribute("dir3",llamado.darParametros().size()+"");
+                elePlano.addContent(llamada);
 
                 retorno = t1;
 
@@ -1049,6 +1251,9 @@ public class GenCodigo {
                 //<arg> ::= <expression>
                 t1 = this.generarExpresion((Reduction)reduccion.getToken(0).getData());
                 this.agregarACodigo(new Parametro(t1));
+                param = new Element("Parametro");
+                param.setAttribute("param",t1);
+                elePlano.addContent(param);
 
                 this.sacarTemp(t1);
 

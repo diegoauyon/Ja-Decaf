@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Program>
+  <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+  <!--Ambito Global-->
+  <!--a = global[0]-->
+  <!--b = global[4]-->
+  <!--c = global[5]-->
+  <!--vs2 = global[7]-->
+  <!--prueba2 = global[22]-->
+  <!--d = global[41]-->
+  <!--vs1 = global[45]-->
+  <!--array = global[60]-->
+  <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+  <!--Método:tryout-->
+  <!--Tipo de retorno: int-->
+  <!--param: t1 = stack[0]-->
+  <!--param: t3 = stack[4]-->
+  <Funcion nombre="tryout">
+    <!--assign-->
+    <!--locacion -> estructura-->
+    <OB t3="0" t1="t|_1" operando="+" t2="4" />
+    <OB t1="t|_2" t2="22" operando="+" t3="t|_1" />
+    <Asignacion dir2="global[t|_2]" dir1="1" />
+    <Retorno t1="1" />
+    <Jmp nombre="E_tryout_$" />
+    <Etiqueta nombre="E_tryout_$" />
+    <!--t|_1 = stack[8]-->
+    <!--t|_2 = stack[12]-->
+  </Funcion>
+  <!--Método:tryout|0-->
+  <!--Tipo de retorno: char-->
+  <!--param: t2 = stack[0]-->
+  <Funcion nombre="tryout_0">
+    <!--assign-->
+    <!--locacion -> estructura-->
+    <OB t1="t|_1" t2="15" operando="*" t3="1" />
+    <OB t1="t|_1" t2="t|_1" operando="+" t3="60" />
+    <OB t1="t|_2" t2="t|_1" operando="+" t3="0" />
+    <Asignacion dir2="global[t|_2]" dir1="2" />
+    <Retorno t1="'c'" />
+    <Jmp nombre="E_tryout|0_$" />
+    <Etiqueta nombre="E_tryout|0_$" />
+    <!--t|_1 = stack[2]-->
+    <!--t|_2 = stack[6]-->
+  </Funcion>
+  <!--Método:getBool-->
+  <!--Tipo de retorno: boolean-->
+  <!--methoda = stack[0]-->
+  <!--methodb = stack[4]-->
+  <!--methodc = stack[6]-->
+  <Funcion nombre="getBool">
+    <!--assign-->
+    <!--LlamadaMetodo-->
+    <OB t3="t|_2" t1="1" operando="+" t2="1" />
+    <Parametro param="t|_2" />
+    <Parametro param="2" />
+    <Llamada dir1="t|_1" dir2="tryout" dir3="2" />
+    <Asignacion dir2="stack[0]" dir1="t|_1" />
+    <!--assign-->
+    <Asignacion dir2="stack[6]" dir1="'c'" />
+    <!--assign-->
+    <!--LlamadaMetodo-->
+    <Llamada dir1="t|_1" dir2="getBool" dir3="0" />
+    <!--locacion -> arreglo-->
+    <OB t1="t|_2" t2="1" operando="*" t3="1" />
+    <OB t1="t|_2" t2="t|_2" operando="+" t3="4" />
+    <Asignacion dir2="stack[t|_2]" dir1="t|_1" />
+    <!--if (exp) bloque1 else bloque2-->
+    <Condicional nombre="E_getBool_2" dir1="1" operador="&lt;" dir2="2" />
+    <Asignacion dir1="t|_1" dir2="0" />
+    <Jmp nombre="E_getBool_3" />
+    <Etiqueta nombre="E_getBool_2" />
+    <Asignacion dir1="t|_1" dir2="1" />
+    <Etiqueta nombre="E_getBool_3" />
+    <Condicional nombre="E_getBool_0" dir1="t|_1" operador="==" dir2="0" />
+    <!--assign-->
+    <Asignacion dir2="stack[0]" dir1="1" />
+    <Retorno t1="1" />
+    <Jmp nombre="E_getBool_$" />
+    <Jmp nombre="E_getBool_1" />
+    <Etiqueta nombre="E_getBool_0" />
+    <Retorno t1="0" />
+    <Jmp nombre="E_getBool_$" />
+    <Etiqueta nombre="E_getBool_1" />
+    <Etiqueta nombre="E_getBool_$" />
+    <!--t|_1 = stack[8]-->
+    <!--t|_2 = stack[12]-->
+  </Funcion>
+  <!--Método:main-->
+  <!--Tipo de retorno: void-->
+  <Funcion nombre="main">
+    <Etiqueta nombre="E_main_$" />
+  </Funcion>
+</Program>
+
