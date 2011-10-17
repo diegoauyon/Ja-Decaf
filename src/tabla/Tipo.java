@@ -1,113 +1,129 @@
 package tabla;
 
+import java.util.LinkedList;
+
+public class Tipo {
+
+    private boolean simple;    
+    private boolean estructura; 
+    private boolean param;     
+    private boolean arreglo;     
+    private int tamanioArreglo;
+
+    private LinkedList<Simbolo> listaVars = new LinkedList<Simbolo>();
+    
+    private String nombreTipo;
+
+    private int tamanioTipo;
+    
+    
+    public Tipo(String nombreTipo, int tamanio){
+        this.nombreTipo = nombreTipo;
+        this.simple = false;
+        this.estructura = false;
+        this.arreglo = false;
+        this.param = false;
+        this.tamanioTipo = tamanio;
+    }
 
 
-public class Tipo 
-{
-	
-	public String nombre;
-	public int tipoVariable = Const.TipoVariables.primitivo;
-	public int tipoPrimitivo = Const.TipoPrimitivo.void_;
-	public int tamanio = 0;
-	public boolean esRef = false;
-	
-//----------------------------------------------------------------------------------	
-	
+    public static int darTamanioBasico(String a){
+        int tamano = 0;
+        if(a.equals("void"))
+            tamano = 0;
+        else if(a.equals("int"))
+            tamano = 4;
+        else if(a.equals("char"))
+            tamano = 2;
+        else if(a.equals("boolean"))
+            tamano = 1;
+        return tamano;
+    }
 
-	
-//----------------------------------------------------------------------------------	
-	
-	//Crea tipo estructura
-	public Tipo()
-	{
-		
-	}
-	
-	public Tipo(int tipoPrimitivo)
-	{
-		tipoVariable = Const.TipoVariables.primitivo;
-		this.tipoPrimitivo =tipoPrimitivo; 
-	}
-	
-	//estructura
-	public Tipo(String nombre)
-	{
-		tipoVariable = Const.TipoVariables.estructura;
-		this.nombre = nombre;
-	}
-	
-	public Tipo crearArregloDesdeTipo(int tamanio,Tipo tipo)
-	{
-		if (tipo.tipoVariable == Const.TipoVariables.primitivo)
-		{
-			tipo.tipoVariable = Const.TipoVariables.arreglo;
-			tipo.tamanio = tamanio;
-		}
-		else if (tipo.tipoVariable == Const.TipoVariables.estructura)
-		{
-			tipo.tipoVariable = Const.TipoVariables.arreglo_Estructura;
-			tipo.tamanio = tamanio;
-		}
-		return tipo;
-	}
-	
-	public Tipo crearArregloTipo(int tipo)
-	{
-		Tipo tip = new Tipo();
-		tip.tipoVariable = Const.TipoVariables.arreglo;
-		tip.tipoPrimitivo = tipo;
-		return tip;
-	}
-	
-	public Tipo crearArregloTipo(String nombre)
-	{
-		Tipo tip = new Tipo();
-		tip.tipoVariable = Const.TipoVariables.arreglo_Estructura;
-		tip.nombre = nombre;
-		return tip;
-	}
-	
-	public String tipo()
-	{
-		//String tipo = "";
-		if (!esRef)
-		{
-			if (tipoVariable == Const.TipoVariables.primitivo)
-			{
-				if (tipoPrimitivo == Const.TipoPrimitivo.integer)
-				{
-					return "integer"; 
-				}
-				else if (tipoPrimitivo == Const.TipoPrimitivo.bool)
-				{
-					return "booleano"; 
-				}
-				else if (tipoPrimitivo == Const.TipoPrimitivo.character)
-				{
-					return "character"; 
-				}
-				else if (tipoPrimitivo == Const.TipoPrimitivo.void_)
-				{
-					return "void"; 
-				}
-			}
-			else if (tipoVariable == Const.TipoVariables.arreglo)
-			{
-				if (tipoPrimitivo == Const.TipoPrimitivo.integer)
-				{
-					return "A_integer"; 
-				}
-				else if (tipoPrimitivo == Const.TipoPrimitivo.bool)
-				{
-					return "A_booleano"; 
-				}
-				else if (tipoPrimitivo == Const.TipoPrimitivo.character)
-				{
-					return "A_character"; 
-				}
-				
-			}
-		}
-	 return null;	
-	}
+
+    public boolean esSimple() {
+        return simple;
+    }
+
+    public void asigSimple(boolean simple) {
+        this.simple = simple;
+    }
+
+    public boolean esEstructura() {
+        return estructura;
+    }
+
+    public void asigEstructura(boolean arreglo) {
+        this.estructura = arreglo;
+    }
+
+    public boolean esArreglo() {
+        return arreglo;
+    }
+
+    public void asigArreglo(boolean arreglo, int tamanioArreglo) {
+        this.arreglo = arreglo;
+        this.tamanioArreglo = tamanioArreglo;
+    }
+    
+    public void asigArreglo(boolean array) {
+        this.arreglo = array;
+    }
+
+
+    public LinkedList<Simbolo> darListaVars() {
+        return listaVars;
+    }
+
+
+    public void asigListaVar(LinkedList<Simbolo> listaVars) {
+        this.listaVars = listaVars;
+    }
+    public String darNombreTipo() {
+        String tipo = nombreTipo;
+        if(this.esArreglo()){
+            tipo = tipo+"[]";
+        }
+        if(this.esEstructura()){
+            tipo = "struct:"+tipo;
+        }
+        return tipo;
+    }
+
+    public String darNombreTipoSinEstruc() {
+        String tipo = nombreTipo;
+        if(this.esArreglo()){
+            tipo = tipo+"[]";
+        }
+        if(this.esEstructura()){
+            tipo = ""+tipo;
+        }
+        return tipo;
+    }
+
+
+    public void asigNombreTipo(String nombreTipo) {
+        this.nombreTipo = nombreTipo;
+    }
+
+
+    public boolean esParametro() {
+        return param;
+    }
+
+
+    public void asigParametro(boolean param) {
+        this.param = param;
+    }
+
+    public int darTamanioTipo() {
+        if(this.arreglo)
+            return this.tamanioTipo*this.tamanioArreglo;
+        return this.tamanioTipo;
+    }
+
+    public int darTamanioTipoSimple() {
+        return this.tamanioTipo;
+    }
+    
 }

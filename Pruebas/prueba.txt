@@ -2,7 +2,6 @@ class Program{
 
 	void main()
 	{
-		dga();
-		ddfas(aaaa,ndfdfn,fdlaf,dkfja);
+
 	}
 }

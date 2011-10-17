@@ -635,7 +635,8 @@ public class IDecaf extends javax.swing.JFrame
     public void corrrer()
     {
     	tree.reload();
-		Main ma = new Main(darRutaArchivo(),this);
+		Main ma = new Main();
+		ma.codigoIntermedio(darRutaArchivo(),this);
     	if (ma!= null && darMotor().equalsIgnoreCase("GoldP"))
     		if (ma.huboErrores()==false)
     		{

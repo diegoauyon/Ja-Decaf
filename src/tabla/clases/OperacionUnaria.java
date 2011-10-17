@@ -1,15 +1,16 @@
 package tabla.clases;
 
 
-public class Asignacion implements IGeneracionCodigo{
+public class OperacionUnaria implements IGeneracionCodigo{
 
     String dir1 = "";   //id1
     String dir2 = "";   //id2
-                        //id3 -> ""
+    String operador = "";
 
-    public Asignacion(String dir1, String dir2){
+    public OperacionUnaria(String dir1, String operador, String dir2){
         this.dir1 = dir1;
         this.dir2 = dir2;
+        this.operador = operador;
     }
 
     public String darId1() {
@@ -25,7 +26,7 @@ public class Asignacion implements IGeneracionCodigo{
     }
 
     public String darCodigo() {
-        return "\t"+this.dir1+" = "+this.dir2;
+        return "\t"+this.dir1+" = "+this.operador+" "+this.dir2;
     }
 
 }

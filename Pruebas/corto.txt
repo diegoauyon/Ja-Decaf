@@ -17,13 +17,12 @@ class Program{
 
 	void metodo (int aa)
 	{
-	//	s1.sa = 32;
 		
 	}
 	
 	void main ()
 	{
-		return 'c'
+	
 	}
 
 }

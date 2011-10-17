@@ -1,18 +1,18 @@
 package tabla.clases;
 
 
-public class Parametro implements IGeneracionCodigo{
+public class Retorno implements IGeneracionCodigo{
 
-    String param = "";  //id1
+    String retorno = "";  //id1
                         //id2 -> ""
                         //id3 -> ""
 
-    public Parametro(String param){
-        this.param = param;
+   public Retorno(String retorno){
+        this.retorno = retorno;
     }
 
     public String darId1() {
-        return this.param;
+        return this.retorno;
     }
 
     public String darId2() {
@@ -24,7 +24,8 @@ public class Parametro implements IGeneracionCodigo{
     }
 
     public String darCodigo() {
-        return "\t"+"param "+this.param+"";
+        return "\t"+"return "+this.retorno+"";
     }
 
 }
+

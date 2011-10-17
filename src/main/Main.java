@@ -1,18 +1,4 @@
 package main;
-import interfaz.IDecaf;
-
-
-import java.util.LinkedList;
-import java.util.Stack;
-
-import tabla.Const;
-import tabla.Const.PasoMetodo;
-import tabla.Const.TipoPrimitivo;
-import tabla.Tipo;
-import tabla.clases.*;
-import goldengine.java.*;
-
-
 
 
 /*
@@ -47,183 +33,191 @@ import goldengine.java.*;
  *
  *---------------------------------------------------------------------------------------<br>
  */
+import tabla.*;
+import tabla.clases.*;
+import interfaz.IDecaf;
+import goldengine.java.*;
+
+import java.util.LinkedList;
+
+
+
 public class Main implements GPMessageConstants
 {
-	@SuppressWarnings("unused")
 
-    private interface SymbolConstants 
+    @SuppressWarnings("unused")
+	private interface SymbolConstants
     {
-       final int SYMBOL_EOF                       =  0;  // (EOF)
-       final int SYMBOL_ERROR                     =  1;  // (Error)
-       final int SYMBOL_WHITESPACE                =  2;  // (Whitespace)
-       final int SYMBOL_COMMENTEND                =  3;  // (Comment End)
-       final int SYMBOL_COMMENTLINE               =  4;  // (Comment Line)
-       final int SYMBOL_COMMENTSTART              =  5;  // (Comment Start)
-       final int SYMBOL_MINUS                     =  6;  // '-'
-       final int SYMBOL_EXCLAM                    =  7;  // '!'
-       final int SYMBOL_EXCLAMEQ                  =  8;  // '!='
-       final int SYMBOL_PERCENT                   =  9;  // '%'
-       final int SYMBOL_AMPAMP                    = 10;  // '&&'
-       final int SYMBOL_LPARAN                    = 11;  // '('
-       final int SYMBOL_RPARAN                    = 12;  // ')'
-       final int SYMBOL_TIMES                     = 13;  // '*'
-       final int SYMBOL_COMMA                     = 14;  // ','
-       final int SYMBOL_DOT                       = 15;  // '.'
-       final int SYMBOL_DIV                       = 16;  // '/'
-       final int SYMBOL_SEMI                      = 17;  // ';'
-       final int SYMBOL_LBRACKET                  = 18;  // '['
-       final int SYMBOL_RBRACKET                  = 19;  // ']'
-       final int SYMBOL_LBRACE                    = 20;  // '{'
-       final int SYMBOL_PIPEPIPE                  = 21;  // '||'
-       final int SYMBOL_RBRACE                    = 22;  // '}'
-       final int SYMBOL_PLUS                      = 23;  // '+'
-       final int SYMBOL_LT                        = 24;  // '<'
-       final int SYMBOL_LTEQ                      = 25;  // '<='
-       final int SYMBOL_EQ                        = 26;  // '='
-       final int SYMBOL_EQEQ                      = 27;  // '=='
-       final int SYMBOL_GT                        = 28;  // '>'
-       final int SYMBOL_GTEQ                      = 29;  // '>='
-       final int SYMBOL_BOOLEAN                   = 30;  // boolean
-       final int SYMBOL_CHAR                      = 31;  // char
-       final int SYMBOL_CHARACTER                 = 32;  // character
-       final int SYMBOL_CLASS                     = 33;  // class
-       final int SYMBOL_ELSE                      = 34;  // else
-       final int SYMBOL_FALSE                     = 35;  // false
-       final int SYMBOL_ID                        = 36;  // id
-       final int SYMBOL_IF                        = 37;  // if
-       final int SYMBOL_INT                       = 38;  // int
-       final int SYMBOL_NUM                       = 39;  // num
-       final int SYMBOL_PROGRAM                   = 40;  // Program
-       final int SYMBOL_RETURN                    = 41;  // return
-       final int SYMBOL_STRUCT                    = 42;  // struct
-       final int SYMBOL_TRUE                      = 43;  // true
-       final int SYMBOL_VOID                      = 44;  // void
-       final int SYMBOL_WHILE                     = 45;  // while
-       final int SYMBOL_ARG                       = 46;  // <arg>
-       final int SYMBOL_ARGDES                    = 47;  // <arg Des>
-       final int SYMBOL_ASIGNACION                = 48;  // <asignacion>
-       final int SYMBOL_BLOQUE                    = 49;  // <bloque>
-       final int SYMBOL_BOOL_LITERAL              = 50;  // <bool_literal>
-       final int SYMBOL_CHAR_LITERAL              = 51;  // <char_literal>
-       final int SYMBOL_CONDICIONALDES            = 52;  // <Condicional Des>
-       final int SYMBOL_DECLARACION               = 53;  // <Declaracion>
-       final int SYMBOL_DECLARACIONKLEENE         = 54;  // <Declaracion Kleene>
-       final int SYMBOL_DESBLOQUE                 = 55;  // <Des bloque>
-       final int SYMBOL_DESEXPRESION              = 56;  // <Des expresion>
-       final int SYMBOL_DESPARAMETRO              = 57;  // <Des parametro>
-       final int SYMBOL_EXPRESION                 = 58;  // <expresion>
-       final int SYMBOL_INT_LITERAL               = 59;  // <int_literal>
-       final int SYMBOL_ITERACION                 = 60;  // <iteracion>
-       final int SYMBOL_KLEENESTATEMENT           = 61;  // <Kleene statement>
-       final int SYMBOL_KLEENEVARIABLEDECLARACION = 62;  // <Kleene variable Declaracion>
-       final int SYMBOL_LITERAL                   = 63;  // <literal>
-       final int SYMBOL_LLAMADAMETODO             = 64;  // <llamada metodo>
-       final int SYMBOL_LOCACION                  = 65;  // <locacion>
-       final int SYMBOL_LOCACIONARRAYDES          = 66;  // <locacion Array Des>
-       final int SYMBOL_METODODECLARACION         = 67;  // <metodo Declaracion>
-       final int SYMBOL_MULTIDES                  = 68;  // <multi Des>
-       final int SYMBOL_MULTIEXP                  = 69;  // <Multi Exp>
-       final int SYMBOL_MULTIPLEPARAMETROS        = 70;  // <multiple parametros>
-       final int SYMBOL_MULTIPLESARGS             = 71;  // <multiples args>
-       final int SYMBOL_NEGACIONEXP               = 72;  // <Negacion Exp>
-       final int SYMBOL_PARAMETRO                 = 73;  // <parametro>
-       final int SYMBOL_PROGRAM2                  = 74;  // <Program>
-       final int SYMBOL_RELACIONDES               = 75;  // <Relacion Des>
-       final int SYMBOL_RELACIONEXP               = 76;  // <Relacion Exp>
-       final int SYMBOL_RETORNO                   = 77;  // <retorno>
-       final int SYMBOL_SELECCION                 = 78;  // <seleccion>
-       final int SYMBOL_STATEMENT                 = 79;  // <statement>
-       final int SYMBOL_STRUCTDECLARACION         = 80;  // <struct Declaracion>
-       final int SYMBOL_SUMADES                   = 81;  // <suma Des>
-       final int SYMBOL_SUMAEXP                   = 82;  // <suma Exp>
-       final int SYMBOL_TIPO                      = 83;  // <Tipo>
-       final int SYMBOL_VALOR                     = 84;  // <Valor>
-       final int SYMBOL_VARARRAYDECISION          = 85;  // <var Array Decision>
-       final int SYMBOL_VARIABLEDECLARACION       = 86;  // <variable Declaracion>
+        final int SYMBOL_EOF                   =  0;  // (EOF)
+        final int SYMBOL_ERROR                 =  1;  // (Error)
+        final int SYMBOL_WHITESPACE            =  2;  // (Whitespace)
+        final int SYMBOL_COMMENTEND            =  3;  // (Comment End)
+        final int SYMBOL_COMMENTLINE           =  4;  // (Comment Line)
+        final int SYMBOL_COMMENTSTART          =  5;  // (Comment Start)
+        final int SYMBOL_MINUS                 =  6;  // '-'
+        final int SYMBOL_EXCLAM                =  7;  // '!'
+        final int SYMBOL_EXCLAMEQ              =  8;  // '!='
+        final int SYMBOL_PERCENT               =  9;  // '%'
+        final int SYMBOL_AMPAMP                = 10;  // '&&'
+        final int SYMBOL_LPARAN                = 11;  // '('
+        final int SYMBOL_RPARAN                = 12;  // ')'
+        final int SYMBOL_TIMES                 = 13;  // '*'
+        final int SYMBOL_COMMA                 = 14;  // ','
+        final int SYMBOL_DOT                   = 15;  // '.'
+        final int SYMBOL_DIV                   = 16;  // '/'
+        final int SYMBOL_SEMI                  = 17;  // ';'
+        final int SYMBOL_LBRACKET              = 18;  // '['
+        final int SYMBOL_RBRACKET              = 19;  // ']'
+        final int SYMBOL_LBRACE                = 20;  // '{'
+        final int SYMBOL_PIPEPIPE              = 21;  // '||'
+        final int SYMBOL_RBRACE                = 22;  // '}'
+        final int SYMBOL_PLUS                  = 23;  // '+'
+        final int SYMBOL_LT                    = 24;  // '<'
+        final int SYMBOL_LTEQ                  = 25;  // '<='
+        final int SYMBOL_EQ                    = 26;  // '='
+        final int SYMBOL_EQEQ                  = 27;  // '=='
+        final int SYMBOL_GT                    = 28;  // '>'
+        final int SYMBOL_GTEQ                  = 29;  // '>='
+        final int SYMBOL_BOOLEAN               = 30;  // boolean
+        final int SYMBOL_CHAR                  = 31;  // char
+        final int SYMBOL_CHARACTER             = 32;  // character
+        final int SYMBOL_CLASS                 = 33;  // class
+        final int SYMBOL_ELSE                  = 34;  // else
+        final int SYMBOL_FALSE                 = 35;  // false
+        final int SYMBOL_ID                    = 36;  // id
+        final int SYMBOL_IF                    = 37;  // if
+        final int SYMBOL_INT                   = 38;  // int
+        final int SYMBOL_NUM                   = 39;  // num
+        final int SYMBOL_PROGRAM               = 40;  // Program
+        final int SYMBOL_RETURN                = 41;  // return
+        final int SYMBOL_STRUCT                = 42;  // struct
+        final int SYMBOL_TRUE                  = 43;  // true
+        final int SYMBOL_VOID                  = 44;  // void
+        final int SYMBOL_WHILE                 = 45;  // while
+        final int SYMBOL_ADDEXP                = 46;  // <Add Exp>
+        final int SYMBOL_ADDOP                 = 47;  // <addop>
+        final int SYMBOL_ARG                   = 48;  // <arg>
+        final int SYMBOL_ARGLIST               = 49;  // <arg list>
+        final int SYMBOL_ASSIGN                = 50;  // <assign>
+        final int SYMBOL_BLOCK                 = 51;  // <block>
+        final int SYMBOL_BOOL_LITERAL          = 52;  // <bool_literal>
+        final int SYMBOL_CHAR_LITERAL          = 53;  // <char_literal>
+        final int SYMBOL_CONDITIONALOP         = 54;  // <conditionalop>
+        final int SYMBOL_DECLARATION           = 55;  // <declaration>
+        final int SYMBOL_EXPRESSION            = 56;  // <expression>
+        final int SYMBOL_INT_LITERAL           = 57;  // <int_literal>
+        final int SYMBOL_ITERATION             = 58;  // <iteration>
+        final int SYMBOL_KLEENE_DECLARATION    = 59;  // <kleene_declaration>
+        final int SYMBOL_KLEENE_STATEMENT      = 60;  // <kleene_statement>
+        final int SYMBOL_KLEENE_VARDECLARATION = 61;  // <kleene_varDeclaration>
+        final int SYMBOL_LITERAL               = 62;  // <literal>
+        final int SYMBOL_LOCATION              = 63;  // <location>
+        final int SYMBOL_METHODCALL            = 64;  // <methodCall>
+        final int SYMBOL_METHODDECLARATION     = 65;  // <methodDeclaration>
+        final int SYMBOL_MULOP                 = 66;  // <mulop>
+        final int SYMBOL_MULTEXP               = 67;  // <Mult Exp>
+        final int SYMBOL_NEGATEEXP             = 68;  // <Negate Exp>
+        final int SYMBOL_OPT_ARG_SEPARATED     = 69;  // <opt_arg_separated>
+        final int SYMBOL_OPT_ELSE_BLOCK        = 70;  // <opt_else_block>
+        final int SYMBOL_OPT_EXPRESSION        = 71;  // <opt_expression>
+        final int SYMBOL_OPT_PARAMETER         = 72;  // <opt_parameter>
+        final int SYMBOL_PARAMETER             = 73;  // <parameter>
+        final int SYMBOL_PARAMETERLIST         = 74;  // <parameter list>
+        final int SYMBOL_PROGRAM2              = 75;  // <Program>
+        final int SYMBOL_RELEXP                = 76;  // <Rel Exp>
+        final int SYMBOL_RELOP                 = 77;  // <relop>
+        final int SYMBOL_RETURN2               = 78;  // <return>
+        final int SYMBOL_SELECTION             = 79;  // <selection>
+        final int SYMBOL_SIMPLELOCATION        = 80;  // <simpleLocation>
+        final int SYMBOL_STATEMENT             = 81;  // <statement>
+        final int SYMBOL_STRUCTDECLARATION     = 82;  // <structDeclaration>
+        final int SYMBOL_TYPE                  = 83;  // <Type>
+        final int SYMBOL_VALUE                 = 84;  // <Value>
+        final int SYMBOL_VARDECL1              = 85;  // <varDecl 1>
+        final int SYMBOL_VARDECLARATION        = 86;  // <varDeclaration>
     };
 
-    private interface RuleConstants
-    {
-       final int RULE_PROGRAM_CLASS_PROGRAM_LBRACE_RBRACE       =  0;  // <Program> ::= class Program '{' <Declaracion Kleene> '}'
-       final int RULE_DECLARACIONKLEENE                         =  1;  // <Declaracion Kleene> ::= <Declaracion> <Declaracion Kleene>
-       final int RULE_DECLARACIONKLEENE2                        =  2;  // <Declaracion Kleene> ::= 
-       final int RULE_DECLARACION                               =  3;  // <Declaracion> ::= <struct Declaracion>
-       final int RULE_DECLARACION2                              =  4;  // <Declaracion> ::= <variable Declaracion>
-       final int RULE_DECLARACION3                              =  5;  // <Declaracion> ::= <metodo Declaracion>
-       final int RULE_VARIABLEDECLARACION_ID_SEMI               =  6;  // <variable Declaracion> ::= <Tipo> id <var Array Decision> ';'
-       final int RULE_VARARRAYDECISION_LBRACKET_NUM_RBRACKET    =  7;  // <var Array Decision> ::= '[' num ']'
-       final int RULE_VARARRAYDECISION                          =  8;  // <var Array Decision> ::= 
-       final int RULE_STRUCTDECLARACION_STRUCT_ID_LBRACE_RBRACE =  9;  // <struct Declaracion> ::= struct id '{' <Kleene variable Declaracion> '}'
-       final int RULE_KLEENEVARIABLEDECLARACION                 = 10;  // <Kleene variable Declaracion> ::= <variable Declaracion> <Kleene variable Declaracion>
-       final int RULE_KLEENEVARIABLEDECLARACION2                = 11;  // <Kleene variable Declaracion> ::= 
-       final int RULE_METODODECLARACION_ID_LPARAN_RPARAN        = 12;  // <metodo Declaracion> ::= <Tipo> id '(' <Des parametro> ')' <bloque>
-       final int RULE_DESPARAMETRO                              = 13;  // <Des parametro> ::= <multiple parametros>
-       final int RULE_DESPARAMETRO2                             = 14;  // <Des parametro> ::= 
-       final int RULE_MULTIPLEPARAMETROS                        = 15;  // <multiple parametros> ::= <parametro>
-       final int RULE_MULTIPLEPARAMETROS_COMMA                  = 16;  // <multiple parametros> ::= <multiple parametros> ',' <parametro>
-       final int RULE_TIPO_INT                                  = 17;  // <Tipo> ::= int
-       final int RULE_TIPO_CHAR                                 = 18;  // <Tipo> ::= char
-       final int RULE_TIPO_BOOLEAN                              = 19;  // <Tipo> ::= boolean
-       final int RULE_TIPO_VOID                                 = 20;  // <Tipo> ::= void
-       final int RULE_TIPO_STRUCT_ID                            = 21;  // <Tipo> ::= struct id
-       final int RULE_TIPO                                      = 22;  // <Tipo> ::= <struct Declaracion>
-       final int RULE_PARAMETRO_ID                              = 23;  // <parametro> ::= <Tipo> id
-       final int RULE_PARAMETRO_ID_LBRACKET_RBRACKET            = 24;  // <parametro> ::= <Tipo> id '[' ']'
-       final int RULE_BLOQUE_LBRACE_RBRACE                      = 25;  // <bloque> ::= '{' <Kleene variable Declaracion> <Kleene statement> '}'
-       final int RULE_KLEENESTATEMENT                           = 26;  // <Kleene statement> ::= <statement> <Kleene statement>
-       final int RULE_KLEENESTATEMENT2                          = 27;  // <Kleene statement> ::= 
-       final int RULE_STATEMENT                                 = 28;  // <statement> ::= <bloque>
-       final int RULE_STATEMENT2                                = 29;  // <statement> ::= <seleccion>
-       final int RULE_STATEMENT3                                = 30;  // <statement> ::= <iteracion>
-       final int RULE_STATEMENT_SEMI                            = 31;  // <statement> ::= <retorno> ';'
-       final int RULE_STATEMENT_SEMI2                           = 32;  // <statement> ::= <asignacion> ';'
-       final int RULE_STATEMENT_SEMI3                           = 33;  // <statement> ::= <Des expresion> ';'
-       final int RULE_SELECCION_IF_LPARAN_RPARAN                = 34;  // <seleccion> ::= if '(' <expresion> ')' <bloque> <Des bloque>
-       final int RULE_DESBLOQUE_ELSE                            = 35;  // <Des bloque> ::= else <bloque>
-       final int RULE_DESBLOQUE                                 = 36;  // <Des bloque> ::= 
-       final int RULE_ITERACION_WHILE_LPARAN_RPARAN             = 37;  // <iteracion> ::= while '(' <expresion> ')' <bloque>
-       final int RULE_RETORNO_RETURN                            = 38;  // <retorno> ::= return <Des expresion>
-       final int RULE_ASIGNACION_EQ                             = 39;  // <asignacion> ::= <locacion> '=' <expresion>
-       final int RULE_DESEXPRESION                              = 40;  // <Des expresion> ::= <expresion>
-       final int RULE_DESEXPRESION2                             = 41;  // <Des expresion> ::= 
-       final int RULE_EXPRESION                                 = 42;  // <expresion> ::= <Relacion Exp> <Condicional Des> <expresion>
-       final int RULE_EXPRESION2                                = 43;  // <expresion> ::= <Relacion Exp>
-       final int RULE_RELACIONEXP                               = 44;  // <Relacion Exp> ::= <suma Exp> <Relacion Des> <Relacion Exp>
-       final int RULE_RELACIONEXP2                              = 45;  // <Relacion Exp> ::= <suma Exp>
-       final int RULE_SUMAEXP                                   = 46;  // <suma Exp> ::= <Multi Exp> <suma Des> <suma Exp>
-       final int RULE_SUMAEXP2                                  = 47;  // <suma Exp> ::= <Multi Exp>
-       final int RULE_MULTIEXP                                  = 48;  // <Multi Exp> ::= <Negacion Exp> <multi Des> <Multi Exp>
-       final int RULE_MULTIEXP2                                 = 49;  // <Multi Exp> ::= <Negacion Exp>
-       final int RULE_NEGACIONEXP_MINUS                         = 50;  // <Negacion Exp> ::= '-' <Valor>
-       final int RULE_NEGACIONEXP_EXCLAM                        = 51;  // <Negacion Exp> ::= '!' <Valor>
-       final int RULE_NEGACIONEXP                               = 52;  // <Negacion Exp> ::= <Valor>
-       final int RULE_CONDICIONALDES_AMPAMP                     = 53;  // <Condicional Des> ::= '&&'
-       final int RULE_CONDICIONALDES_PIPEPIPE                   = 54;  // <Condicional Des> ::= '||'
-       final int RULE_RELACIONDES_LTEQ                          = 55;  // <Relacion Des> ::= '<='
-       final int RULE_RELACIONDES_LT                            = 56;  // <Relacion Des> ::= '<'
-       final int RULE_RELACIONDES_GT                            = 57;  // <Relacion Des> ::= '>'
-       final int RULE_RELACIONDES_GTEQ                          = 58;  // <Relacion Des> ::= '>='
-       final int RULE_RELACIONDES_EQEQ                          = 59;  // <Relacion Des> ::= '=='
-       final int RULE_RELACIONDES_EXCLAMEQ                      = 60;  // <Relacion Des> ::= '!='
-       final int RULE_SUMADES_PLUS                              = 61;  // <suma Des> ::= '+'
-       final int RULE_SUMADES_MINUS                             = 62;  // <suma Des> ::= '-'
-       final int RULE_MULTIDES_TIMES                            = 63;  // <multi Des> ::= '*'
-       final int RULE_MULTIDES_DIV                              = 64;  // <multi Des> ::= '/'
-       final int RULE_MULTIDES_PERCENT                          = 65;  // <multi Des> ::= '%'
-       final int RULE_VALOR                                     = 66;  // <Valor> ::= <literal>
-       final int RULE_VALOR_LPARAN_RPARAN                       = 67;  // <Valor> ::= '(' <expresion> ')'
-       final int RULE_VALOR2                                    = 68;  // <Valor> ::= <llamada metodo>
-       final int RULE_VALOR3                                    = 69;  // <Valor> ::= <locacion>
-       final int RULE_LOCACION_DOT                              = 70;  // <locacion> ::= <locacion Array Des> '.' <locacion>
-       final int RULE_LOCACION                                  = 71;  // <locacion> ::= <locacion Array Des>
-       final int RULE_LOCACIONARRAYDES_ID_LBRACKET_RBRACKET     = 72;  // <locacion Array Des> ::= id '[' <expresion> ']'
-       final int RULE_LOCACIONARRAYDES_ID                       = 73;  // <locacion Array Des> ::= id
-       final int RULE_LLAMADAMETODO_ID_LPARAN_RPARAN            = 74;  // <llamada metodo> ::= id '(' <arg Des> ')'
-       final int RULE_ARGDES                                    = 75;  // <arg Des> ::= <multiples args>
-       final int RULE_ARGDES2                                   = 76;  // <arg Des> ::= 
-       final int RULE_MULTIPLESARGS                             = 77;  // <multiples args> ::= <arg>
-       final int RULE_MULTIPLESARGS_COMMA                       = 78;  // <multiples args> ::= <multiples args> ',' <arg>
-       final int RULE_ARG                                       = 79;  // <arg> ::= <expresion>
+    public interface RuleConstants{
+       final int RULE_PROGRAM_CLASS_PROGRAM_LBRACE_RBRACE       =  0;  // <Program> ::= class Program '{' <kleene_declaration> '}'
+       final int RULE_KLEENE_DECLARATION                        =  1;  // <kleene_declaration> ::= <declaration> <kleene_declaration>
+       final int RULE_KLEENE_DECLARATION2                       =  2;  // <kleene_declaration> ::= 
+       final int RULE_DECLARATION                               =  3;  // <declaration> ::= <structDeclaration>
+       final int RULE_DECLARATION2                              =  4;  // <declaration> ::= <varDeclaration>
+       final int RULE_DECLARATION3                              =  5;  // <declaration> ::= <methodDeclaration>
+       final int RULE_VARDECLARATION_ID_SEMI                    =  6;  // <varDeclaration> ::= <Type> id <varDecl 1> ';'
+       final int RULE_VARDECL1_LBRACKET_NUM_RBRACKET            =  7;  // <varDecl 1> ::= '[' num ']'
+       final int RULE_VARDECL1                                  =  8;  // <varDecl 1> ::= 
+       final int RULE_STRUCTDECLARATION_STRUCT_ID_LBRACE_RBRACE =  9;  // <structDeclaration> ::= struct id '{' <kleene_varDeclaration> '}'
+       final int RULE_KLEENE_VARDECLARATION                     = 10;  // <kleene_varDeclaration> ::= <varDeclaration> <kleene_varDeclaration>
+       final int RULE_KLEENE_VARDECLARATION2                    = 11;  // <kleene_varDeclaration> ::= 
+       final int RULE_METHODDECLARATION_ID_LPARAN_RPARAN        = 12;  // <methodDeclaration> ::= <Type> id '(' <opt_parameter> ')' <block>
+       final int RULE_OPT_PARAMETER                             = 13;  // <opt_parameter> ::= <parameter list>
+       final int RULE_OPT_PARAMETER2                            = 14;  // <opt_parameter> ::= 
+       final int RULE_PARAMETERLIST                             = 15;  // <parameter list> ::= <parameter>
+       final int RULE_PARAMETERLIST_COMMA                       = 16;  // <parameter list> ::= <parameter list> ',' <parameter>
+       final int RULE_TYPE_INT                                  = 17;  // <Type> ::= int
+       final int RULE_TYPE_CHAR                                 = 18;  // <Type> ::= char
+       final int RULE_TYPE_BOOLEAN                              = 19;  // <Type> ::= boolean
+       final int RULE_TYPE_VOID                                 = 20;  // <Type> ::= void
+       final int RULE_TYPE_STRUCT_ID                            = 21;  // <Type> ::= struct id
+       final int RULE_TYPE                                      = 22;  // <Type> ::= <structDeclaration>
+       final int RULE_PARAMETER_ID                              = 23;  // <parameter> ::= <Type> id
+       final int RULE_PARAMETER_ID_LBRACKET_RBRACKET            = 24;  // <parameter> ::= <Type> id '[' ']'
+       final int RULE_BLOCK_LBRACE_RBRACE                       = 25;  // <block> ::= '{' <kleene_varDeclaration> <kleene_statement> '}'
+       final int RULE_KLEENE_STATEMENT                          = 26;  // <kleene_statement> ::= <statement> <kleene_statement>
+       final int RULE_KLEENE_STATEMENT2                         = 27;  // <kleene_statement> ::= 
+       final int RULE_STATEMENT                                 = 28;  // <statement> ::= <block>
+       final int RULE_STATEMENT2                                = 29;  // <statement> ::= <selection>
+       final int RULE_STATEMENT3                                = 30;  // <statement> ::= <iteration>
+       final int RULE_STATEMENT_SEMI                            = 31;  // <statement> ::= <return> ';'
+       final int RULE_STATEMENT_SEMI2                           = 32;  // <statement> ::= <assign> ';'
+       final int RULE_STATEMENT_SEMI3                           = 33;  // <statement> ::= <opt_expression> ';'
+       final int RULE_SELECTION_IF_LPARAN_RPARAN                = 34;  // <selection> ::= if '(' <expression> ')' <block> <opt_else_block>
+       final int RULE_OPT_ELSE_BLOCK_ELSE                       = 35;  // <opt_else_block> ::= else <block>
+       final int RULE_OPT_ELSE_BLOCK                            = 36;  // <opt_else_block> ::= 
+       final int RULE_ITERATION_WHILE_LPARAN_RPARAN             = 37;  // <iteration> ::= while '(' <expression> ')' <block>
+       final int RULE_RETURN_RETURN                             = 38;  // <return> ::= return <opt_expression>
+       final int RULE_ASSIGN_EQ                                 = 39;  // <assign> ::= <location> '=' <expression>
+       final int RULE_OPT_EXPRESSION                            = 40;  // <opt_expression> ::= <expression>
+       final int RULE_OPT_EXPRESSION2                           = 41;  // <opt_expression> ::= 
+       final int RULE_EXPRESSION                                = 42;  // <expression> ::= <Rel Exp> <conditionalop> <expression>
+       final int RULE_EXPRESSION2                               = 43;  // <expression> ::= <Rel Exp>
+       final int RULE_RELEXP                                    = 44;  // <Rel Exp> ::= <Add Exp> <relop> <Rel Exp>
+       final int RULE_RELEXP2                                   = 45;  // <Rel Exp> ::= <Add Exp>
+       final int RULE_ADDEXP                                    = 46;  // <Add Exp> ::= <Mult Exp> <addop> <Add Exp>
+       final int RULE_ADDEXP2                                   = 47;  // <Add Exp> ::= <Mult Exp>
+       final int RULE_MULTEXP                                   = 48;  // <Mult Exp> ::= <Negate Exp> <mulop> <Mult Exp>
+       final int RULE_MULTEXP2                                  = 49;  // <Mult Exp> ::= <Negate Exp>
+       final int RULE_NEGATEEXP_MINUS                           = 50;  // <Negate Exp> ::= '-' <Value>
+       final int RULE_NEGATEEXP_EXCLAM                          = 51;  // <Negate Exp> ::= '!' <Value>
+       final int RULE_NEGATEEXP                                 = 52;  // <Negate Exp> ::= <Value>
+       final int RULE_CONDITIONALOP_AMPAMP                      = 53;  // <conditionalop> ::= '&&'
+       final int RULE_CONDITIONALOP_PIPEPIPE                    = 54;  // <conditionalop> ::= '||'
+       final int RULE_RELOP_LTEQ                                = 55;  // <relop> ::= '<='
+       final int RULE_RELOP_LT                                  = 56;  // <relop> ::= '<'
+       final int RULE_RELOP_GT                                  = 57;  // <relop> ::= '>'
+       final int RULE_RELOP_GTEQ                                = 58;  // <relop> ::= '>='
+       final int RULE_RELOP_EQEQ                                = 59;  // <relop> ::= '=='
+       final int RULE_RELOP_EXCLAMEQ                            = 60;  // <relop> ::= '!='
+       final int RULE_ADDOP_PLUS                                = 61;  // <addop> ::= '+'
+       final int RULE_ADDOP_MINUS                               = 62;  // <addop> ::= '-'
+       final int RULE_MULOP_TIMES                               = 63;  // <mulop> ::= '*'
+       final int RULE_MULOP_DIV                                 = 64;  // <mulop> ::= '/'
+       final int RULE_MULOP_PERCENT                             = 65;  // <mulop> ::= '%'
+       final int RULE_VALUE                                     = 66;  // <Value> ::= <literal>
+       final int RULE_VALUE_LPARAN_RPARAN                       = 67;  // <Value> ::= '(' <expression> ')'
+       final int RULE_VALUE2                                    = 68;  // <Value> ::= <methodCall>
+       final int RULE_VALUE3                                    = 69;  // <Value> ::= <location>
+       final int RULE_LOCATION_DOT                              = 70;  // <location> ::= <simpleLocation> '.' <location>
+       final int RULE_LOCATION                                  = 71;  // <location> ::= <simpleLocation>
+       final int RULE_SIMPLELOCATION_ID_LBRACKET_RBRACKET       = 72;  // <simpleLocation> ::= id '[' <expression> ']'
+       final int RULE_SIMPLELOCATION_ID                         = 73;  // <simpleLocation> ::= id
+       final int RULE_METHODCALL_ID_LPARAN_RPARAN               = 74;  // <methodCall> ::= id '(' <opt_arg_separated> ')'
+       final int RULE_OPT_ARG_SEPARATED                         = 75;  // <opt_arg_separated> ::= <arg list>
+       final int RULE_OPT_ARG_SEPARATED2                        = 76;  // <opt_arg_separated> ::= 
+       final int RULE_ARGLIST                                   = 77;  // <arg list> ::= <arg>
+       final int RULE_ARGLIST_COMMA                             = 78;  // <arg list> ::= <arg list> ',' <arg>
+       final int RULE_ARG                                       = 79;  // <arg> ::= <expression>
        final int RULE_LITERAL                                   = 80;  // <literal> ::= <int_literal>
        final int RULE_LITERAL2                                  = 81;  // <literal> ::= <char_literal>
        final int RULE_LITERAL3                                  = 82;  // <literal> ::= <bool_literal>
@@ -232,805 +226,233 @@ public class Main implements GPMessageConstants
        final int RULE_BOOL_LITERAL_TRUE                         = 85;  // <bool_literal> ::= true
        final int RULE_BOOL_LITERAL_FALSE                        = 86;  // <bool_literal> ::= false
     };
-
-
-    public GOLDParser parser;
+    
+    public GOLDParser parser = new GOLDParser();
     private String rutaGramatica= "src/grammar/GoldParser/Decaf2.cgt";
-    private boolean huboErrores= true;
+    private static final String gramatica = "src/Grammar/Decaf2.grm";
     private IDecaf padre;
+    private String textToParse = "";
+    private boolean error = true;
     
-    @SuppressWarnings("rawtypes")
-	private Stack stack = new Stack();
+    private TablaSimbolos tablaSimbolos = new TablaSimbolos();
+    private MetodoTabla tablaMetodos = new MetodoTabla();
+    private EstructuraTabla tablaEstructura = new EstructuraTabla();
+    private Verificador ambitoActual = new Verificador();
+    private String tipoRetorno = "";
+    private boolean methodAmbit = false;
+    private LinkedList<IGeneracionCodigo> codigoX = new LinkedList<IGeneracionCodigo>();
+
     
-
-    /***************************************************************
- 	 * This class will run the engine, and needs a file called config.dat
-     * in the current directory. This file should contain two lines,
-     * The first should be the absolute path name to the .cgt file, the second
-     * should be the source file you wish to parse.
- 	 * @param args Array of arguments.
- 	 ***************************************************************/
+    public Main(){}
     
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Main(String textToParse, IDecaf padre)
-    {
-    	this.padre=padre;
-        String compiledGrammar = "";
+    public void codigoIntermedio(String textToParse,IDecaf padre){
+        this.padre=padre;
+        this.textToParse = textToParse;
 
-            compiledGrammar = rutaGramatica;
-    		//textToParse = buffR.readLine();
+        parsea();
+        
+        try{
+            if(this.error == false){
+
+                //crea la tabla de símbolos
+                this.crearTabla(parser.currentReduction());
 
 
-            parser = new GOLDParser();
-            parser.setTrimReductions(false);
-           // boolean varDeclaration = false;
-           // boolean varVariable = false;
-           // Literal lit = null;
+                if(error == true){
+                    parser.closeFile();
+                    return;
+                }
 
-        try
-        {
-            parser.loadCompiledGrammar(compiledGrammar);
+                //println("Method Table: \n"+this.methodTable.toString());
+                //println("Struct Table: \n"+this.structTable.toString());
+                verificacionMain();
+
+                if(error == true){
+                    parser.closeFile();
+                    return;
+                }
+
+                //setear el ámbito como el ámbito padre
+                this.ambitoActual = this.ambitoActual.darPadre();
+                //resetear para obtener hijo
+                this.ambitoActual.resetearAHijo();
+
+
+                codigoX.add(new Comentario("*******************************************"));
+                codigoX.add(new Comentario("               Ámbito global"));
+                for(tabla.Simbolo a : this.darTablaSimbolos().darTodosSimbolosGlobales(ambitoActual)){
+                    String [] b = GenCodigo.darDesplazamiento(a,this,this.ambitoActual);
+                    codigoX.add(new Comentario(a.darId()+" = "+b[0]+"["+b[1]+"]"));
+                }
+                codigoX.add(new Comentario("*******************************************\n\n"));
+
+                padre.imprimir("\n--------------------------------------------\n", 2);
+                
+                //generación de código intermedio
+                generarCodigo(parser.currentReduction(),0);
+                
+                for(String a : darCodigoString()){
+
+                    System.out.println(a+"\n");
+                }
+                //parser.getInterCodeStr()
+                
+            }
             
-            if ( (textToParse != null))  
-            {
-            	parser.openFile(textToParse);	
-            }
-            else
-            {
-            	padre.imprimir("Por favor intente poniendo un archivo",1);
-            }
-        	
-        	
-        	
+            parser.closeFile();
         }
-        catch(ParserException parse)
-        {
-        	padre.imprimir("**PARSER ERROR**\n" + parse.toString(),1);
-        	padre.imprimir("Error de Parser: No cargó gramática o el archivo a parsear",1);
-            System.exit(1);
+        catch(ParserException parse){
+
+            //println("**PARSER ERROR**\n" + "parse.toString()");
+            padre.imprimir("** PARSER ERROR ** "+"\n\t"+ parse.toString() +"\n",1);
         }
+    }
 
-        boolean done = false;
-        int response = -1;
-        Expresion expLo = null;
-        Object antesdeSigno = null;
-        String nombreAsig = null;
-        if ( (textToParse != null))  
-        {
+public void parsea(){
+        //GOLDParser parser = new GOLDParser();
+        parser.setTrimReductions(false);
+        try{
+            parser.loadCompiledGrammar(this.rutaGramatica);
+            //println(textToParse);
+            parser.openFile(textToParse);
+        }
+       catch(ParserException parse){
 
-        	padre.imprimir("-------------------- Proceso Lectura --------------------",2);
-	        while(!done)
-	        {
-	            try
-	            {
-	            	response = parser.parse();
-	            }
-	            catch(ParserException parse)
-	            {
-	            	padre.imprimir("**PARSER ERROR**\n" + parse.toString() ,1);
-	            	padre.imprimir(""+parse.getCause() + "  "+parse.getMessage(),1);
-	            	padre.imprimir("Linea: "+parse.getMessage(),1);
-	            	imprimirErrores();
-	                System.exit(1);
-	            }
+           //println("**PARSER ERROR**\n" + parse.toString());
+           padre.imprimir("** PARSER ERROR ** "+"\n\t"+ parse.toString() +"\n",1);
+       }
 
-	            switch(response)
-	            {
-	                case gpMsgTokenRead:
-	                    /* A token was read by the parser. The Token Object can be accessed 
-						   through the CurrentToken() property:  Parser.CurrentToken */
+       boolean done = false;
+       int response = -1;
 
-	                	
-	                    // ************************************** log file
-	                    //System.out.println("gpMsgTokenRead");
-	                    //Token myTok = parser.currentToken();
-	                    //padre.imprimir("gpMsgTokenRead:   "+(String)myTok.getData(),2);
-	                    // ************************************** end log
-	                	parser.currentToken().setLineNumber(parser.currentLineNumber());
-	                	Token myTok = parser.currentToken();
-	                	
-	                    int cos=myTok.getPSymbol().getTableIndex();
-	                    
-	                    
-	                    switch (myTok.getPSymbol().getTableIndex())
-	                    {
-	                    	case SymbolConstants.SYMBOL_PROGRAM:
-	                    		padre.imprimir("TokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "   Text:  "+myTok.getData().toString()+"\n",2);
-	                    		stack.push(myTok.getText());
-	                    		break;
-	                    	case SymbolConstants.SYMBOL_ID:
-	                    	case SymbolConstants.SYMBOL_TRUE:
-	                    	case SymbolConstants.SYMBOL_FALSE:
-	                    	case SymbolConstants.SYMBOL_CHARACTER:
-	                    		padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "   Text:  "+myTok.getData().toString()+"\n",2);
-	                    		stack.push(myTok.getData().toString());
-	                    		break;
-	                    	case SymbolConstants.SYMBOL_NUM:
-	                    		padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "   Text:  "+myTok.getData().toString()+"\n",2);
-	                    		int numero = Integer.parseInt(myTok.getData().toString());
-	                    		stack.push(numero);
-	                    		break;
-	                    }
+       while(!done)
+       {
+           try{
+               response = parser.parse();
+           }
+           catch(ParserException parse){
+               //println("**PARSER ERROR**\n" + parse.toString());
+               padre.imprimir("** PARSER ERROR ** "+"\n\t"+ parse.toString() +"\n",1);
+           }
 
-	                	
+           switch(response)
+           {
+               case gpMsgTokenRead:
+                   /* A token was read by the parser. The Token Object can be accessed
+                      through the CurrentToken() property:  Parser.CurrentToken */
+                   parser.currentToken().setLineNumber(parser.currentLineNumber());
+                   Token myTok = parser.currentToken();
+               	
+                   int cos=myTok.getPSymbol().getTableIndex();
+                   
+                   
+                   switch (myTok.getPSymbol().getTableIndex())
+                   {
+                   	case SymbolConstants.SYMBOL_PROGRAM:
+                   		padre.imprimir("TokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "   Text:  "+myTok.getData().toString()+"\n",2);
+                   		break;
+                   	case SymbolConstants.SYMBOL_ID:
+                   	case SymbolConstants.SYMBOL_TRUE:
+                   	case SymbolConstants.SYMBOL_FALSE:
+                   	case SymbolConstants.SYMBOL_CHARACTER:
+                   		padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "   Text:  "+myTok.getData().toString()+"\n",2);
+                   		break;
+                   	case SymbolConstants.SYMBOL_NUM:
+                   		padre.imprimir("gpMsgTokenRead:   "+cos+"  "+myTok.getPSymbol()+ "    "+myTok.getText()+ "   Text:  "+myTok.getData().toString()+"\n",2);
+                   		//int numero = Integer.parseInt(myTok.getData().toString());
+                   		break;
+                   }
 
-	                    break;
+                   break;
 
-	                case gpMsgReduction:
-	                    /* This message is returned when a rule was reduced by the parse engine.
-	                    The CurrentReduction property is assigned a Reduction object
-	                    containing the rule and its related tokens. You can reassign this
-	                    property to your own customized class. If this is not the case,
-	                    this message can be ignored and the Reduction object will be used
-	                    to store the parse tree.  */
-
-	               
-	                	
-	                    switch(parser.currentReduction().getParentRule().getTableIndex())
-	                      {
-	                         case RuleConstants.RULE_PROGRAM_CLASS_PROGRAM_LBRACE_RBRACE:
-	                            //<Program> ::= class Program '{' <Declaracion Kleene> '}'
-		                    	   LinkedList<Declaracion> listaDeclaraciones = (LinkedList<Declaracion>)stack.pop();
-		                    	   while ((stack.peek().getClass() == Variable.class) || (stack.peek().getClass() == Estructura.class) || (stack.peek().getClass() == Funcion.class))
-		                    	   {
-		                    		   listaDeclaraciones.add((Declaracion)stack.pop());
-		                    	   }
-		                    	   stack.push(listaDeclaraciones);
-		                    	   stackPruebas((Stack)stack.clone(), "En el main");
-		                    	   stack.push(new Clase(new Cuerpo((LinkedList<Declaracion>)stack.pop()),(String)stack.pop()));
-	                            break;
-	                         case RuleConstants.RULE_DECLARACIONKLEENE:
-	                            //<Declaracion Kleene> ::= <Declaracion> <Declaracion Kleene>
-	                        	stackPruebas(stack.clone(), "RULE_DECLARACIONKLEENE I");
-	                 	   		LinkedList<Declaracion> listaVar1 = ((LinkedList<Declaracion>) stack.pop());
-                		   		Declaracion variable = (Declaracion)stack.pop();
-                		   		listaVar1.add(variable);
-                		   		stack.push(listaVar1);
-                		   		stackPruebas(stack.clone(), "RULE_DECLARACIONKLEENE F");
-	                        	 
-	                            break;
-	                         case RuleConstants.RULE_DECLARACIONKLEENE2:
-	                            //<Declaracion Kleene> ::= 
-	                        	 LinkedList<Declaracion> listaVar = new LinkedList<Declaracion>();
-	                        	 stack.push(listaVar);
-	                        	 stackPruebas(stack.clone(), "Declaracionk2");
-	                            break;
-	                         case RuleConstants.RULE_DECLARACION:
-	                            //<Declaracion> ::= <struct Declaracion>
-	                        	 //!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_DECLARACION2:
-	                            //<Declaracion> ::= <variable Declaracion>
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_DECLARACION3:
-	                            //<Declaracion> ::= <metodo Declaracion>
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_VARIABLEDECLARACION_ID_SEMI:
-	                            //<variable Declaracion> ::= <Tipo> id <var Array Decision> ';'
-	                        	 stackPruebas(stack.clone(),"RULE_VARIABLEDECLARACION_ID_SEMI I");
-	                        	 if (stack.peek().getClass() == String.class)
-	                        	 {
-	                        		 nombreAsig = (String)stack.pop();
-	                        	 }
-	                        	 stack.push(new Variable(null,(Tipo)stack.pop(),(String) stack.pop()));
-	                        	 stackPruebas(stack.clone(),"RULE_VARIABLEDECLARACION_ID_SEMI F");
-	                            break;
-	                         case RuleConstants.RULE_VARARRAYDECISION_LBRACKET_NUM_RBRACKET:
-	                            //<var Array Decision> ::= '[' num ']'
-	                        	 Tipo tip = new Tipo();
-	                        	 	try{
-		                    	   int numero = (Integer)stack.pop();
-		                    	   if (numero<1)
-		                    	   {
-		                    		   padre.imprimir("El numero del Array debe ser mayor a 1. Linea: "+parser.currentLineNumber(), 1);
-		                    		   done = true;
-		                    		   huboErrores = true;
-		                    	   }
-		                    	   stack.push(tip.crearArregloDesdeTipo(numero,(Tipo)stack.pop()));
-	                        	 	}
-	                        	 	catch (Exception ex)
-	                        	 	{
-	                        	 		padre.imprimir("Debe escribir un número y lo que puso no lo es. Linea: "+parser.currentLineNumber(), 1);
-			                    		done = true;
-			                    		huboErrores = true;
-	                        	 	}
-		                    	   
-	                            break;
-	                         case RuleConstants.RULE_VARARRAYDECISION:
-	                            //<var Array Decision> ::= 
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_STRUCTDECLARACION_STRUCT_ID_LBRACE_RBRACE:
-	                            //<struct Declaracion> ::= struct id '{' <Kleene variable Declaracion> '}'
-	                        	 stackPruebas(stack.clone(),"RULE_STRUCTDECLARACION_STRUCT_ID_LBRACE_RBRACE I");
-	                        	 if (stack.peek().getClass() == String.class)
-	                        	 {
-	                        		String nombreVar = (String) stack.pop();
-	                        		LinkedList<Variable> lista = (LinkedList<Variable>) stack.pop();
-		                    		String nombreEstructura = (String)stack.pop();
-	                        		stack.push(new Estructura(lista,nombreEstructura));
-	                        		stack.push(nombreVar);
-	                        		stack.push(new Tipo(nombreEstructura));
-	                        	 }
-	                        	 else
-	                        	 {
-	                        	 stack.push(new Estructura((LinkedList<Variable>) stack.pop(),(String)stack.pop()));
-	                        	 }
-	                        	 stackPruebas(stack.clone(),"RULE_STRUCTDECLARACION_STRUCT_ID_LBRACE_RBRACE F");
-	                            break;
-	                         case RuleConstants.RULE_KLEENEVARIABLEDECLARACION:
-	                            //<Kleene variable Declaracion> ::= <variable Declaracion> <Kleene variable Declaracion>
-	                        	 stackPruebas(stack.clone(),"RULE_KLEENEVARIABLEDECLARACION I");
-	                        	 LinkedList<Variable> listaVar2 = (LinkedList<Variable>)stack.pop();
-	                        	 listaVar2.add((Variable)stack.pop());
-	                    	     stack.push(listaVar2);
-	                    	     stackPruebas(stack.clone(),"RULE_KLEENEVARIABLEDECLARACION F");
-	                            break;
-	                         case RuleConstants.RULE_KLEENEVARIABLEDECLARACION2:
-	                            //<Kleene variable Declaracion> ::= 
-	                        	 stack.push(new LinkedList<Variable>());
-	                            break;
-	                         case RuleConstants.RULE_METODODECLARACION_ID_LPARAN_RPARAN:
-	                            //<metodo Declaracion> ::= <Tipo> id '(' <Des parametro> ')' <bloque>
-	                        	 stack.push(new Funcion((Cuerpo)stack.pop(),(LinkedList<Parametro>)stack.pop(),(Tipo)stack.pop(),(String)stack.pop()));
-	                            break;
-	                         case RuleConstants.RULE_DESPARAMETRO:
-	                            //<Des parametro> ::= <multiple parametros>
-	                        	 //!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_DESPARAMETRO2:
-	                            //<Des parametro> ::=
-	                        	 stack.push(new LinkedList<Parametro>());
-	                            break;
-	                         case RuleConstants.RULE_MULTIPLEPARAMETROS:
-	                            //<multiple parametros> ::= <parametro>
-	                        	 LinkedList<Parametro> paramlist = new LinkedList<Parametro>();
-	                        	 paramlist.add((Parametro)stack.pop());
-	                        	 stack.push(paramlist);
-	                            break;
-	                         case RuleConstants.RULE_MULTIPLEPARAMETROS_COMMA:
-	                            //<multiple parametros> ::= <multiple parametros> ',' <parametro>
-	                        	 Parametro parametro = (Parametro)stack.pop();
-	                        	 ((LinkedList<Parametro>)stack.peek()).add(parametro);
-	                            break;
-	                         case RuleConstants.RULE_TIPO_INT:
-	                            //<Tipo> ::= int
-	                        	 stack.push(new Tipo(TipoPrimitivo.integer));
-	                            break;
-	                         case RuleConstants.RULE_TIPO_CHAR:
-	                            //<Tipo> ::= char
-	                        	 stack.push(new Tipo(TipoPrimitivo.character));
-	                            break;
-	                         case RuleConstants.RULE_TIPO_BOOLEAN:
-	                            //<Tipo> ::= boolean
-	                        	 stack.push(new Tipo(TipoPrimitivo.bool));
-	                            break;
-	                         case RuleConstants.RULE_TIPO_VOID:
-	                            //<Tipo> ::= void
-	                        	 stack.push(new Tipo(TipoPrimitivo.void_));
-	                            break;
-	                         case RuleConstants.RULE_TIPO_STRUCT_ID:
-	                            //<Tipo> ::= struct id
-	                        	 stack.push(new Tipo((String)stack.pop()));
-	                            break;
-	                         case RuleConstants.RULE_TIPO:
-	                            //<Tipo> ::= <struct Declaracion>
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_PARAMETRO_ID:
-	                            //<parametro> ::= <Tipo> id
-	                        	 stack.push(new Parametro((Tipo)stack.pop(),(String)stack.pop(),PasoMetodo.porValor));
-	                            break;
-	                         case RuleConstants.RULE_PARAMETRO_ID_LBRACKET_RBRACKET:
-	                            //<parametro> ::= <Tipo> id '[' ']'
-	                        	 Tipo tipo = (Tipo)stack.pop();
-		                    	 tipo = tipo.crearArregloTipo(tipo.tipoPrimitivo);
-	                    		 stack.push(new Parametro(tipo,(String)stack.pop(),PasoMetodo.porValor));
-	                            break;
-	                         case RuleConstants.RULE_BLOQUE_LBRACE_RBRACE:
-	                            //<bloque> ::= '{' <Kleene variable Declaracion> <Kleene statement> '}'
-	                        	 stackPruebas(stack.clone(),"RULE_BLOQUE_LBRACE_RBRACE I");
-	                        	 LinkedList<Declaracion> lista1 = (LinkedList<Declaracion>)stack.pop();
-		                    	   LinkedList<Declaracion> lista2 = (LinkedList<Declaracion>)stack.pop();
-		                    	   for (int i=0; i<lista2.size(); i++)
-		                    	   {
-		                    		   lista1.add(lista2.get(i));
-		                    	   }	   
-		                    	   stack.push(new Cuerpo(lista1));
-	                        	 stackPruebas(stack.clone(),"RULE_BLOQUE_LBRACE_RBRACE F");
-	                            break;
-	                         case RuleConstants.RULE_KLEENESTATEMENT:
-	                            //<Kleene statement> ::= <statement> <Kleene statement>
-	                        	 stackPruebas(stack.clone(),"RULE_KLEENESTATEMENT I");
-	                        	 LinkedList<Declaracion> listaDec = (LinkedList<Declaracion>)stack.pop();
-	                        	 listaDec.add((Declaracion)stack.pop());
-	                    	     stack.push(listaDec);
-	                    	     stackPruebas(stack.clone(),"RULE_KLEENESTATEMENT F");
-	                            break;
-	                         case RuleConstants.RULE_KLEENESTATEMENT2:
-	                            //<Kleene statement> ::= 
-	                        	 stack.push(new LinkedList<Declaracion>());
-	                            break;
-	                         case RuleConstants.RULE_STATEMENT:
-	                            //<statement> ::= <bloque>
-	                        	 //!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_STATEMENT2:
-	                            //<statement> ::= <seleccion>
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_STATEMENT3:
-	                            //<statement> ::= <iteracion>
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_STATEMENT_SEMI:
-	                            //<statement> ::= <retorno> ';'
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_STATEMENT_SEMI2:
-	                            //<statement> ::= <asignacion> ';'
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_STATEMENT_SEMI3:
-	                            //<statement> ::= <Des expresion> ';'
-	                        	//!!! SOLO SE ENCARGA SI UNA EXPRESION LLEGA COMO DECLARACION
-	                        	 if (stack.peek().getClass() == Llamada.class)
-	                        	 {
-	                        		 Llamada llamadita = (Llamada)stack.pop();
-	                        		 stack.push(new LlamadaDeclaracion(llamadita.argumentos,llamadita.nombre));
-	                        	 }
-	                            break;
-	                         case RuleConstants.RULE_SELECCION_IF_LPARAN_RPARAN:
-	                            //<seleccion> ::= if '(' <expresion> ')' <bloque> <Des bloque>
-	                        	 // SE ENCARGA <Des bloque>
-	                            break;
-	                         case RuleConstants.RULE_DESBLOQUE_ELSE:
-	                            //<Des bloque> ::= else <bloque>
-	                        	 stackPruebas(stack.clone(),"RULE_DESBLOQUE_ELSE I");
-	                        	 stack.push(new If((Cuerpo)stack.pop(),(Cuerpo)stack.pop(),(Expresion)stack.pop()));
-	                        	 stackPruebas(stack.clone(),"RULE_DESBLOQUE_ELSE F");
-	                            break;
-	                         case RuleConstants.RULE_DESBLOQUE:
-	                            //<Des bloque> ::=
-	                        	 stackPruebas(stack.clone(),"RULE_DESBLOQUE I");
-	                        	 stack.push(new If(null,(Cuerpo)stack.pop(),(Expresion)stack.pop()));
-	                        	 stackPruebas(stack.clone(),"RULE_DESBLOQUE F");
-	                            break;
-	                         case RuleConstants.RULE_ITERACION_WHILE_LPARAN_RPARAN:
-	                            //<iteracion> ::= while '(' <expresion> ')' <bloque>
-	                        	 stack.push(new While( (Cuerpo)stack.pop(),(Expresion)stack.pop()));
-	                            break;
-	                         case RuleConstants.RULE_RETORNO_RETURN:
-	                            //<retorno> ::= return <Des expresion>
-	                        	 stack.push(new Return((Expresion)stack.pop()));
-	                            break;
-	                         case RuleConstants.RULE_ASIGNACION_EQ:
-	                            //<asignacion> ::= <locacion> '=' <expresion>
-	                        	 stackPruebas(stack.clone(),"RULE_ASIGNACION_EQ I");
-	                        	/**Literal indice = (Literal)expLo;
-	                        	 Literal valor = (Literal)stack.peek();
-	                        	 if (indice != null)
-	                        	 {
-	                        	 System.out.println("Valor de indice = "+indice.valor);
-	                        	 }
-	                        	 System.out.println("Valor de valor  = "+valor.valor);
-	                        	 **/
-	                        	 if (expLo != null)
-	                        	 {
-	                        		 stack.push( new Asignacion((Expresion)stack.pop(),expLo,(String)stack.pop()));
-	                        	 }
-	                        	 else
-	                        	 {
-	                        		 Expresion enAsignaEx = (Expresion)stack.pop();
-	                        		 if (stack.peek().getClass() != LinkedList.class)
-	                        		 {
-	                        		 stack.push( new Asignacion(enAsignaEx,null,(String)stack.pop()));
-	                        		 }
-	                        		 else
-	                        		 {
-	                        			 LinkedList le = (LinkedList)stack.pop();
-	                        			 stackPruebas(stack.clone(),"RULE_ASIGNACION_EQ EN COSO");
-	                        			 if (stack.peek().getClass() == String.class)
-	                        			 {
-		                        			 Asignacion asi = new Asignacion(enAsignaEx,null,(String)stack.pop());
-		                        			 stack.push(le );
-		                        			 stack.push(asi);
-	                        			 }
-	                        			 else
-	                        			 {
-	                        				 if (nombreAsig == null|| nombreAsig.isEmpty()  || nombreAsig.contentEquals("")	)
-	                        				 {
-	                        					 done = true;
-	                        					 huboErrores= true;
-	                        				 }
-	                        				 Asignacion asi = new Asignacion(enAsignaEx,null,nombreAsig);
-	                        				 nombreAsig = null;
-	                        				 stack.push(le );
-		                        			 stack.push(asi);
-	                        			 }
-	                        			 
-	                        			 
-	                        		 }
-	                        	 }
-	                        	 stackPruebas(stack.clone(),"RULE_ASIGNACION_EQ F");
-	                            break;
-	                         case RuleConstants.RULE_DESEXPRESION:
-	                            //<Des expresion> ::= <expresion>
-	                            break;
-	                         case RuleConstants.RULE_DESEXPRESION2:
-	                            //<Des expresion> ::= 
-	                        	 stack.push(null);
-	                            break;
-	                         case RuleConstants.RULE_EXPRESION:
-	                            //<expresion> ::= <Relacion Exp> <Condicional Des> <expresion>
-	                            break;
-	                         case RuleConstants.RULE_EXPRESION2:
-	                            //<expresion> ::= <Relacion Exp>
-	                            break;
-	                         case RuleConstants.RULE_RELACIONEXP:
-	                            //<Relacion Exp> ::= <suma Exp> <Relacion Des> <Relacion Exp>
-	                        	 Expresion expDe = (Expresion)stack.pop();
-		                    	 int numOperacion = (Integer)stack.pop();
-		                    	 stack.push(new ExpresionBinaria(expDe,numOperacion,(Expresion)stack.pop()));
-	                            break;
-	                         case RuleConstants.RULE_RELACIONEXP2:
-	                            //<Relacion Exp> ::= <suma Exp>
-	                            break;
-	                         case RuleConstants.RULE_SUMAEXP:
-	                            //<suma Exp> ::= <Multi Exp> <suma Des> <suma Exp>
-	                            break;
-	                         case RuleConstants.RULE_SUMAEXP2:
-	                            //<suma Exp> ::= <Multi Exp>
-	                            break;
-	                         case RuleConstants.RULE_MULTIEXP:
-	                            //<Multi Exp> ::= <Negacion Exp> <multi Des> <Multi Exp>
-	                            break;
-	                         case RuleConstants.RULE_MULTIEXP2:
-	                            //<Multi Exp> ::= <Negacion Exp>
-	                            break;
-	                         case RuleConstants.RULE_NEGACIONEXP_MINUS:
-	                            //<Negacion Exp> ::= '-' <Valor>
-	                        	 stack.push(new ExpresionUnaria((Expresion)stack.pop(),Const.TipoOperadorUnario.negativo));
-	                            break;
-	                         case RuleConstants.RULE_NEGACIONEXP_EXCLAM:
-	                            //<Negacion Exp> ::= '!' <Valor>
-	                        	 stack.push(new ExpresionUnaria((Expresion)stack.pop(),Const.TipoOperadorUnario.negacion));
-	                            break;
-	                         case RuleConstants.RULE_NEGACIONEXP:
-	                            //<Negacion Exp> ::= <Valor>
-	                            break;
-	                         case RuleConstants.RULE_CONDICIONALDES_AMPAMP:
-	                            //<Condicional Des> ::= '&&'
-	                        	 stackPruebas(stack.clone(), "RULE_CONDICIONALDES_AMPAMP I");
-	                        	 antesdeSigno = (Object) stack.pop();
-	                        	 stack.push(Const.TipoOperadorBinario.and);
-	                        	 stack.push(antesdeSigno);
-	                        	 stackPruebas(stack.clone(), "RULE_CONDICIONALDES_AMPAMP F");
-	                            break;
-	                         case RuleConstants.RULE_CONDICIONALDES_PIPEPIPE:
-	                            //<Condicional Des> ::= '||'
-	                        	 stack.push(Const.TipoOperadorBinario.or);
-	                            break;
-	                         case RuleConstants.RULE_RELACIONDES_LTEQ:
-	                            //<Relacion Des> ::= '<='
-	                        	 antesdeSigno = (Object) stack.pop();
-	                        	 stack.push(Const.TipoOperadorBinario.menorIgual);
-	                        	 stack.push(antesdeSigno);
-	                            break;
-	                         case RuleConstants.RULE_RELACIONDES_LT:
-	                            //<Relacion Des> ::= '<'
-	                        	 antesdeSigno = (Object) stack.pop();
-	                        	 stack.push(Const.TipoOperadorBinario.menor);
-	                        	 stack.push(antesdeSigno);
-	                            break;
-	                         case RuleConstants.RULE_RELACIONDES_GT:
-	                            //<Relacion Des> ::= '>'
-	                        	 //stackPruebas(stack.clone(),"<RULE_RELACIONDES_GT>1");
-	                        	 antesdeSigno = (Object) stack.pop();
-	                        	 stack.push(Const.TipoOperadorBinario.mayor);
-	                        	 stack.push(antesdeSigno);
-	                        	 //stackPruebas(stack.clone(),"<RULE_RELACIONDES_GT>2");
-	                            break;
-	                         case RuleConstants.RULE_RELACIONDES_GTEQ:
-	                            //<Relacion Des> ::= '>='
-	                        	 antesdeSigno = (Object) stack.pop();
-	                        	 stack.push(Const.TipoOperadorBinario.mayorIgual);
-	                        	 stack.push(antesdeSigno);
-	                            break;
-	                         case RuleConstants.RULE_RELACIONDES_EQEQ:
-	                            //<Relacion Des> ::= '=='
-	                        	 antesdeSigno = (Object) stack.pop();
-	                        	 stack.push(Const.TipoOperadorBinario.igual);
-	                        	 stack.push(antesdeSigno);
-	                            break;
-	                         case RuleConstants.RULE_RELACIONDES_EXCLAMEQ:
-	                            //<Relacion Des> ::= '!='
-	                        	 antesdeSigno = (Object) stack.pop();
-	                        	 stack.push(Const.TipoOperadorBinario.noIgual);
-	                        	 stack.push(antesdeSigno);
-	                            break;
-	                         case RuleConstants.RULE_SUMADES_PLUS:
-	                            //<suma Des> ::= '+'
-	                        	 stack.push(Const.TipoOperadorBinario.suma);
-	                            break;
-	                         case RuleConstants.RULE_SUMADES_MINUS:
-	                            //<suma Des> ::= '-'
-	                        	 stack.push(Const.TipoOperadorBinario.resta);
-	                            break;
-	                         case RuleConstants.RULE_MULTIDES_TIMES:
-	                            //<multi Des> ::= '*'
-	                        	 stack.push(Const.TipoOperadorBinario.multiplicacion);
-	                            break;
-	                         case RuleConstants.RULE_MULTIDES_DIV:
-	                            //<multi Des> ::= '/'
-	                        	stack.push(Const.TipoOperadorBinario.division);
-	                            break;
-	                         case RuleConstants.RULE_MULTIDES_PERCENT:
-	                            //<multi Des> ::= '%'
-	                        	 stack.push(Const.TipoOperadorBinario.modulo);
-	                            break;
-	                         case RuleConstants.RULE_VALOR:
-	                            //<Valor> ::= <literal>
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_VALOR_LPARAN_RPARAN:
-	                            //<Valor> ::= '(' <expresion> ')'
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_VALOR2:
-	                            //<Valor> ::= <llamada metodo>
-	                        	//!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_VALOR3:
-	                            //<Valor> ::= <locacion>
-	                        	 //!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_LOCACION_DOT:
-	                            //<locacion> ::= <locacion Array Des> '.' <locacion>
-	                        	  stackPruebas(stack.clone(), "RULE_LOCATION_DOT I");
-		                    	   String id = (String)stack.pop();
-		                    	   LinkedList<Variable> lk = null;
-		                    	   if (stack.peek().getClass() == LinkedList.class)
-		                    	   {
-		                    		   System.out.println("Entra aca");
-		                    		   lk = (LinkedList<Variable>)stack.pop();
-		                    		   if (stack.peek().getClass() == String.class)
-		                    		   {
-		                    		   String nombrePrincipal = (String)stack.pop();
-		                    		   stack.push(lk);
-		                    		   stack.push(nombrePrincipal+"."+id);
-		                    		   }
-		                    		   else
-		                    		   {
-		                    			   stack.push(lk);
-		                    			   stack.push(nombreAsig+"."+id);
-		                    			   nombreAsig = null;
-		                    		   }
-		                    	   }
-		                    	   else
-		                    	   {
-		                    	   stack.push(id+"."+(String)stack.pop());
-		                    	   }
-		                    	  stackPruebas(stack.clone(), "RULE_LOCATION_DOT F");
-	                            break;
-	                         case RuleConstants.RULE_LOCACION:
-	                            //<locacion> ::= <locacion Array Des>
-	                            break;
-	                         case RuleConstants.RULE_LOCACIONARRAYDES_ID_LBRACKET_RBRACKET:
-	                            //<locacion Array Des> ::= id '[' <expresion> ']'
-	                        	 stackPruebas(stack.clone(), "RULE_LOCACIONARRAYDES_ID_LBRACKET_RBRACKET I");
-	                        	 expLo = (Expresion)stack.pop();
-	                        	 stackPruebas(stack.clone(), "RULE_LOCACIONARRAYDES_ID_LBRACKET_RBRACKET F");
-	                            break;
-	                         case RuleConstants.RULE_LOCACIONARRAYDES_ID:
-	                            //<locacion Array Des> ::= id
-	                        	 //!!! NO HACE NADA
-	                            break;
-	                         case RuleConstants.RULE_LLAMADAMETODO_ID_LPARAN_RPARAN:
-	                            //<llamada metodo> ::= id '(' <arg Des> ')'
-	                        	 stackPruebas(stack.clone(), "RULE_LLAMADAMETODO_ID_LPARAN_RPARAN I");
-	                        	 if (stack.peek().getClass() == String.class)
-	                        	 stack.push(new Llamada((LinkedList<Argumento>)stack.pop(),(String)stack.pop()));
-	                        	 else
-	                        	 {
-	                        		 LinkedList<Argumento> arglistt = (LinkedList<Argumento>)stack.pop();
-	                        		 if (stack.peek().getClass() !=String.class)
-	                        		 {
-	                        		 LinkedList<Parametro> paramlistt = (LinkedList<Parametro>)stack.pop();
-	                        		 String nombredeArg = (String)stack.pop();
-	                        		 stack.push(paramlistt);
-	                        		 stack.push(new Llamada(arglistt,nombredeArg));
-	                        		 }
-	                        		 else
-	                        		 {
-	                        			 String nombredeArg = (String)stack.pop();
-		                        		 stack.push(new Llamada(arglistt,nombredeArg));
-	                        		 }
-	                        	 }
-	                        	 stackPruebas(stack.clone(), "RULE_LLAMADAMETODO_ID_LPARAN_RPARAN F");
-	                            break;
-	                         case RuleConstants.RULE_ARGDES:
-	                            //<arg Des> ::= <multiples args>
-	                            break;
-	                         case RuleConstants.RULE_ARGDES2:
-	                            //<arg Des> ::= 
-	                        	 stack.push(new LinkedList<Parametro>());
-	                            break;
-	                         case RuleConstants.RULE_MULTIPLESARGS:
-	                            //<multiples args> ::= <arg>
-	                        	 stackPruebas(stack.clone(), "RULE_MULTIPLESARGS I");
-	                        	 LinkedList<Argumento> arg = new LinkedList<Argumento>();
-	                        	 arg.add((Argumento)stack.pop());
-	                        	 stack.push(arg);
-	                        	 stackPruebas(stack.clone(), "RULE_MULTIPLESARGS F");
-	                            break;
-	                         case RuleConstants.RULE_MULTIPLESARGS_COMMA:
-	                            //<multiples args> ::= <multiples args> ',' <arg>
-	                        	 stackPruebas(stack.clone(), "RULE_MULTIPLESARGS_COMMA I");
-	                        	 Argumento argu = (Argumento)stack.pop();
-	                        	 ((LinkedList<Argumento>)stack.peek()).add(argu);
-	                        	 stackPruebas(stack.clone(), "RULE_MULTIPLESARGS_COMMA F");
-	                            break;
-	                         case RuleConstants.RULE_ARG:
-	                            //<arg> ::= <expresion>
-	                        	 stackPruebas(stack.clone(), "RULE_ARG I");
-	                        	 if (stack.peek().getClass() == String.class)
-	                        	 {
-	                        		 Location local = new Location((String)stack.pop());
-	                        		 stack.push(local);
-	                        	 }
-	                        	 stack.push(new Argumento((Expresion)stack.pop(), Const.PasoMetodo.porValor));
-	                        	 stackPruebas(stack.clone(), "RULE_ARG F");
-	                            break;
-	                         case RuleConstants.RULE_LITERAL:
-	                            //<literal> ::= <int_literal>
-	                        	 //stackPruebas(stack.clone(),"<RULE_LITERAL>1");
-	                        	 stack.push(new Literal(""+(Integer)stack.pop(),Const.TipoLiteral.integer));
-	                        	 //stackPruebas(stack.clone(),"<RULE_LITERAL>2");
-	                            break;
-	                         case RuleConstants.RULE_LITERAL2:
-	                            //<literal> ::= <char_literal>
-	                        	 stack.push(new Literal((String)stack.pop(),Const.TipoLiteral.character));
-	                            break;
-	                         case RuleConstants.RULE_LITERAL3:
-	                            //<literal> ::= <bool_literal>
-	                        	 stackPruebas(stack.clone(), "RULE_LITERAL3 I");
-	                        	 stack.push(new Literal((String)stack.pop(),Const.TipoLiteral.bool));
-	                        	 stackPruebas(stack.clone(), "RULE_LITERAL3 F");
-	                            break;
-	                         case RuleConstants.RULE_INT_LITERAL_NUM:
-	                            //<int_literal> ::= num
-	                        	//Se encarga RULE_LITERAL
-	                            break;
-	                         case RuleConstants.RULE_CHAR_LITERAL_CHARACTER:
-	                            //<char_literal> ::= character
-	                        	//Se encarga RULE_LITERAL2
-	                            break;
-	                         case RuleConstants.RULE_BOOL_LITERAL_TRUE:
-	                            //<bool_literal> ::= true
-	                        	 //Se encarga RULE_LITERAL3
-	                            break;
-	                         case RuleConstants.RULE_BOOL_LITERAL_FALSE:
-	                            //<bool_literal> ::= false
-	                        	//Se encarga RULE_LITERAL3
-	                            break;
-	                      }
-
-	                  // ************************************** log file
-
-	                  Reduction myRed = parser.currentReduction();
+               case gpMsgReduction:
+                   /* This message is returned when a rule was reduced by the parse engine.
+                      The CurrentReduction property is assigned a Reduction object
+                      containing the rule and its related tokens. You can reassign this
+                      property to your own customized class. If this is not the case,
+                      this message can be ignored and the Reduction object will be used
+                      to store the parse tree.  */
+                   //Reduction reduction  = parser.currentReduction();
+                    //Parser.Reduction = //Object you created to store the rule
+                    // ************************************** log file
+                    //println("gpMsgReduction");
+                   // Reduction myRed = parser.currentReduction();
+                    //this.addDebugLog("gpMsgReduction (Line "+parser.currentLineNumber()+"): "+"\n\t"+ myRed.getParentRule().getText() +"\n");
+                    //println(myRed.getParentRule().getText());
+            	   	  Reduction myRed = parser.currentReduction();
 	                  //Token tok = parser.currentToken();
 	                  //String info = (String)tok.getData();
 	                  String info = "  ---> Linea:  "+parser.currentLineNumber();
 	                  padre.imprimir("gpMsgReduction:   "+myRed.getParentRule().getText()+info,2);
-	                  // ************************************** end log
+                    // ************************************** end log
+                    break;
+                case gpMsgAccept:
+                    /* The program was accepted by the parsing engine */
+                    // ************************************** log file
+                    this.error = false;
+                    padre.imprimir("MsgAccept: El programa fue parseado correctamente",1);
+                    padre.imprimir("\n-----------------------------------------------\n",2);
+                    //println("gpMsgAccept");
+                    // ************************************** end log
+                    done = true;
+                    break;
+                case gpMsgLexicalError:
+                    /* Place code here to handle a illegal or unrecognized token
+                           To recover, pop the token from the stack: Parser.PopInputToken */
+                    // ************************************** log file
+                    Token token = parser.popInputToken();
+                    padre.imprimir("MsgLexicalError: Linea "+parser.currentLineNumber()+": " +"Token No Esperado/Reconocido: "+ (String)token.getData(),1);
+                    //println("gpMsgLexicalError");
+                    // ************************************** end log
+                    done = true;
+                    break;
+                case gpMsgNotLoadedError:
+                    /* Load the Compiled Grammar Table file first. */
+                    // ************************************** log file
+                	padre.imprimir("MsgNotLoadedError: Linea "+parser.currentLineNumber()+": " +""+ "Cargue la tabla de la gramática primero.",1);
+                    //println("gpMsgNotLoadedError");
+                    // ************************************** end log
+                    done = true;
+                    break;
+                case gpMsgSyntaxError:
+                    /* This is a syntax error: the source has produced a token that was
+                           not expected by the LALR State Machine. The expected tokens are stored
+                           into the Tokens() list. To recover, push one of the
+                              expected tokens onto the parser's input queue (the first in this case):
+                           You should limit the number of times this type of recovery can take
+                           place. */
+                    done = true;
+                    Token theTok = parser.currentToken();
+                    //println("Token not expected: " + (String)theTok.getData());
+                    // ************************************** log file
+                    padre.imprimir("MsgSyntaxError: Linea "+parser.currentLineNumber()+": " +""+ "Token no esperado: "+ (String)theTok.getData(),1);
+                    //println("gpMsgSyntaxError");
+                    // ************************************** end log
+                    break;
+                case gpMsgCommentError:
+                    /* The end of the input was reached while reading a comment.
+                             This is caused by a comment that was not terminated */
+                    // ************************************** log file
+                	padre.imprimir("MsgCommentError: Linea "+parser.currentLineNumber()+"): " +""+ "No se ha encontrado fin mientras se leia un comentario",1);
+                    //println("gpMsgCommentError");
+                    // ************************************** end log
+                    done = true;
+                    break;
+                case gpMsgInternalError:
+                    /* Something horrid happened inside the parser. You cannot recover */
+                    // ************************************** log file
+                	padre.imprimir("MsgInternalError: Linea "+parser.currentLineNumber()+"): " +""+ "Nunca debería pasar, si pasa, estas perdido",1);
+                    //println("gpMsgInternalError");
+                    // ************************************** end log
+                    done = true;
+                    break;
+            }
+        }
+    }
 
-	                  break;
 
-	                case gpMsgAccept:
-	                    /* The program was accepted by the parsing engine */
-
-	                    // ************************************** log file
-	                   padre.imprimir(" El archivo dado fue parseado",1);
-
-	                    // ************************************** end log
-	                    huboErrores=false;
-	                    done = true;
-	                    
-	                    break;
-
-	                case gpMsgLexicalError:
-	                    /* Place code here to handle a illegal or unrecognized token
-			               To recover, pop the token from the stack: Parser.PopInputToken */
-
-	                    // ************************************** log file
-	                   padre.imprimir("gpMsgLexicalError",1);
-	                   imprimirErrores();
-	                    // ************************************** end log
-
-	                    parser.popInputToken();
-
-	                    break;
-
-	                case gpMsgNotLoadedError:
-	                    /* Load the Compiled Grammar Table file first. */
-
-	                    // ************************************** log file
-	                	padre.imprimir("gpMsgNotLoadedError",1);
-	                	imprimirErrores();
-	                    // ************************************** end log
-
-	                    done = true;
-
-	                    break;
-
-	                case gpMsgSyntaxError:
-	                    /* This is a syntax error: the source has produced a token that was
-	        		       not expected by the LALR State Machine. The expected tokens are stored
-			               into the Tokens() list. To recover, push one of the
-	   		               expected tokens onto the parser's input queue (the first in this case):
-	        		       You should limit the number of times this type of recovery can take
-			               place. */
-
-	                    done = true;
-
-	                    Token theTok = parser.currentToken();
-
-	                    padre.imprimir("gp-Msg-SyntaxError: Token not expected: " + (String)theTok.getData(),1);
-	                    //padre.imprimir("Tipo token: "+theTok.getText());
-	                    //padre.imprimir("" +parser.currentLineNumber());
-	                    // ************************************** log file
-	                    imprimirErrores();
-	                    // ************************************** end log
-
-	                    break;
-
-	                case gpMsgCommentError:
-	                    /* The end of the input was reached while reading a comment.
-				           This is caused by a comment that was not terminated */
-
-	                    // ************************************** log file
-	                	padre.imprimir("gpMsgCommentError: El final de la cadena fue alcanzado mientras se leia un comentario",1);
-	                	imprimirErrores();
-	                    // ************************************** end log
-
-	                    done = true;
-
-						break;
-
-	                case gpMsgInternalError:
-	                    /* Something horrid happened inside the parser. You cannot recover */
-
-	                    // ************************************** log file
-	                	padre.imprimir("gpMsgInternalError: No debería pasar nunca, algo pasó dentro del parser, murió sin dejar rastros",1);
-	                	imprimirErrores();
-	                    // ************************************** end log
-
-	                    done = true;
-
-	                    break;
-	            }
-	        }
-    	} 
-        if ( (textToParse != null))  
-         {
-	        try
-	        {
-	        	parser.closeFile();
-	        }
-	        catch(ParserException parse)
-	        {
-	        	padre.imprimir("**PARSER ERROR**\n" + parse.toString(),1);
-	        	padre.imprimir(""+parse.getCause() + "  "+parse.getMessage(),1);
-	        	padre.imprimir("Linea: "+parse.getMessage(),1);
-	        	parse.printStackTrace();
-	        	imprimirErrores();
-	            System.exit(1);
-	        }
-          }  
-	    }
+  
+    
     
     public void imprimirErrores()
     {
@@ -1057,20 +479,1193 @@ public class Main implements GPMessageConstants
     
     public boolean huboErrores()
     {
-    	return huboErrores;
+    	return error;
     }
+
     
-    public void stackPruebas(Object stack,String estado)
-    {
-    	@SuppressWarnings("rawtypes")
-		Stack stack1 = (Stack)stack;
-    	System.out.println("--------------------------------"+ " "+estado+" -------------------------");
-    	while (stack1.size()>0)
-    	{
-    		System.out.println("Stack: "+stack1.pop());
-    	}
-    	System.out.println("-------------------------------------------------------------------------");
+    public TablaSimbolos darTablaSimbolos() {
+        return tablaSimbolos;
     }
+
+    public EstructuraTabla darTablaEstructuras() {
+        return this.tablaEstructura;
+    }
+
+    public MetodoTabla darTablaMetodos() {
+        return this.tablaMetodos;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    private LinkedList<Simbolo> darListaParametros(Reduction reduccion){
+
+        LinkedList<Simbolo> lista = new LinkedList<Simbolo>();
+        String id = "";
+        Reduction redu = null;
+        switch(reduccion.getParentRule().getTableIndex())
+        {
+            case RuleConstants.RULE_OPT_PARAMETER:
+                //<opt_parameter> ::= <parameter list>
+                lista.addAll(darListaParametros((Reduction)reduccion.getToken(0).getData()));
+                break;
+            case RuleConstants.RULE_OPT_PARAMETER2:
+                //<opt_parameter> ::=
+                break;
+            case RuleConstants.RULE_PARAMETERLIST_COMMA:
+                //<parameter list> ::= <parameter list> ',' <parameter>
+                lista.addAll(darListaParametros((Reduction)reduccion.getToken(0).getData()));
+                lista.addAll(darListaParametros((Reduction)reduccion.getToken(2).getData()));
+                break;
+            case RuleConstants.RULE_PARAMETERLIST:
+                //<parameter list> ::= <parameter>
+                lista.addAll(darListaParametros((Reduction)reduccion.getToken(0).getData()));
+                break;
+            case RuleConstants.RULE_PARAMETER_ID: case RuleConstants.RULE_PARAMETER_ID_LBRACKET_RBRACKET:
+                //<parameter> ::= <Type> id | <Type> id '[' ']'
+                //<Type> = <parameterType> ::= 'int' | 'char' | 'boolean'
+                redu = (Reduction) reduccion.getToken(0).getData();
+                id = (String) reduccion.getToken(1).getData();
+                Tipo tipo = null;
+                //instanceof es mejor que escribir objecto.getClass() == Clase.class
+                if(redu.getToken(0).getData() instanceof String){
+                    String a = (String)redu.getToken(0).getData();
+                    if(a.equals("int") || a.equals("char") || a.equals("boolean")){
+                        tipo = new Tipo(a,Tipo.darTamanioBasico(a));
+                        tipo.asigParametro(true);
+                    }else{
+                        padre.imprimir("\nTipo Parametro Incorrecto: Linea "+redu.getToken(0).getLineNumber()+": "+(String)redu.getToken(0).getData()+" ---> "+id+"",1);
+                        break;
+                    }
+                }else{
+                    padre.imprimir("\nTipo Parametro Incorrecto: Linea "+redu.getToken(0).getLineNumber()+": "+redu.getToken(0).getName()+" ---> "+id+"",1);
+                    break;
+                }
+                if(reduccion.getTokenCount()==4){
+                    tipo.asigArreglo(true);
+                }
+                Simbolo simb = new Simbolo(id, tipo, this.ambitoActual);
+                lista.add(simb);
+                break;
+        }
+        return lista;
+    }
+
+    private LinkedList<Simbolo> darListaListaVars(Reduction reduccion){
+
+        LinkedList<Simbolo> list = new LinkedList<Simbolo>();
+        Tipo tipo = null;
+
+        switch(reduccion.getParentRule().getTableIndex())
+        {
+            case RuleConstants.RULE_KLEENE_VARDECLARATION:
+                //<kleene_varDeclaration> ::= <varDeclaration> <kleene_varDeclaration>
+                list.addAll(this.darListaListaVars((Reduction)reduccion.getToken(0).getData()));
+                list.addAll(this.darListaListaVars((Reduction)reduccion.getToken(1).getData()));
+                break;
+            case RuleConstants.RULE_KLEENE_VARDECLARATION2:
+                //<kleene_varDeclaration> ::=
+                break;
+            case RuleConstants.RULE_VARDECLARATION_ID_SEMI:
+                //<varDeclaration> ::= <Type> id <varDecl 1> ';'
+                String idVarD = (String)reduccion.getToken(1).getData();
+                Reduction varDec = (Reduction)reduccion.getToken(2).getData();
+                Reduction tipo1 =(Reduction)reduccion.getToken(0).getData();
+                int numeroTipo = (tipo1).getParentRule().getTableIndex();
+                
+                if(numeroTipo == RuleConstants.RULE_TYPE_INT || numeroTipo == RuleConstants.RULE_TYPE_CHAR || numeroTipo == RuleConstants.RULE_TYPE_BOOLEAN){
+                    //<Type> ::= int | char | boolean
+                    String a = (String)tipo1.getToken(0).getData();
+                    tipo = new Tipo(a,Tipo.darTamanioBasico(a));
+                    tipo.asigSimple(true);
+                }
+                else if(numeroTipo == RuleConstants.RULE_TYPE_VOID){
+                    //<Type> ::= void
+                    padre.imprimir("\nNo se puede definir void como variable: Linea "+tipo1.getToken(0).getLineNumber()+"): "+tipo1.getToken(0).getData()+"",1);
+                }
+                else if(numeroTipo == RuleConstants.RULE_TYPE_STRUCT_ID){
+                    //<Type> ::= struct id
+                    String id = (String)tipo1.getToken(1).getData();
+                    Estructura struct = this.tablaEstructura.darEstructura(id, ambitoActual);
+                    if(struct == null){
+                        padre.imprimir("\nEn estructura, tipo no definido: Linea "+tipo1.getToken(1).getLineNumber()+": struct "+id+"",1);
+                    }else{
+                        tipo = struct.darTipo();
+                    }
+                }
+                else if(numeroTipo == RuleConstants.RULE_TYPE){
+                    //<Type> ::= <structDeclaration>
+                    //type = this.getTypeStructDecl((Reduction)reduction.getToken(0).getData());
+                    padre.imprimir("\nEstructura no puede tener una variable tipo estructura adentro: Linea "+reduccion.getToken(0).getLineNumber()+": "+reduccion.getToken(0).getData()+"",1);
+                }
+                //<varDecl 1> ::= '[' num ']' |
+                if(tipo!=null){
+                    if(varDec.getTokenCount()==3){
+                        int num = Integer.parseInt((String)varDec.getToken(1).getData());
+                        if(num==0){
+                            padre.imprimir("\nArreglo debe de ser mayor a 0: Linea "+reduccion.getToken(1).getLineNumber()+"",1);
+                            break;
+                        }
+                        tipo.asigArreglo(true, num);
+                    }
+                    Simbolo simbolo = new Simbolo(idVarD,tipo,this.ambitoActual);
+                    list.add(simbolo);
+                }
+                
+                break;
+        }
+        return list;
+    }
+
+
+    private Estructura darDeclaracionEstructura(Reduction reduccion){
+        //<structDeclaration> ::= struct id '{' <kleene_varDeclaration> '}'
+        String id = (String)reduccion.getToken(1).getData();
+        Reduction kleenevarDecl = (Reduction)reduccion.getToken(3).getData();
+        LinkedList<Simbolo> listaVars = new LinkedList<Simbolo>();
+        listaVars = this.darListaListaVars(kleenevarDecl);
+        Estructura struct = new Estructura(id, this.ambitoActual, listaVars);
+        return struct;
+    }
+
+    private Tipo darTipo(Reduction reduccion) {
+        Tipo tipo = null;
+        switch(reduccion.getParentRule().getTableIndex())
+        {
+            case RuleConstants.RULE_TYPE_INT: case RuleConstants.RULE_TYPE_CHAR: case RuleConstants.RULE_TYPE_BOOLEAN: case RuleConstants.RULE_TYPE_VOID:
+                //<Type> ::= int | char | boolean | void
+                String a = (String)reduccion.getToken(0).getData();
+                tipo = new Tipo(a,Tipo.darTamanioBasico(a));
+                tipo.asigSimple(true);
+                break;
+            case RuleConstants.RULE_TYPE_STRUCT_ID:
+                //<Type> ::= struct id
+                String id = (String) reduccion.getToken(1).getData();
+                boolean existe = (this.tablaEstructura.darEstructura(id, ambitoActual) != null);
+                if(existe){
+                    tipo = this.tablaEstructura.darEstructura(id, ambitoActual).darTipo();
+                }
+                else{
+                    padre.imprimir("\nEstructura no definida en linea: "+reduccion.getToken(1).getLineNumber()+": struct "+id+"",1);
+                }
+                break;
+            case RuleConstants.RULE_TYPE:
+                //<Type> ::= <structDeclaration>
+                boolean agregado = agregarEstructuraATabla((Reduction)reduccion.getToken(0).getData());
+                if(agregado){
+                    tipo = this.tablaEstructura.darUltimaEstructura().darTipo();
+                }
+                
+                break;
+        }
+        return tipo;
+    }
+
+    private boolean agregarEstructuraATabla(Reduction reduccion) {
+        //<structDeclaration> ::= struct id '{' <kleene_varDeclaration> '}'
+        Estructura estuct = this.darDeclaracionEstructura(reduccion);
+        if(estuct == null){
+            padre.imprimir("\nError Struct en linea "+reduccion.getToken(1).getLineNumber()+": struct "+((String)reduccion.getToken(1).getData())+"",1);
+            return false;
+        }
+        boolean canAdd = this.tablaEstructura.agregarEstructura(estuct);
+
+        if(!canAdd){
+            padre.imprimir("\nYa existe estructura, cambia nombre o revise en linea "+reduccion.getToken(1).getLineNumber()+": struct "+((String)reduccion.getToken(1).getData())+"",1);
+        }
+        padre.imprimir("Nueva Declaracion de Estructura en linea "+reduccion.getToken(1).getLineNumber()+": struct "+estuct.darId()+"",2);
+        return canAdd;
+    }
+
+    private void agregarDeclaracionVariableaATabla(Reduction reduccion) {
+        //<varDeclaration> ::= <Type> id <varDecl 1> ';'
+        //<varDecl 1> ::= '[' num ']' |
+        String idlexeme = (String)reduccion.getToken(1).getData();
+        Reduction varTipo = (Reduction)reduccion.getToken(0).getData();
+
+        Tipo tipo = this.darTipo(varTipo);
+        if(tipo == null){
+            return;
+        }
+        boolean yaExiste = this.tablaSimbolos.existeSimboloEnVerificador(idlexeme, ambitoActual);
+        
+        if(yaExiste){
+            padre.imprimir("\nImposible declarar: Linea "+reduccion.getToken(1).getLineNumber()+": Ya existe variable: "+idlexeme+"",1);
+            return;
+        }
+        Reduction varDecl1 = (Reduction)reduccion.getToken(2).getData();
+        Simbolo varSimbolo = new Simbolo(idlexeme, tipo, this.ambitoActual);
+
+        if(varDecl1.getTokenCount()==3){
+            int num = Integer.parseInt((String)varDecl1.getToken(1).getData());
+            if(num==0){
+                padre.imprimir("\nArreglo debe ser mayor a 0: Linea "+varDecl1.getToken(1).getLineNumber()+"",1);
+                return;
+            }
+            varSimbolo.darTipo().asigArreglo(true, num);
+            varSimbolo.darTipo().asigSimple(false);
+        }
+        this.tablaSimbolos.agregarSimbolo(varSimbolo);
+        padre.imprimir("Nueva Declaración Variable en linea "+reduccion.getToken(1).getLineNumber()+": "+idlexeme+"",2);
+
+    }
+
+
+    private boolean existeLocacionEnListaVar(String locacion, LinkedList<Simbolo> listaVars) {
+        boolean existe = false;
+
+        for(Simbolo a : listaVars){
+            if(locacion.equals(a.darId())){
+                existe = true;
+                break;
+            }
+        }
+
+        return existe;
+    }
+
+
+    private Simbolo darLocacionEnListaVar(String locacion, LinkedList<Simbolo> listaVars) {
+
+        for(Simbolo a : listaVars){
+            if(locacion.equals(a.darId())){
+                return a;
+            }
+        }
+
+        return null;
+    }
+
+
+    public String darFirmaMetodo(Reduction reduccion) {
+        //<methodCall> ::= id '(' <opt_arg_separated> ')'
+        String firma = "";
+        LinkedList<String> parametros = this.darParametrosActuales((Reduction)reduccion.getToken(2).getData());
+        String id = (String)reduccion.getToken(0).getData();
+
+        firma = id+"(";
+        if(parametros.size()>0){
+            firma+=parametros.get(0)+",";
+            for(int i = 1;i<parametros.size(); i++){
+                String a  = parametros.get(i);
+                firma+=""+a+",";
+            }
+            firma = firma.substring(0, firma.length()-1);
+        }
+        firma+=")";
+
+        return firma;
+    }
+
+    private LinkedList<String> darParametrosActuales(Reduction reduccion) {
+        //<methodCall> ::= id '(' <opt_arg_separated> ')'
+        LinkedList<String> paramActual = new LinkedList<String>();
+
+        switch(reduccion.getParentRule().getTableIndex())
+        {
+            case RuleConstants.RULE_OPT_ARG_SEPARATED:
+                //<opt_arg_separated> ::= <arg list>
+                paramActual.addAll(this.darParametrosActuales((Reduction)reduccion.getToken(0).getData()));
+                break;
+            case RuleConstants.RULE_OPT_ARG_SEPARATED2:
+                //<opt_arg_separated> ::=
+                break;
+            case RuleConstants.RULE_ARGLIST:
+                //<arg list> ::= <arg>
+                paramActual.addAll(this.darParametrosActuales((Reduction)reduccion.getToken(0).getData()));
+                break;
+            case RuleConstants.RULE_ARGLIST_COMMA:
+                //<arg list> ::= <arg list> ',' <arg>
+                paramActual.addAll(this.darParametrosActuales((Reduction)reduccion.getToken(0).getData()));
+                paramActual.addAll(this.darParametrosActuales((Reduction)reduccion.getToken(2).getData()));
+                break;
+            case RuleConstants.RULE_ARG:
+                //<arg> ::= <expression>
+                String arg = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                paramActual.add(arg);
+                break;
+        }
+        return paramActual;
+    }
+
+    private void agregarDeclaracionMetodoATabla(Reduction reduction) {
+        //<methodDeclaration> ::= <Type> id '(' <opt_parameter> ')' <block>
+        //<Type> = <methodType> ::= 'int' | 'char' | 'boolean' | 'void'
+        Reduction tipo1 = (Reduction)reduction.getToken(0).getData();
+        String id = (String)reduction.getToken(1).getData();
+        Reduction parametro = (Reduction)reduction.getToken(3).getData();
+        Tipo tipo = null;
+
+        if(tipo1.getTokenCount()==1){
+
+            if(tipo1.getToken(0).getData() instanceof String){
+                String a = (String)tipo1.getToken(0).getData();
+                if(a.equals("void") || a.equals("int") || a.equals("char") || a.equals("boolean")){
+                    tipo = new Tipo(a,Tipo.darTamanioBasico(a));
+                }
+                else{
+                    padre.imprimir("\nTipo de método incorrecto en linea "+reduction.getToken(1).getLineNumber()+": "+(String)tipo1.getToken(0).getData()+"",1);
+                    return;
+                }
+            }
+            else{
+                padre.imprimir("\nTipo de método incorrecto en linea "+reduction.getToken(1).getLineNumber()+": "+(String)tipo1.getToken(0).getData()+"",1);
+                return;
+            }
+        }
+        else{
+            padre.imprimir("\nTipo de método incorrecto en linea "+reduction.getToken(1).getLineNumber()+": "+(String)tipo1.getToken(0).getData()+"",1);
+            return;
+        }
+        //<opt_parameter>
+        Verificador nuevo = new Verificador(this.ambitoActual);
+        this.ambitoActual = nuevo;
+        this.methodAmbit = true;
+        LinkedList<Simbolo> parametros = this.darListaParametros(parametro);
+        Metodo met = new Metodo(id, tipo, parametros);
+        boolean agregable = this.tablaMetodos.agregarMetodo(met);
+        if(agregable == false){
+            padre.imprimir("\nYa existe este método con igual tipo de parametros: Linea "+reduction.getToken(1).getLineNumber()+": "+met.darFirmaMetodo()+"",1);
+            return;
+        }
+        padre.imprimir("Nueva Declaración Método: Linea "+reduction.getToken(1).getLineNumber()+": "+met.darFirmaMetodo()+"",2);
+        this.tablaSimbolos.agregarTodosLosSimbolos(parametros);
+    }
+
+    private void crearTabla(Reduction reduccion){
+
+        Reduction kleene_declaration;
+        Reduction declaration;
+        Reduction structDeclaration;
+        Reduction varDeclaration;
+        Reduction methodDeclaration;
+        Reduction kleene_varDeclaration;
+        Reduction kleeneStatement;
+        Reduction statement;
+        Reduction block;
+        Reduction selection;
+        Reduction iteration;
+        Reduction opt_else_block;
+
+        switch(reduccion.getParentRule().getTableIndex())
+        {
+            case RuleConstants.RULE_PROGRAM_CLASS_PROGRAM_LBRACE_RBRACE:
+                //<Program> ::= class Program '{' <kleene_declaration> '}'
+                kleene_declaration = (Reduction)reduccion.getToken(3).getData();
+                this.crearTabla(kleene_declaration);
+                break;
+            case RuleConstants.RULE_KLEENE_DECLARATION:
+                //<kleene_declaration> ::= <declaration> <kleene_declaration>
+                declaration = (Reduction)reduccion.getToken(0).getData();
+                this.crearTabla(declaration);
+                kleene_declaration = (Reduction)reduccion.getToken(1).getData();
+                this.crearTabla(kleene_declaration);
+                break;
+            case RuleConstants.RULE_KLEENE_DECLARATION2:
+                //<kleene_declaration> ::=
+                break;
+            case RuleConstants.RULE_DECLARATION:
+                //<declaration> ::= <structDeclaration>
+                structDeclaration = (Reduction)reduccion.getToken(0).getData();
+                this.crearTabla(structDeclaration);
+                break;
+            case RuleConstants.RULE_DECLARATION2:
+                //<declaration> ::= <varDeclaration>
+                varDeclaration = (Reduction)reduccion.getToken(0).getData();
+                this.crearTabla(varDeclaration);
+                break;
+            case RuleConstants.RULE_DECLARATION3:
+                //<declaration> ::= <methodDeclaration>
+                methodDeclaration = (Reduction)reduccion.getToken(0).getData();
+                this.crearTabla(methodDeclaration);
+                break;
+            case RuleConstants.RULE_KLEENE_VARDECLARATION:
+                //<kleene_varDeclaration> ::= <varDeclaration> <kleene_varDeclaration>
+                varDeclaration = (Reduction)reduccion.getToken(0).getData();
+                this.crearTabla(varDeclaration);
+                kleene_varDeclaration = (Reduction)reduccion.getToken(1).getData();
+                this.crearTabla(kleene_varDeclaration);
+                break;
+            case RuleConstants.RULE_KLEENE_VARDECLARATION2:
+                //<kleene_varDeclaration> ::=
+                break;
+            case RuleConstants.RULE_VARDECLARATION_ID_SEMI:
+                //<varDeclaration> ::= <Type> id <varDecl 1> ';'//<varDeclaration> ::= <Type> id <varDecl 1> ';'
+                //System.out.println("varDeclaration");
+                this.agregarDeclaracionVariableaATabla(reduccion);
+                break;
+            case RuleConstants.RULE_STRUCTDECLARATION_STRUCT_ID_LBRACE_RBRACE:
+                //<structDeclaration> ::= struct id '{' <kleene_varDeclaration> '}'
+                //no meterse a kleene varDeclaration
+                //entra acá cuando sólo se declara (sin ningún declarar ninguna variable de este tipo)
+                //System.out.println("structDeclaration");
+                this.agregarEstructuraATabla(reduccion);
+                break;
+            case RuleConstants.RULE_METHODDECLARATION_ID_LPARAN_RPARAN:
+                //<methodDeclaration> ::= <Type> id '(' <opt_parameter> ')' <block>
+                //System.out.println("methodDeclaration");
+                this.agregarDeclaracionMetodoATabla(reduccion);
+                block = (Reduction)reduccion.getToken(5).getData();
+                this.crearTabla(block);
+
+                break;
+            case RuleConstants.RULE_TYPE:
+                //<Type> ::= <structDeclaration>
+                structDeclaration = (Reduction)reduccion.getToken(0).getData();
+                this.crearTabla(structDeclaration);
+                break;
+            case RuleConstants.RULE_BLOCK_LBRACE_RBRACE:
+                //<block> ::= '{' <kleene_varDeclaration> <kleene_statement> '}'
+                if(this.methodAmbit == true){
+                    //no cambiar de ámbito porque se acaba de definir un método
+                    this.methodAmbit = false;
+                }
+                else{
+                    Verificador nuevo = new Verificador(this.ambitoActual);
+                    this.ambitoActual = nuevo;
+                }
+                kleene_varDeclaration = (Reduction)reduccion.getToken(1).getData();
+                this.crearTabla(kleene_varDeclaration);
+                kleeneStatement = (Reduction)reduccion.getToken(2).getData();
+                this.crearTabla(kleeneStatement);
+                this.ambitoActual = this.ambitoActual.darVerificadorPrevio();
+                break;
+            case RuleConstants.RULE_KLEENE_STATEMENT:
+                //<kleene_statement> ::= <statement> <kleene_statement>
+                statement = (Reduction)reduccion.getToken(0).getData();
+                this.crearTabla(statement);
+                kleeneStatement = (Reduction)reduccion.getToken(1).getData();
+                this.crearTabla(kleeneStatement);
+                break;
+            case RuleConstants.RULE_KLEENE_STATEMENT2:
+                //<kleene_statement> ::=
+                break;
+            case RuleConstants.RULE_STATEMENT:
+                //<statement> ::= <block>
+                block = (Reduction)reduccion.getToken(0).getData();
+                this.crearTabla(block);
+                break;
+            case RuleConstants.RULE_STATEMENT2:
+                //<statement> ::= <selection>
+                selection = (Reduction)reduccion.getToken(0).getData();
+                this.crearTabla(selection);
+                break;
+            case RuleConstants.RULE_STATEMENT3:
+                //<statement> ::= <iteration>
+                iteration = (Reduction)reduccion.getToken(0).getData();
+                this.crearTabla(iteration);
+                break;
+            case RuleConstants.RULE_STATEMENT_SEMI:
+                //<statement> ::= <return> ';'
+                break;
+            case RuleConstants.RULE_STATEMENT_SEMI2:
+                //<statement> ::= <assign> ';'
+                break;
+            case RuleConstants.RULE_STATEMENT_SEMI3:
+                //<statement> ::= <opt_expression> ';'
+                break;
+            case RuleConstants.RULE_SELECTION_IF_LPARAN_RPARAN:
+                //<selection> ::= if '(' <expression> ')' <block> <opt_else_block>
+                block = (Reduction)reduccion.getToken(4).getData();
+                this.crearTabla(block);
+                opt_else_block = (Reduction)reduccion.getToken(5).getData();
+                this.crearTabla(opt_else_block);
+                break;
+            case RuleConstants.RULE_OPT_ELSE_BLOCK_ELSE:
+                //<opt_else_block> ::= else <block>
+                block = (Reduction)reduccion.getToken(1).getData();
+                this.crearTabla(block);
+                break;
+            case RuleConstants.RULE_OPT_ELSE_BLOCK:
+                //<opt_else_block> ::=
+                break;
+            case RuleConstants.RULE_ITERATION_WHILE_LPARAN_RPARAN:
+                //<iteration> ::= while '(' <expression> ')' <block>
+                block = (Reduction)reduccion.getToken(4).getData();
+                this.crearTabla(block);
+                break;
+        }
+    }
+
     
+
+    private String obtenerTipo(Reduction reduccion){
+        String retorno = "";
+
+        String kleene_declaration,declaration;
+        String declaracionMetodo,Type,block,kleene_statement,statement;
+        String opt_else_block,opt_expression,expression,Rel_Exp,Add_Exp;
+        String Mult_Exp,Negate_Exp,Value,location,simpleLocation;
+
+        Simbolo simbolo;
+
+        switch(reduccion.getParentRule().getTableIndex())
+        {
+            case RuleConstants.RULE_PROGRAM_CLASS_PROGRAM_LBRACE_RBRACE:
+                //<Program> ::= class Program '{' <kleene_declaration> '}'
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(3).getData());
+                break;
+            case RuleConstants.RULE_KLEENE_DECLARATION:
+                //<kleene_declaration> ::= <declaration> <kleene_declaration>
+                declaration = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                kleene_declaration = this.obtenerTipo((Reduction)reduccion.getToken(1).getData());
+                if(declaration.equals("error") || kleene_declaration.equals("error")){
+                    retorno = "error";
+                }else{
+                    retorno = "void";
+                }
+                break;
+            case RuleConstants.RULE_KLEENE_DECLARATION2:
+                //<kleene_declaration> ::=
+                retorno = "void";
+                break;
+            case RuleConstants.RULE_DECLARATION:
+                //<declaration> ::= <structDeclaration>
+                retorno = "void"; 
+                break;
+            case RuleConstants.RULE_DECLARATION2:
+                //<declaration> ::= <varDeclaration>
+                retorno = "void"; 
+                break;
+            case RuleConstants.RULE_DECLARATION3:
+                //<declaration> ::= <methodDeclaration>
+                declaracionMetodo = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                if(declaracionMetodo.equals("error")){
+                    retorno ="error";
+                }else{
+                    retorno = "void";
+                }
+                break;
+            case RuleConstants.RULE_METHODDECLARATION_ID_LPARAN_RPARAN:
+                //<methodDeclaration> ::= <Type> id '(' <opt_parameter> ')' <block>
+                //<Type> ::= int | char | boolean | void
+                Reduction reduccionTipo = (Reduction)reduccion.getToken(0).getData();
+                Type = (String)reduccionTipo.getToken(0).getData();
+                this.tipoRetorno = Type;
+                Reduction red_block = (Reduction)reduccion.getToken(5).getData();
+                block = this.obtenerTipo(red_block);
+                if(block.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+                //si el tipo de block es diferente a type_return_method significa un missing return statement
+                if(tipoRetorno.equals(block) || tipoRetorno.equals("void")){
+                    retorno = "void";
+                }else{
+                    retorno = "error";
+                    padre.imprimir("Missing return statement"+ red_block.getToken(3).getLineNumber()+ "\n\t"+"}",1);
+                }
+                break;
+            case RuleConstants.RULE_BLOCK_LBRACE_RBRACE:
+                //<block> ::= '{' <kleene_varDeclaration> <kleene_statement> '}'
+                this.ambitoActual = this.ambitoActual.darHijo();
+                //System.out.println("entra a nuevo ámbito: "+this.actual_ambit.getName());
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(2).getData());
+                //System.out.println("sale del ámbito: "+this.actual_ambit.getName());
+                this.ambitoActual = this.ambitoActual.darVerificadorPrevio();
+                //System.out.println("regresa al ámbito: "+this.actual_ambit.getName());
+                break;
+            case RuleConstants.RULE_KLEENE_STATEMENT:
+                //<kleene_statement> ::= <statement> <kleene_statement>
+                Reduction red_statement = (Reduction)reduccion.getToken(0).getData();
+                Reduction red_kleene_statement = (Reduction)reduccion.getToken(1).getData();
+                statement = this.obtenerTipo(red_statement);
+                kleene_statement = this.obtenerTipo(red_kleene_statement);
+
+                if(red_statement.getParentRule().getTableIndex() == RuleConstants.RULE_STATEMENT_SEMI){
+                    //<statement> ::= <return> ';'
+                    if(red_kleene_statement.getTokenCount() != 0){
+                        //unreachable statement (Line: 4)
+                        padre.imprimir("No se puede alcanzar Statement: "+" Linea "+(red_statement.getToken(1).getLineNumber()+1)+""+"\n",1);
+                    }
+                }else if(red_statement.getParentRule().getTableIndex() == RuleConstants.RULE_STATEMENT2){
+                    //<statement> ::= <selection>
+                    //<selection> ::= if '(' <expression> ')' <block> <opt_else_block>
+                    int opt_else_block_len = ((Reduction)((Reduction)red_statement.getToken(0).getData()).getToken(5).getData()).getTokenCount();
+                    if(red_kleene_statement.getTokenCount() != 0 && opt_else_block_len!=0 && statement.equals(this.tipoRetorno) && this.tipoRetorno.equals("void")==false){
+                        Reduction red_selection = (Reduction)red_statement.getToken(0).getData();
+                        padre.imprimir("unreachable statement"+" (Line "+(darUltimaLinea(red_selection)+1)+")"+"\n",1);
+                    }
+                }
+
+                if(red_kleene_statement.getTokenCount() == 0){
+                    retorno = statement;
+                }else{
+                    retorno = kleene_statement;
+                }
+                break;
+            case RuleConstants.RULE_KLEENE_STATEMENT2:
+                //<kleene_statement> ::=
+                retorno = "void";
+                break;
+            case RuleConstants.RULE_STATEMENT:
+                //<statement> ::= <block>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_STATEMENT2:
+                //<statement> ::= <selection>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_STATEMENT3:
+                //<statement> ::= <iteration>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_STATEMENT_SEMI:
+                //<statement> ::= <return> ';'
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_STATEMENT_SEMI2:
+                //<statement> ::= <assign> ';'
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_STATEMENT_SEMI3:
+                //<statement> ::= <opt_expression> ';'
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_SELECTION_IF_LPARAN_RPARAN:
+                //<selection> ::= if '(' <expression> ')' <block> <opt_else_block>
+
+                expression = this.obtenerTipo((Reduction)reduccion.getToken(2).getData());
+                if(expression.equals("boolean")==false){
+                    retorno = "error";
+                    padre.imprimir("Tipos Incompatibles: "+ reduccion.getToken(2).getLineNumber() + "\n\t"+"en: "+expression+"\n\t"+"Debe de ser tipo: "+"boolean",1);
+                }
+                block = this.obtenerTipo((Reduction)reduccion.getToken(4).getData());
+                opt_else_block = this.obtenerTipo((Reduction)reduccion.getToken(5).getData());
+                if(block.equals("error") || opt_else_block.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+                if(block.equals(opt_else_block)){
+                    retorno = block;
+                }else if(((Reduction)reduccion.getToken(5).getData()).getTokenCount() == 0){
+                    retorno = "void";
+                }else{
+                    retorno = "void";
+                }
+                break;
+            case RuleConstants.RULE_OPT_ELSE_BLOCK_ELSE:
+                //<opt_else_block> ::= else <block>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(1).getData());
+                break;
+            case RuleConstants.RULE_OPT_ELSE_BLOCK:
+                //<opt_else_block> ::=
+                retorno = "void";
+                break;
+            case RuleConstants.RULE_ITERATION_WHILE_LPARAN_RPARAN:
+                //<iteration> ::= while '(' <expression> ')' <block>
+
+                expression = this.obtenerTipo((Reduction)reduccion.getToken(2).getData());
+                if(expression.equals("boolean")==false){
+                    retorno = "error";
+                    padre.imprimir("Tipos Incompatibles: "+ reduccion.getToken(2).getLineNumber() + "\n\t"+"en: "+expression+"\n\t"+"Debe de ser tipo: "+"boolean",1);
+                }
+                block = this.obtenerTipo((Reduction)reduccion.getToken(4).getData());
+                if(block.equals("error")){
+                    retorno = "error";
+                }else{
+                    retorno = "void";//void porque en un while no se garantiza nunca regresar algo
+                }
+
+                break;
+            case RuleConstants.RULE_RETURN_RETURN:
+                //<return> ::= return <opt_expression>
+
+                opt_expression = this.obtenerTipo((Reduction)reduccion.getToken(1).getData());
+                if(tipoRetorno.equals(opt_expression)){
+                    retorno = tipoRetorno;
+                }else{//El retorno debe de ser del mismo tipo de la declaración del método
+                    retorno = "error";
+                    padre.imprimir("Tipo Return no el mismo que Tipo Método: "+ reduccion.getToken(0).getLineNumber() + "\n\t"+"en: "+opt_expression+"\n\t"+"necesita: "+tipoRetorno+"",1);
+                }
+
+                break;
+            case RuleConstants.RULE_ASSIGN_EQ:
+                //<assign> ::= <location> '=' <expression>
+
+                location = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                expression = this.obtenerTipo((Reduction)reduccion.getToken(2).getData());
+
+                if(location.equals("error") || expression.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+
+                if(location.equals(expression)){
+                    retorno = "void";
+                }else{
+                   // System.out.println("tipos incompatibles en assign");
+                    padre.imprimir("Esta asignando un tipo a otro incorrecto: "+ reduccion.getToken(1).getLineNumber() + "\n\t"+"en: "+expression+"\n\t"+"necesita: "+location+"",1);
+                    retorno = "error";
+                }
+                
+
+                break;
+            case RuleConstants.RULE_OPT_EXPRESSION:
+                //<opt_expression> ::= <expression>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_OPT_EXPRESSION2:
+                //<opt_expression> ::=
+                retorno = "void";
+                break;
+            case RuleConstants.RULE_EXPRESSION:
+                //<expression> ::= <Rel Exp> <conditionalop> <expression>
+
+                Rel_Exp = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                expression = this.obtenerTipo((Reduction)reduccion.getToken(2).getData());
+                String str_conditionalop = (String)((Reduction)reduccion.getToken(1).getData()).getToken(0).getData();
+                if(Rel_Exp.equals("error") ||expression.equals("error")){
+                    retorno = "error";
+                }
+                else if(Rel_Exp.equals("boolean") && expression.equals("boolean")) {
+                    retorno = "boolean";
+                }else{
+                    retorno = "error";
+                    padre.imprimir("operator "+str_conditionalop+" cannot be applied"+ reduccion.getToken(1).getLineNumber() + "\n\t"+"to "+Rel_Exp+", "+expression+"",1);
+                }
+
+                break;
+            case RuleConstants.RULE_EXPRESSION2:
+                //<expression> ::= <Rel Exp>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_RELEXP:
+                //<Rel Exp> ::= <Add Exp> <relop> <Rel Exp>
+                //<relop> ::= '<=' | '<' | '>' | '>=' | '==' | '!='
+                Reduction relop_op = (Reduction)reduccion.getToken(1).getData();
+                String str_relop = (String)relop_op.getToken(0).getData();
+
+                Add_Exp = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                Rel_Exp = this.obtenerTipo((Reduction)reduccion.getToken(2).getData());
+
+                if(Add_Exp.equals("error") || Rel_Exp.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+
+                if(str_relop.equals("!=") || str_relop.equals("==")){
+                    //ambos iguales (int | char | boolean) -> boolean else error
+                    if(Add_Exp.equals(Rel_Exp) && (Add_Exp.equals("int") || Add_Exp.equals("char") || Add_Exp.equals("boolean"))){
+                        retorno = "boolean";
+                    }else{
+                        padre.imprimir("El operador "+str_relop+" no es aplicable en "+ relop_op.getToken(0).getLineNumber() + "\n\t"+"a "+Add_Exp+", "+Rel_Exp+"",1);
+                        retorno = "error";
+                    }
+
+                }else if(str_relop.equals("<") || str_relop.equals("<=") || str_relop.equals(">") || str_relop.equals(">=")){
+                    //deben ser de tipo int
+                    //si ambos son de tipo int, resultado es boolean else error
+                    if(Add_Exp.equals("int") && Rel_Exp.equals("int") ){
+                        retorno = "boolean";
+                    }else{
+                        padre.imprimir("El operador "+str_relop+" no es aplicable en "+ relop_op.getToken(0).getLineNumber() + "\n\t"+"a "+Add_Exp+", "+Rel_Exp+"",1);
+                        retorno = "error";
+                    }
+                }
+
+                break;
+            case RuleConstants.RULE_RELEXP2:
+                //<Rel Exp> ::= <Add Exp>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_ADDEXP:
+                //<Add Exp> ::= <Mult Exp> <addop> <Add Exp>
+
+                Mult_Exp = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                Add_Exp = this.obtenerTipo((Reduction)reduccion.getToken(2).getData());
+                if(Add_Exp.equals("error") || Mult_Exp.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+
+                Reduction add_op = (Reduction)reduccion.getToken(1).getData();
+                String str_addop = (String)add_op.getToken(0).getData();
+
+                if(Mult_Exp.equals("int") && Add_Exp.equals("int") ){
+                    retorno = "int";
+                }else{
+                    padre.imprimir("El operador "+str_addop+" no es aplicable en "+ add_op.getToken(0).getLineNumber() + "\n\t"+"a "+Mult_Exp+", "+Add_Exp+"",1);
+                    retorno = "error";
+                }
+
+                break;
+            case RuleConstants.RULE_ADDEXP2:
+                //<Add Exp> ::= <Mult Exp>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_MULTEXP:
+                //<Mult Exp> ::= <Negate Exp> <mulop> <Mult Exp>
+
+                Negate_Exp = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                Mult_Exp = this.obtenerTipo((Reduction)reduccion.getToken(2).getData());
+
+                if(Negate_Exp.equals("error") || Mult_Exp.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+
+                Reduction mul_op = (Reduction)reduccion.getToken(1).getData();
+                String str_mulop = (String)mul_op.getToken(0).getData();
+
+                if(Negate_Exp.equals("int") && Mult_Exp.equals("int")){
+                    retorno = "int";
+                }else{
+                    padre.imprimir("El operador  "+str_mulop+" no es aplicable en "+ mul_op.getToken(0).getLineNumber() + "\n\t"+"a "+Negate_Exp+", "+Mult_Exp+"",1);
+                    retorno = "error";
+                }
+
+                break;
+            case RuleConstants.RULE_MULTEXP2:
+                //<Mult Exp> ::= <Negate Exp>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_NEGATEEXP_MINUS:
+                //<Negate Exp> ::= '-' <Value>
+
+                Value = this.obtenerTipo((Reduction)reduccion.getToken(1).getData());
+                if(Value.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+                if(Value.equals("int")){
+                    retorno = "int";
+                }else{
+                    padre.imprimir("operator "+"-"+" cannot be applied"+ reduccion.getToken(0).getLineNumber() + "\n\t"+"to "+Value+"",1);
+                    retorno = "error";
+                }
+
+                break;
+            case RuleConstants.RULE_NEGATEEXP_EXCLAM:
+                //<Negate Exp> ::= '!' <Value>
+
+                Value = this.obtenerTipo((Reduction)reduccion.getToken(1).getData());
+                if(Value.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+                if(Value.equals("boolean")){
+                    retorno = "boolean";
+                }else{
+                    padre.imprimir("operator "+"!"+" cannot be applied"+ reduccion.getToken(0).getLineNumber() + "\n\t"+"to "+Value+"",1);
+                    retorno = "error";
+                }
+
+                break;
+            case RuleConstants.RULE_NEGATEEXP:
+                //<Negate Exp> ::= <Value>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_VALUE:
+                //<Value> ::= <literal>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_VALUE_LPARAN_RPARAN:
+                //<Value> ::= '(' <expression> ')'
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(1).getData());
+                break;
+            case RuleConstants.RULE_VALUE2:
+                //<Value> ::= <methodCall>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_VALUE3:
+                //<Value> ::= <location>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_LOCATION_DOT:
+                //<location> ::= <simpleLocation> '.' <location>
+
+                //obtener a simpleLocation
+                simpleLocation = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                
+                if(simpleLocation.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+
+                String id_location_1 = (String)((Reduction)reduccion.getToken(0).getData()).getToken(0).getData();
+                if(!simpleLocation.startsWith("struct:")){
+                    retorno = "error";
+                    padre.imprimir("No es aplicable locacion '.' locacion: "+ reduccion.getToken(1).getLineNumber() + "\n\t"+""+id_location_1+" porque no es una estructura "+"\n\ten: "+simpleLocation,1);
+                    break;
+                }
+                
+                if(simpleLocation.endsWith("[]")){
+                    retorno = "error";
+                    padre.imprimir("No es aplicable locacion '.' locacion: "+ reduccion.getToken(1).getLineNumber() + "\n\t"+""+id_location_1+" porque no es una estructura "+"\n\ten: "+simpleLocation,1);
+                    break;
+                }
+
+                //buscarlo en la tabla de símbolos
+                simbolo = this.tablaSimbolos.darSimbolo(id_location_1, ambitoActual);
+                retorno = this.darTipoLocacion((Reduction)reduccion.getToken(2).getData(), simbolo.darTipo().darListaVars());
+                break;
+            case RuleConstants.RULE_LOCATION:
+                //<location> ::= <simpleLocation>
+                retorno = this.obtenerTipo((Reduction)reduccion.getToken(0).getData());
+                break;
+            case RuleConstants.RULE_SIMPLELOCATION_ID_LBRACKET_RBRACKET:
+                //<simpleLocation> ::= id '[' <expression> ']'
+
+                //primero revisar que <expression> sea de tipo int
+                expression = this.obtenerTipo((Reduction)reduccion.getToken(2).getData());
+
+                if(expression.equals("error")){
+                    retorno = "error";
+                    break;
+                }else if(!expression.equals("int")){
+                    retorno = "error";
+                    padre.imprimir("Tipos incompatibles en el indice: "+ reduccion.getToken(1).getLineNumber() + "\n\t"+"en: "+expression+"\n\t"+"necesita: "+"int",1);
+                    //System.out.println("tipo incompatible.... [!int]");
+
+                }
+
+                String id_simpleLocation_2 = (String)reduccion.getToken(0).getData();
+                simbolo = this.tablaSimbolos.darSimbolo(id_simpleLocation_2, ambitoActual);
+                if(simbolo == null){
+                    //no encontró en la tabla de símbolos
+                    padre.imprimir("No se encuentra "+ reduccion.getToken(0).getLineNumber()+ "\n\t"+""+id_simpleLocation_2,1);
+                    retorno = "error";
+                }else{
+                    if(simbolo.darTipo().esArreglo()){
+                        retorno = simbolo.darTipo().darNombreTipo().substring(0, simbolo.darTipo().darNombreTipo().length()-2);
+                    }else{
+                        padre.imprimir("No aplicable "+ reduccion.getToken(0).getLineNumber() + "\n\t"+""+id_simpleLocation_2+" no es un Arreglo"+"\n\t"+" se encontró: "+simbolo.darTipo().darNombreTipo()+"",1);
+                        retorno = "error";
+                    }
+                }
+
+                break;
+            case RuleConstants.RULE_SIMPLELOCATION_ID:
+                //<simpleLocation> ::= id
+                String id_simpleLocation_1 = (String)reduccion.getToken(0).getData();
+                simbolo = this.tablaSimbolos.darSimbolo(id_simpleLocation_1, ambitoActual);
+                if(simbolo == null){
+                    //no encontró en la tabla de símbolos
+                    padre.imprimir("No se encuentra "+ reduccion.getToken(0).getLineNumber() + "\n\t"+""+id_simpleLocation_1,1);
+                    retorno = "error";
+                }else{
+                    retorno = simbolo.darTipo().darNombreTipo();
+                }
+
+                break;
+            case RuleConstants.RULE_METHODCALL_ID_LPARAN_RPARAN:
+                //<methodCall> ::= id '(' <opt_arg_separated> ')'
+                //obtener la firma de esta llamada a método y buscarla en la tabla de métodos
+                String signature = darFirmaMetodo(reduccion);
+                //por si los argumentos ya tienen un error...
+                if(signature.contains("error") && !signature.startsWith("error")){
+                    retorno = "error";
+                    break;
+                }
+
+                Metodo correct_method = this.tablaMetodos.darMetodo(signature);
+                if(correct_method!=null && !signature.isEmpty()){
+                    retorno = correct_method.darRet().darNombreTipo();
+                }else{
+                    padre.imprimir("No se encuentra " + reduccion.getToken(1).getLineNumber() + "\n\t"+signature,1);
+                    retorno = "error";
+                }
+
+                break;
+            case RuleConstants.RULE_LITERAL:
+                //<literal> ::= <int_literal>
+                //<int_literal> ::= num
+                retorno = "int";
+                break;
+            case RuleConstants.RULE_LITERAL2:
+                //<literal> ::= <char_literal>
+                //<char_literal> ::= character
+                retorno = "char";
+                break;
+            case RuleConstants.RULE_LITERAL3:
+                //<literal> ::= <bool_literal>
+                //<bool_literal> ::= true | false
+                retorno = "boolean";
+                break;
+        }
+        return retorno;
+    }
+
+    private int darUltimaLinea(Reduction reduction){
+        int line = 0;
+        //<selection> ::= if '(' <expression> ')' <block> <opt_else_block>
+        Reduction block, opt_else_block;
+        switch(reduction.getParentRule().getTableIndex())
+        {
+            case RuleConstants.RULE_SELECTION_IF_LPARAN_RPARAN:
+                //<selection> ::= if '(' <expression> ')' <block> <opt_else_block>
+                opt_else_block = (Reduction)reduction.getToken(5).getData();
+                block = (Reduction)reduction.getToken(4).getData();
+
+                if(opt_else_block.getTokenCount()==0){
+                    line = darUltimaLinea(block);
+                }else{
+                    line = darUltimaLinea(opt_else_block);
+                }
+                break;
+            case RuleConstants.RULE_OPT_ELSE_BLOCK_ELSE:
+                //<opt_else_block> ::= else <block>
+                line = darUltimaLinea((Reduction)reduction.getToken(1).getData());
+                break;
+            case RuleConstants.RULE_BLOCK_LBRACE_RBRACE:
+                //<block> ::= '{' <kleene_varDeclaration> <kleene_statement> '}'
+                line = reduction.getToken(3).getLineNumber();
+                break;
+
+        }
+        return line;
+    }
+
+
+    private String darTipoLocacion(Reduction reduccion, LinkedList<Simbolo> listaVars){
+        String retorno = "";
+
+        switch(reduccion.getParentRule().getTableIndex())
+        {
+            case RuleConstants.RULE_LOCATION_DOT:
+                //<location> ::= <simpleLocation> '.' <location>
+                String simpleLocation = this.darTipoLocacion((Reduction)reduccion.getToken(0).getData(), listaVars);
+                if(simpleLocation.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+
+                String id_location_1 = (String)((Reduction)reduccion.getToken(0).getData()).getToken(0).getData();
+
+                //revisar si es un struct (empieza con "struct:")
+                if(!simpleLocation.startsWith("struct:")){
+                    retorno = "error";
+                    padre.imprimir("No aplica locacion '.' locacion" + reduccion.getToken(1).getLineNumber()  + "\n\t"+""+id_location_1+" no es estructura"+"\n\ten: "+simpleLocation,1);
+                    break;
+                }
+
+                if(simpleLocation.endsWith("[]")){
+                    retorno = "error";
+                    padre.imprimir("No aplica locacion '.' locacion" + reduccion.getToken(1).getLineNumber() + "\n\t"+""+id_location_1+" no es estructura"+"\n\ten: "+simpleLocation,1);
+                    break;
+                }
+
+                //buscarlo entre los miembros
+                Simbolo symbol_0 = this.darLocacionEnListaVar(id_location_1, listaVars);
+                retorno = this.darTipoLocacion((Reduction)reduccion.getToken(2).getData(), symbol_0.darTipo().darListaVars());
+                break;
+            case RuleConstants.RULE_LOCATION:
+                //---------------------------------------------------------------------------------------------------------
+                //<location> ::= <simpleLocation>
+                retorno = this.darTipoLocacion((Reduction)reduccion.getToken(0).getData(), listaVars);
+                break;
+            case RuleConstants.RULE_SIMPLELOCATION_ID_LBRACKET_RBRACKET:
+                //---------------------------------------------------------------------------------------------------------
+                //<simpleLocation> ::= id '[' <expression> ']'
+
+                String expression = this.obtenerTipo((Reduction)reduccion.getToken(2).getData());
+                if(expression.equals("error")){
+                    retorno = "error";
+                    break;
+                }
+                else if(!expression.equals("int")) {
+                    retorno = "error";
+                    padre.imprimir("Tipos Incompatibles "+ reduccion.getToken(1).getLineNumber() + "\n\t"+"en: "+expression+"\n\t"+"necesita: "+"int",1);
+                    break;
+                }
+                String id_2 = (String)reduccion.getToken(0).getData();
+                Boolean exist_2 = this.existeLocacionEnListaVar(id_2, listaVars);
+                if(exist_2){
+                    Simbolo symbol_2 = this.darLocacionEnListaVar(id_2, listaVars);
+                    if(symbol_2.darTipo().esArreglo()){
+                        //quitar el "[]" del final...
+                        retorno = symbol_2.darTipo().darNombreTipo().substring(0, symbol_2.darTipo().darNombreTipo().length()-2);
+                    }else{
+                        retorno = "error";
+                        padre.imprimir("No aplicable "+ reduccion.getToken(1).getLineNumber() + "\n\t"+""+id_2+" no es arreglo"+"\n\t"+", se encontró: "+symbol_2.darTipo().darNombreTipo()+"",1);
+                    }
+                }else{
+                    retorno = "error";
+                    padre.imprimir("No se encontró:"+ reduccion.getToken(0).getLineNumber() + "\n\t"+" --> "+id_2+" No está en la estructura",1);
+                }
+
+                break;
+            case RuleConstants.RULE_SIMPLELOCATION_ID:
+                //---------------------------------------------------------------------------------------------------------
+                //<simpleLocation> ::= id
+                String id = (String)reduccion.getToken(0).getData();
+                Boolean exist = this.existeLocacionEnListaVar(id, listaVars);
+                if(exist){
+                    Simbolo symbol = this.darLocacionEnListaVar(id, listaVars);
+                    retorno = symbol.darTipo().darNombreTipo();
+                }else{
+                    retorno = "error";
+                    padre.imprimir("No se encontró" + reduccion.getToken(0).getLineNumber() + "\n\t"+" --> "+id+" No está en la estructura",1);
+                }
+                break;
+        }
+
+
+        return retorno;
+    }
+
+    private int generarCodigo(Reduction reduccion, int cont){
+
+        int retorno = cont;
+        
+        switch(reduccion.getParentRule().getTableIndex())
+        {
+            case RuleConstants.RULE_PROGRAM_CLASS_PROGRAM_LBRACE_RBRACE:
+                //<Program> ::= class Program '{' <kleene_declaration> '}'
+                generarCodigo((Reduction)reduccion.getToken(3).getData(),cont);
+                break;
+            case RuleConstants.RULE_KLEENE_DECLARATION:
+                //<kleene_declaration> ::= <declaration> <kleene_declaration>
+                int cont2 = generarCodigo((Reduction)reduccion.getToken(0).getData(),cont);
+                retorno = generarCodigo((Reduction)reduccion.getToken(1).getData(),cont2);
+                break;
+            case RuleConstants.RULE_DECLARATION3:
+                //<declaration> ::= <methodDeclaration>
+                //<methodDeclaration> ::= <Type> id '(' <opt_parameter> ')' <block>
+
+                Metodo met = this.tablaMetodos.darListaMetodo().get(cont);
+                Reduction methodDeclaration = (Reduction)reduccion.getToken(0).getData();
+                Verificador ambito_metodo = this.ambitoActual.darHijo();
+
+                padre.imprimir("Método: "+met.darFirmaMetodo()+" - Ambito: "+ambito_metodo.darNombre(),2);
+
+
+                GenCodigo method_code = new GenCodigo(met, ambito_metodo, methodDeclaration,this);
+                method_code.generar();
+                this.codigoX.addAll(method_code.darCodigo());
+
+                retorno++;
+                break;
+        }
+        return retorno;
+    }
+
+    public LinkedList<IGeneracionCodigo> darCodigo(){
+        return this.codigoX;
+    }
+
+    public LinkedList<String> darCodigoString(){
+        LinkedList<String> retorno = new LinkedList<String>();
+        for(IGeneracionCodigo a : this.codigoX){
+            retorno.add(a.darCodigo()+"");
+        }
+        return retorno;
+    }
+
+    private void verificacionMain(){
+        String signature = "main()";
+        Metodo correct_method = this.tablaMetodos.darMetodo(signature);
+        if(correct_method==null){
+            //cannot find symbol method (Line 2): method(boolean,int)
+            padre.imprimir("No se encontró el método MAIN",1);
+        }
+    }
+
+    public static String darGramatica() {
+        return gramatica;
+    }
     
 }
+   
