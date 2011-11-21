@@ -1,13 +1,13 @@
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //               Ámbito global
-//a = global[0]
-//b = global[1]
-//c = global[2]
-//vs2 = global[3]
-//prueba2 = global[11]
-//d = global[20]
-//vs1 = global[21]
-//array = global[29]
+//a = global[a]
+//b = global[b]
+//c = global[c]
+//vs2 = global[vs2]
+//prueba2 = global[prueba2]
+//d = global[d]
+//vs1 = global[vs1]
+//array = global[array]
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
@@ -16,24 +16,17 @@
 //Tipo de retorno: int
 //param: t1 = stack[0]
 //param: t3 = stack[1]
-//t|_1 = stack[2]
-//t|_2 = stack[3]
 //*******************************************
 tryout proc near
 //--- <assign> ----------------------------
 	//°°° <location> - structure °°°°
-	t|_1 = 1 + 0
-	t|_2 = 11 + t|_1
 	//°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
-	global[t|_2] = 1
+	global[prueba2].prueba.sa = 1
 //-----------------------------------------
 //--- <assign> ----------------------------
 	//°°° <location> - structure °°°°
-	t|_1 = 5 * 1
-	t|_1 = t|_1 + 1
-	t|_2 = 3 + t|_1
 	//°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
-	global[t|_2] = 0
+	global[vs2]{5} = 0
 //-----------------------------------------
 	return 1
 	goto E_tryout_$
@@ -47,17 +40,13 @@ tryout endp
 //Método: tryout|0
 //Tipo de retorno: char
 //param: t2 = stack[0]
-//t|_1 = stack[1]
-//t|_2 = stack[2]
 //*******************************************
 tryout|0 proc near
 //--- <assign> ----------------------------
 	//°°° <location> - structure °°°°
-	t|_1 = 8 * 1
-	t|_1 = t|_1 + 29
-	t|_2 = t|_1 + 0
+// <simpleLocation> ::= id '[' <expression> ']'
 	//°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
-	global[t|_2] = 2
+	global[array].sa = 2
 //-----------------------------------------
 	return 'c'
 	goto E_tryout|0_$
@@ -70,11 +59,11 @@ tryout|0 endp
 //*******************************************
 //Método: getBool
 //Tipo de retorno: boolean
-//methoda = stack[0]
-//methodb = stack[1]
-//methodc = stack[3]
-//t|_1 = stack[4]
-//t|_2 = stack[5]
+//methodb = stack[0]
+//methoda = stack[1]
+//methodc = stack[2]
+//t|_1 = stack[3]
+//t|_2 = stack[4]
 //*******************************************
 getBool proc near
 //--- <assign> ----------------------------
@@ -84,20 +73,18 @@ getBool proc near
 	param 2, tryout, 2
 	t|_1 = call tryout, 2
 	//+++++++++++++++++++++++++++++++
-	stack[0] = t|_1
+	stack[1] = t|_1
 //-----------------------------------------
 //--- <assign> ----------------------------
-	stack[3] = 'c'
+	stack[2] = 'c'
 //-----------------------------------------
 //--- <assign> ----------------------------
 	//+++ <metodoCall> ++++++++++++++
 	t|_1 = call getBool, 0
 	//+++++++++++++++++++++++++++++++
 	//°°° <location> - array °°°°°°°°
-	t|_2 = 1 * 1
-	t|_2 = t|_2 + 1
 	//°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
-	stack[t|_2] = t|_1
+	stack[0]{32} = t|_1
 //-----------------------------------------
 //### if(<exp>) <block1> else <block2> ####
 	if 1 < 2 goto E_getBool_2
@@ -109,7 +96,7 @@ E_getBool_3:
 	if t|_1 == 0 goto E_getBool_0
 //### <block1> ############################
 //--- <assign> ----------------------------
-	stack[0] = 1
+	stack[1] = 1
 //-----------------------------------------
 	return 1
 	goto E_getBool_$

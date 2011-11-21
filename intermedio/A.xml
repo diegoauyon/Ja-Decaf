@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class type="Program" package="" access="public">
+  <fields size="1">
+    <field access="public" name="a" type="I" array="false" estructure="false" />
+    <field access="public" name="b" type="C" array="true" estructure="false" />
+    <field access="public" name="c" type="Z" array="false" estructure="false" />
+  </fields>
+</class>
+

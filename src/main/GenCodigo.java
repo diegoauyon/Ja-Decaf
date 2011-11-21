@@ -174,7 +174,7 @@ public class GenCodigo {
         		locale.setAttribute("array",""+a.darTipo().esArreglo());
         		locale.setAttribute("estructure",""+a.darTipo().esEstructura());
         		locale.setAttribute("annotation",""+b[0]+"["+b[1]+"]");
-        		locale.setAttribute("size",""+a.darTipo().darTamanioTipo());
+        		locale.setAttribute("size",""+a.darTipo().darTamanioArreglo());
                 locales.addContent(locale);
             }
             
@@ -508,7 +508,7 @@ public class GenCodigo {
                         cod(<location>) -> temp2
                         temp2 = temp1
                 -------------------------------------------------------------------------*/
-                
+           //TODO     
                 this.agregarACodigo(new Comentario(" <assign> ",false,'-',40));
                 instrucciones.addContent(new Comment("assign"));
 
@@ -672,7 +672,7 @@ public class GenCodigo {
                 asignacion = new Element("assign");
                 asignacion.setAttribute("dir1",t3);
                 asignacion.setAttribute("dir2","1");
-                elePlano.addContent(asignacion);
+                instrucciones.addContent(asignacion);
 
                 this.agregarACodigo(L2);
                 instrucciones.addContent(new Element("label").setAttribute("name",L2.etiqueta));
@@ -835,7 +835,7 @@ public class GenCodigo {
                 this.sacarTemp(t1);
 
                 t2 = this.getTemporal();
-//TODO
+
                 this.agregarACodigo(new OperacionUnaria(t2,"not",t1));
                 op = new Element("ou");
                 op.setAttribute("t1",t2);
@@ -876,7 +876,7 @@ public class GenCodigo {
                 break;
             case Main.RuleConstants.RULE_VALUE3:
                 //<Value> ::= <location>
-                
+                //TODO
                 
                 t2 = this.generarLocacion((Reduction)reduccion.getToken(0).getData());
 
@@ -939,6 +939,7 @@ public class GenCodigo {
                 Reduction location = (Reduction)reduction.getToken(2).getData();
 
                 id = (String)simpleLoc.getToken(0).getData();
+                System.out.println("<location> ::= <simpleLocation> '.' <location>:   "+id);
                 for(tabla.Simbolo a : listaVars){
 
                     if(id.equals(a.darId())){
@@ -951,19 +952,19 @@ public class GenCodigo {
                 t1 = this.darDesplazarEstructura(simpleLoc, listaVars);
                 t2 = this.darDesplazarEstructura(location, miembro.darTipo().darListaVars());
 
-                String t3 = this.getTemporal();
-
-                this.agregarACodigo(new OperacionBinaria(t3,t1,"+",t2));
-                op = new Element("ob");
+             //   String t3 = this.getTemporal();
+                System.out.println("Estructura:  "+id+"."+t1+"."+t2);
+                //this.agregarACodigo(new OperacionBinaria(t3,t1,"+",t2));
+               /** op = new Element("ob");
                 op.setAttribute("t1", t3);
                 op.setAttribute("t2",t1);
                 op.setAttribute("op","+");
                 op.setAttribute("t3",t2);
-                instrucciones.addContent(op);
+                instrucciones.addContent(op);*/
 
 
-                retorno = t3;
-                
+              //  retorno = t3;
+                retorno = "."+t1+"."+t2;
                 this.sacarTemp(t1);
                 this.sacarTemp(t2);
 
@@ -971,6 +972,7 @@ public class GenCodigo {
             case Main.RuleConstants.RULE_LOCATION:
                 //<location> ::= <simpleLocation>
                 retorno = this.darDesplazarEstructura((Reduction)reduction.getToken(0).getData(), listaVars);
+                System.out.println("<location> ::= <simpleLocation>:  "+retorno);
                 break;
             case Main.RuleConstants.RULE_SIMPLELOCATION_ID_LBRACKET_RBRACKET:
                 //<simpleLocation> ::= id '[' <expression> ']'
@@ -989,27 +991,27 @@ public class GenCodigo {
                 t1 = this.generarExpresion((Reduction)reduction.getToken(2).getData());
 
                 int tam_ind = miembro.darTipo().darTamanioTipoSimple();
-
-                t2 = this.getTemporal();
-
-                this.agregarACodigo(new OperacionBinaria(t2,t1,"*",tam_ind+""));
-                op = new Element("ob");
+                
+             //  t2 = this.getTemporal();
+             //  this.agregarACodigo(new Comentario("Estuvo aqui el huequle"));
+                //this.agregarACodigo(new OperacionBinaria(t2,t1,"*",tam_ind+""));
+              /**  op = new Element("ob");
                 op.setAttribute("t1", t2);
                 op.setAttribute("t2",t1);
                 op.setAttribute("op","*");
                 op.setAttribute("t3",tam_ind+"");
-                instrucciones.addContent(op);
+                instrucciones.addContent(op);*/
 
-                this.agregarACodigo(new OperacionBinaria(t2,t2,"+",cont+""));
-                op = new Element("ob");
+             //   this.agregarACodigo(new OperacionBinaria(t2,t2,"+",cont+""));
+              /**  op = new Element("ob");
                 op.setAttribute("t1", t2);
                 op.setAttribute("t2",t2);
                 op.setAttribute("op","+");
                 op.setAttribute("t3",cont+"");
-                instrucciones.addContent(op);
+                instrucciones.addContent(op);*/
 
 
-                retorno = t2;
+                retorno = "{"+t1+"}";
 
                 this.sacarTemp(t1);
 
@@ -1018,17 +1020,20 @@ public class GenCodigo {
                 //<simpleLocation> ::= id
 
                 id = (String)reduction.getToken(0).getData();
-
+                String idd="";
                 for(tabla.Simbolo a : listaVars){
 
-                    if(id.equals(a.darId())){
+                    if(id.equals(a.darId()))
+                    {
+                    	idd = a.darId();
                         break;
                     }
                     cont+=a.darTipo().darTamanioTipo();
                 }
 
-                retorno = cont+"";
-
+                //retorno = cont+"";
+                System.out.println("Fuck: "+idd);
+                retorno = idd;
                 break;
         }
 
@@ -1054,8 +1059,10 @@ public class GenCodigo {
 
                 id = (String)simpleLoc.getToken(0).getData();
                 simbolo = this.parser.darTablaSimbolos().darSimbolo(id, this.ambitoActual);
+                //TODO
+                System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$: "+simbolo.darId());
                 a = this.darDesplazamiento(simbolo,parser,this.verificador);
-
+                System.out.println("####$$$$#$#$#$#$#$##$#$#$#$#$$#$#: " + a[0]  + " ---- "+ a[1]);
                 this.agregarACodigo(new Comentario(" <location> - structure ",true,'°',30));//°°°°°°
                 instrucciones.addContent(new Comment("locacion -> estructura"));
 
@@ -1074,52 +1081,56 @@ public class GenCodigo {
 
                 }else{
                     //<simpleLocation> ::= id '[' <expression> ']'
+                	 this.agregarACodigo(new Comentario(" <simpleLocation> ::= id '[' <expression> ']'"));
 
                     base = a[0];
                     
                     t1 = this.generarExpresion((Reduction)simpleLoc.getToken(2).getData());
-                    t2 = this.getTemporal();
+                   // t2 = this.getTemporal();
 
                     tam = simbolo.darTipo().darTamanioTipoSimple();
-                    this.agregarACodigo(new OperacionBinaria(t2,tam+"","*",t1));
-                    op = new Element("ob");
+                   // this.agregarACodigo(new OperacionBinaria(t2,tam+"","*",t1));
+                /**    op = new Element("ob");
                     op.setAttribute("t1", t2);
                     op.setAttribute("t2",tam+"");
                     op.setAttribute("op","*");
                     op.setAttribute("t3",t1);
                     instrucciones.addContent(op);
                     
-                    this.agregarACodigo(new OperacionBinaria(t2,t2,"+",a[1]));
+                   // this.agregarACodigo(new OperacionBinaria(t2,t2,"+",a[1]));
                     op = new Element("ob");
                     op.setAttribute("t1", t2);
                     op.setAttribute("t2",t2);
                     op.setAttribute("op","+");
                     op.setAttribute("t3",a[1]);
-                    instrucciones.addContent(op);
-                    despl_inicial = t2;
+                    instrucciones.addContent(op);*/
+                    despl_inicial = a[1];
 
                     this.sacarTemp(t1);
 
                 }
-
+                //TODO
+                
                 t1 = this.darDesplazarEstructura((Reduction)reduccion.getToken(2).getData(), simbolo.darTipo().darListaVars());
+                System.out.println("Llama a desplazamiento est: "+t1+ "  ficic: "+ reduccion.getToken(2).getName()+  "   "+simbolo.darId());	
+               // t3 = this.getTemporal();
 
-                t3 = this.getTemporal();
-
-                this.agregarACodigo(new OperacionBinaria(t3,despl_inicial,"+",t1));
-                op = new Element("ob");
+                //this.agregarACodigo(new OperacionBinaria(t3,despl_inicial,"+",t1));
+             /**   op = new Element("ob");
                 op.setAttribute("t1", t3);
                 op.setAttribute("t2",despl_inicial);
                 op.setAttribute("op","+");
                 op.setAttribute("t3",t1);
-                instrucciones.addContent(op);
-
-                retorno = base+"["+t3+"]";
+                instrucciones.addContent(op);*/
+                if (!t1.startsWith("{"))
+                	  if (!t1.startsWith("."))
+                		  t1 = "."+t1;
+                retorno = base+"["+despl_inicial+"]" + t1;
 
 
                 this.sacarTemp(t1);
                 this.sacarTemp(despl_inicial);
-                this.sacarTemp(t3);
+                //this.sacarTemp(t3);
 
                 this.agregarACodigo(new Comentario("",true,'°',30));//°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
                 
@@ -1147,7 +1158,7 @@ public class GenCodigo {
 
                 id = (String)reduccion.getToken(0).getData();
                 simbolo = this.parser.darTablaSimbolos().darSimbolo(id, this.ambitoActual);
-
+                
                 a = this.darDesplazamiento(simbolo,parser,this.verificador);
                 //retorno[0] = base;
                 //retorno[1] = despl+"";
@@ -1158,8 +1169,8 @@ public class GenCodigo {
 
                 tam = simbolo.darTipo().darTamanioTipoSimple();
 
-                this.agregarACodigo(new OperacionBinaria(t2,tam+"","*",t1));
-                op = new Element("ob");
+               // this.agregarACodigo(new OperacionBinaria(t2,tam+"","*",t1));
+               /** op = new Element("ob");
                 op.setAttribute("t1", t2);
                 op.setAttribute("t2",tam+"");
                 op.setAttribute("op","*");
@@ -1172,9 +1183,10 @@ public class GenCodigo {
                 op.setAttribute("t2",t2);
                 op.setAttribute("op","+");
                 op.setAttribute("t3",a[1]);
-                instrucciones.addContent(op);
+                instrucciones.addContent(op);*/
 
-                retorno = a[0]+"["+t2+"]";
+                //retorno = a[0]+"["+t2+"]";
+                retorno = a[0] +"["+a[1]+"]"+"{"+t1+"}";
 
                 
                 this.sacarTemp(t1);
@@ -1188,7 +1200,7 @@ public class GenCodigo {
                 
                 id = (String)reduccion.getToken(0).getData();
                 simbolo = this.parser.darTablaSimbolos().darSimbolo(id, this.ambitoActual);
-
+                
                 a = this.darDesplazamiento(simbolo,parser,this.verificador);
                 //retorno[0] = base;
                 //retorno[1] = despl+"";
@@ -1207,33 +1219,40 @@ public class GenCodigo {
         String base;
         String retorno[] = new String[2];
 
-        int despl = 0;
-
+        //int despl = 0;
+        String despl = "";
+        int dwa = 0;
 
         //ver si es global
         if(symbol.darVerificador().darNombre() == 0){
-
+        	System.out.println("Simbolo constant pool: "+ symbol.darId());
             base = "global";
 
-            LinkedList<tabla.Simbolo> simbGlobal = parser.darTablaSimbolos().darTodosSimbolosGlobales(actual_ambit);
+           // LinkedList<tabla.Simbolo> simbGlobal = parser.darTablaSimbolos().darTodosSimbolosGlobales(actual_ambit);
 
             //System.out.println("Simbolos en ambitos hijos: \n"+simbGlobal);
-
+            /**
             for(tabla.Simbolo a : simbGlobal){
 
-                if(a == symbol){
+                if(a == symbol)
+                {
+                	
                     break;
                 }else{
                     despl+=a.darTipo().darTamanioTipo();
                 }
-            }
-
+            }**/
+            
+            //############
+            
+           despl = symbol.darId(); 
+           retorno[1] = despl+"";
 
         }else{
             //está definida en el método actual
 
             base = "stack";
-
+            System.out.println("Simbolo local: "+ symbol.darId());
             LinkedList<tabla.Simbolo> simbLocal = parser.darTablaSimbolos().darTodoLosSimbolosEnAmbitoYSubSiguiente(actual_ambit);
 
             //System.out.println("Simbolos en ambitos hijos: \n"+simbLocal);
@@ -1243,15 +1262,15 @@ public class GenCodigo {
                 if(a == symbol){
                     break;
                 }else{
-                    despl+=a.darTipo().darTamanioTipo();
+                	dwa+=a.darTipo().darTamanioTipo();
                 }
             }
 
-
+            retorno[1] = dwa+"";
         }
 
         retorno[0] = base;
-        retorno[1] = despl+"";
+        
         
         return retorno;
     }

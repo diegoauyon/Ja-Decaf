@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class type="Program" package="" access="public">
-  <fields>
+  <fields size="4">
     <field access="public" name="s2a" type="I" array="false" estructure="false" />
-    <field access="public" name="prueba" type="s1" array="false" estructure="true" />
+    <field access="public static" name="prueba" type="s1" array="false" estructure="true" />
   </fields>
 </class>
 

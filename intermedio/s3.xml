@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class type="Program" package="" access="public">
-  <fields>
+  <fields size="1">
     <field access="public" name="s3a" type="I" array="false" estructure="false" />
   </fields>
 </class>

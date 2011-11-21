@@ -2,14 +2,14 @@
 <class type="Program" package="" access="public">
   <!--Variables Globales-->
   <fields>
-    <field access="public" name="a" type="I" array="false" estructure="false" annotation="global[0]" />
-    <field access="public" name="b" type="Z" array="true" estructure="false" annotation="global[1]" />
-    <field access="public" name="c" type="C" array="false" estructure="false" annotation="global[2]" />
-    <field access="public" name="vs2" type="s1" array="false" estructure="true" annotation="global[3]" />
-    <field access="public" name="prueba2" type="s2" array="false" estructure="true" annotation="global[11]" />
-    <field access="public" name="d" type="I" array="false" estructure="false" annotation="global[20]" />
-    <field access="public" name="vs1" type="s1" array="false" estructure="true" annotation="global[21]" />
-    <field access="public" name="array" type="s1" array="true" estructure="true" annotation="global[29]" />
+    <field access="public" name="a" type="I" array="false" estructure="false" annotation="global[a]" size="0" />
+    <field access="public" name="b" type="Z" array="true" estructure="false" annotation="global[b]" size="1" />
+    <field access="public" name="c" type="C" array="false" estructure="false" annotation="global[c]" size="0" />
+    <field access="public static" name="vs2" type="s1" array="false" estructure="true" annotation="global[vs2]" size="0" />
+    <field access="public static" name="prueba2" type="s2" array="false" estructure="true" annotation="global[prueba2]" size="0" />
+    <field access="public" name="d" type="I" array="false" estructure="false" annotation="global[d]" size="0" />
+    <field access="public static" name="vs1" type="s1" array="false" estructure="true" annotation="global[vs1]" size="0" />
+    <field access="public static" name="array" type="s1" array="true" estructure="true" annotation="global[array]" size="5" />
   </fields>
   <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
   <methods>
@@ -17,9 +17,7 @@
     <!--Tipo de retorno: int-->
     <!--param: t1 = stack[0]-->
     <!--param: t3 = stack[1]-->
-    <!--t|_1 = stack[2]-->
-    <!--t|_2 = stack[3]-->
-    <!--Tamaño Parametros: 2  Locales: 0  Temporales:  2-->
+    <!--Tamaño Parametros: 2  Locales: 0  Temporales:  0-->
     <method name="tryout">
       <properties>
         <return type="I" array="false" estructure="false" />
@@ -32,15 +30,10 @@
       <instructions>
         <!--assign-->
         <!--locacion -> estructura-->
-        <ob t1="t|_1" t2="1" op="+" t3="0" />
-        <ob t1="t|_2" t2="11" op="+" t3="t|_1" />
-        <assign dir1="global[t|_2]" dir2="1" />
+        <assign dir1="global[prueba2].prueba.sa" dir2="1" />
         <!--assign-->
         <!--locacion -> estructura-->
-        <ob t1="t|_1" t2="5" op="*" t3="1" />
-        <ob t1="t|_1" t2="t|_1" op="+" t3="1" />
-        <ob t1="t|_2" t2="3" op="+" t3="t|_1" />
-        <assign dir1="global[t|_2]" dir2="0" />
+        <assign dir1="global[vs2]{5}" dir2="0" />
         <return ret="1" />
         <goto name="E_tryout_$" />
         <label name="E_tryout_$" />
@@ -51,9 +44,7 @@
     <!--Método:tryout|0-->
     <!--Tipo de retorno: char-->
     <!--param: t2 = stack[0]-->
-    <!--t|_1 = stack[1]-->
-    <!--t|_2 = stack[2]-->
-    <!--Tamaño Parametros: 1  Locales: 0  Temporales:  2-->
+    <!--Tamaño Parametros: 1  Locales: 0  Temporales:  0-->
     <method name="tryout_0">
       <properties>
         <return type="C" array="false" estructure="false" />
@@ -65,10 +56,7 @@
       <instructions>
         <!--assign-->
         <!--locacion -> estructura-->
-        <ob t1="t|_1" t2="8" op="*" t3="1" />
-        <ob t1="t|_1" t2="t|_1" op="+" t3="29" />
-        <ob t1="t|_2" t2="t|_1" op="+" t3="0" />
-        <assign dir1="global[t|_2]" dir2="2" />
+        <assign dir1="global[array].sa" dir2="2" />
         <return ret="'c'" />
         <goto name="E_tryout|0_$" />
         <label name="E_tryout|0_$" />
@@ -78,23 +66,22 @@
     <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <!--Método:getBool-->
     <!--Tipo de retorno: boolean-->
-    <!--methoda = stack[0]-->
-    <!--methodb = stack[1]-->
-    <!--methodc = stack[3]-->
-    <!--t|_1 = stack[4]-->
-    <!--t|_2 = stack[5]-->
-    <!--Tamaño Parametros: 0  Locales: 4  Temporales:  2-->
+    <!--methodb = stack[0]-->
+    <!--methoda = stack[1]-->
+    <!--methodc = stack[2]-->
+    <!--t|_1 = stack[3]-->
+    <!--t|_2 = stack[4]-->
+    <!--Tamaño Parametros: 0  Locales: 3  Temporales:  2-->
     <method name="getBool">
       <properties>
         <return type="Z" array="false" estructure="false" />
         <parameters num="0" />
         <locals num="3">
-          <local name="methoda" type="I" array="false" estructure="false" annotation="stack[0]" size="1" />
-          <local name="methodb" type="Z" array="true" estructure="false" annotation="stack[1]" size="2" />
-          <local name="methodc" type="C" array="false" estructure="false" annotation="stack[3]" size="1" />
+          <local name="methodb" type="Z" array="true" estructure="false" annotation="stack[0]" size="2" />
+          <local name="methoda" type="I" array="false" estructure="false" annotation="stack[1]" size="0" />
+          <local name="methodc" type="C" array="false" estructure="false" annotation="stack[2]" size="0" />
         </locals>
       </properties>
-      <assign dir1="t|_1" dir2="1" />
       <instructions>
         <!--assign-->
         <!--LlamadaMetodo-->
@@ -102,25 +89,24 @@
         <param param="t|_2" method="tryout" numArg="1" />
         <param param="2" method="tryout" numArg="2" />
         <call ret="t|_1" name="tryout" size="2" />
-        <assign dir1="stack[0]" dir2="t|_1" />
+        <assign dir1="stack[1]" dir2="t|_1" />
         <!--assign-->
-        <assign dir1="stack[3]" dir2="'c'" />
+        <assign dir1="stack[2]" dir2="'c'" />
         <!--assign-->
         <!--LlamadaMetodo-->
         <call ret="t|_1" name="getBool" size="0" />
         <!--locacion -> arreglo-->
-        <ob t1="t|_2" t2="1" op="*" t3="1" />
-        <ob t1="t|_2" t2="t|_2" op="+" t3="1" />
-        <assign dir1="stack[t|_2]" dir2="t|_1" />
+        <assign dir1="stack[0]{32}" dir2="t|_1" />
         <!--if (exp) bloque1 else bloque2-->
         <if goto="E_getBool_2" dir1="1" op="&lt;" dir2="2" />
         <assign dir1="t|_1" dir2="0" />
         <goto name="E_getBool_3" />
         <label name="E_getBool_2" />
+        <assign dir1="t|_1" dir2="1" />
         <label name="E_getBool_3" />
         <if goto="E_getBool_0" dir1="t|_1" op="==" dir2="0" />
         <!--assign-->
-        <assign dir1="stack[0]" dir2="1" />
+        <assign dir1="stack[1]" dir2="1" />
         <return ret="1" />
         <goto name="E_getBool_$" />
         <goto name="E_getBool_1" />

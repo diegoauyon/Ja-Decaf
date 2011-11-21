@@ -5,5 +5,6 @@ public class clase2
 	public void metodoX()
 	{
 		int a = objetoClase.a;
+		int vv = objetoClase.ae.a;
 	}
 }

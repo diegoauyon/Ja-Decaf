@@ -311,7 +311,7 @@ public class Main implements GPMessageConstants
                     fields.setAttribute("array",""+a.darTipo().esArreglo());
                     fields.setAttribute("estructure",""+ a.darTipo().esEstructura());
                     fields.setAttribute("annotation",""+b[0]+"["+b[1]+"]");
-                    fields.setAttribute("size",""+a.darTipo().darTamanioTipo());
+                    fields.setAttribute("size",""+a.darTipo().darTamanioArreglo());
                     fieldsC.addContent(fields);
 
                 }

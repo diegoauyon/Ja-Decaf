@@ -17,23 +17,24 @@ class Program{
 	} prueba2;
 	int d;
 	struct s1 vs1;
-	struct s1 array[3];
+	struct s1 array[5];
 	int tryout(int t1, int t3){
 		prueba2.prueba.sa = 1;
 		vs2.sb[5]= false;		
 		return 1;
 	}
 	char tryout(char t2){
-		array[1].sa = 2;
+		array[2].sa = 2;
 		return 'c';
 	}
 	boolean getBool(){
-		int methoda;
 		boolean methodb[2];
+		int methoda;
+		
 		char methodc;
 		methoda = tryout(1+1,2);
 		methodc = 'c';
-		methodb[1] = getBool();
+		methodb[32] = getBool();
 		if(1 < 2){
 			methoda = 1;
 			return true;

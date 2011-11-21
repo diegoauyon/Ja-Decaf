@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class type="Program" package="" access="public">
-  <fields>
+  <fields size="1">
     <field access="public" name="sa" type="I" array="false" estructure="false" />
     <field access="public" name="sb" type="Z" array="true" estructure="false" />
     <field access="public" name="sc" type="C" array="false" estructure="false" />
-    <field access="public" name="prueba3" type="s3" array="false" estructure="true" />
+    <field access="public static" name="prueba3" type="s3" array="false" estructure="true" />
   </fields>
 </class>
 

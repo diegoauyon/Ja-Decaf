@@ -124,9 +124,14 @@ public class Tipo {
     }
 
     public int darTamanioTipo() {
-        if(this.arreglo)
-            return this.tamanioTipo*this.tamanioArreglo;
+        //if(this.arreglo)
+          //  return this.tamanioTipo;//*this.tamanioArreglo;
         return this.tamanioTipo;
+    }
+    
+    public int darTamanioArreglo()
+    {
+    	return this.tamanioArreglo;
     }
 
     public int darTamanioTipoSimple() {
