@@ -24,27 +24,30 @@
       <properties>
         <return type="I" array="false" estructure="false" />
         <parameters num="2">
-          <parameter nombre="t1" type="I" array="false" estructure="false" annotation="stack[0]" />
-          <parameter nombre="t3" type="I" array="false" estructure="false" annotation="stack[1]" />
+          <parameter name="t1" type="I" array="false" estructure="false" annotation="stack[0]" />
+          <parameter name="t3" type="I" array="false" estructure="false" annotation="stack[1]" />
         </parameters>
         <locals num="0" />
       </properties>
-      <!--assign-->
-      <!--locacion -> estructura-->
-      <OB t3="0" t1="t|_1" operando="+" t2="1" />
-      <OB t1="t|_2" t2="11" operando="+" t3="t|_1" />
-      <Asignacion dir2="global[t|_2]" dir1="1" />
-      <!--assign-->
-      <!--locacion -> estructura-->
-      <OB t3="1" t1="t|_1" operando="*" t2="5" />
-      <OB t1="t|_1" t2="t|_1" operando="+" t3="1" />
-      <OB t1="t|_2" t2="3" operando="+" t3="t|_1" />
-      <Asignacion dir2="global[t|_2]" dir1="0" />
-      <Retorno t1="1" />
-      <Jmp nombre="E_tryout_$" />
-      <Etiqueta nombre="E_tryout_$" />
-      <ret />
+      <instructions>
+        <!--assign-->
+        <!--locacion -> estructura-->
+        <ob t1="t|_1" t2="1" op="+" t3="0" />
+        <ob t1="t|_2" t2="11" op="+" t3="t|_1" />
+        <assign dir1="global[t|_2]" dir2="1" />
+        <!--assign-->
+        <!--locacion -> estructura-->
+        <ob t1="t|_1" t2="5" op="*" t3="1" />
+        <ob t1="t|_1" t2="t|_1" op="+" t3="1" />
+        <ob t1="t|_2" t2="3" op="+" t3="t|_1" />
+        <assign dir1="global[t|_2]" dir2="0" />
+        <return ret="1" />
+        <goto name="E_tryout_$" />
+        <label name="E_tryout_$" />
+        <return ret="" />
+      </instructions>
     </method>
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <!--Método:tryout|0-->
     <!--Tipo de retorno: char-->
     <!--param: t2 = stack[0]-->
@@ -55,21 +58,24 @@
       <properties>
         <return type="C" array="false" estructure="false" />
         <parameters num="1">
-          <parameter nombre="t2" type="C" array="false" estructure="false" annotation="stack[0]" />
+          <parameter name="t2" type="C" array="false" estructure="false" annotation="stack[0]" />
         </parameters>
         <locals num="0" />
       </properties>
-      <!--assign-->
-      <!--locacion -> estructura-->
-      <OB t1="t|_1" t2="8" operando="*" t3="1" />
-      <OB t1="t|_1" t2="t|_1" operando="+" t3="29" />
-      <OB t1="t|_2" t2="t|_1" operando="+" t3="0" />
-      <Asignacion dir2="global[t|_2]" dir1="2" />
-      <Retorno t1="'c'" />
-      <Jmp nombre="E_tryout|0_$" />
-      <Etiqueta nombre="E_tryout|0_$" />
-      <ret />
+      <instructions>
+        <!--assign-->
+        <!--locacion -> estructura-->
+        <ob t1="t|_1" t2="8" op="*" t3="1" />
+        <ob t1="t|_1" t2="t|_1" op="+" t3="29" />
+        <ob t1="t|_2" t2="t|_1" op="+" t3="0" />
+        <assign dir1="global[t|_2]" dir2="2" />
+        <return ret="'c'" />
+        <goto name="E_tryout|0_$" />
+        <label name="E_tryout|0_$" />
+        <return ret="" />
+      </instructions>
     </method>
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <!--Método:getBool-->
     <!--Tipo de retorno: boolean-->
     <!--methoda = stack[0]-->
@@ -83,47 +89,50 @@
         <return type="Z" array="false" estructure="false" />
         <parameters num="0" />
         <locals num="3">
-          <local nombre="methoda" type="I" array="false" estructure="false" annotation="stack[0]" size="1" />
-          <local nombre="methodb" type="Z" array="true" estructure="false" annotation="stack[1]" size="2" />
-          <local nombre="methodc" type="C" array="false" estructure="false" annotation="stack[3]" size="1" />
+          <local name="methoda" type="I" array="false" estructure="false" annotation="stack[0]" size="1" />
+          <local name="methodb" type="Z" array="true" estructure="false" annotation="stack[1]" size="2" />
+          <local name="methodc" type="C" array="false" estructure="false" annotation="stack[3]" size="1" />
         </locals>
       </properties>
-      <!--assign-->
-      <!--LlamadaMetodo-->
-      <OB t3="t|_2" t1="1" operando="+" t2="1" />
-      <Parametro param="t|_2" />
-      <Parametro param="2" />
-      <Llamada dir1="t|_1" dir2="tryout" dir3="2" />
-      <Asignacion dir2="stack[0]" dir1="t|_1" />
-      <!--assign-->
-      <Asignacion dir2="stack[3]" dir1="'c'" />
-      <!--assign-->
-      <!--LlamadaMetodo-->
-      <Llamada dir1="t|_1" dir2="getBool" dir3="0" />
-      <!--locacion -> arreglo-->
-      <OB t1="t|_2" t2="1" operando="*" t3="1" />
-      <OB t1="t|_2" t2="t|_2" operando="+" t3="1" />
-      <Asignacion dir2="stack[t|_2]" dir1="t|_1" />
-      <!--if (exp) bloque1 else bloque2-->
-      <Condicional nombre="E_getBool_2" dir1="1" operador="&lt;" dir2="2" />
-      <Asignacion dir1="t|_1" dir2="0" />
-      <Jmp nombre="E_getBool_3" />
-      <Etiqueta nombre="E_getBool_2" />
-      <Asignacion dir1="t|_1" dir2="1" />
-      <Etiqueta nombre="E_getBool_3" />
-      <Condicional nombre="E_getBool_0" dir1="t|_1" operador="==" dir2="0" />
-      <!--assign-->
-      <Asignacion dir2="stack[0]" dir1="1" />
-      <Retorno t1="1" />
-      <Jmp nombre="E_getBool_$" />
-      <Jmp nombre="E_getBool_1" />
-      <Etiqueta nombre="E_getBool_0" />
-      <Retorno t1="0" />
-      <Jmp nombre="E_getBool_$" />
-      <Etiqueta nombre="E_getBool_1" />
-      <Etiqueta nombre="E_getBool_$" />
-      <ret />
+      <assign dir1="t|_1" dir2="1" />
+      <instructions>
+        <!--assign-->
+        <!--LlamadaMetodo-->
+        <ob t1="t|_2" t2="1" op="+" t3="1" />
+        <param param="t|_2" method="tryout" numArg="1" />
+        <param param="2" method="tryout" numArg="2" />
+        <call ret="t|_1" name="tryout" size="2" />
+        <assign dir1="stack[0]" dir2="t|_1" />
+        <!--assign-->
+        <assign dir1="stack[3]" dir2="'c'" />
+        <!--assign-->
+        <!--LlamadaMetodo-->
+        <call ret="t|_1" name="getBool" size="0" />
+        <!--locacion -> arreglo-->
+        <ob t1="t|_2" t2="1" op="*" t3="1" />
+        <ob t1="t|_2" t2="t|_2" op="+" t3="1" />
+        <assign dir1="stack[t|_2]" dir2="t|_1" />
+        <!--if (exp) bloque1 else bloque2-->
+        <if goto="E_getBool_2" dir1="1" op="&lt;" dir2="2" />
+        <assign dir1="t|_1" dir2="0" />
+        <goto name="E_getBool_3" />
+        <label name="E_getBool_2" />
+        <label name="E_getBool_3" />
+        <if goto="E_getBool_0" dir1="t|_1" op="==" dir2="0" />
+        <!--assign-->
+        <assign dir1="stack[0]" dir2="1" />
+        <return ret="1" />
+        <goto name="E_getBool_$" />
+        <goto name="E_getBool_1" />
+        <label name="E_getBool_0" />
+        <return ret="0" />
+        <goto name="E_getBool_$" />
+        <label name="E_getBool_1" />
+        <label name="E_getBool_$" />
+        <return ret="" />
+      </instructions>
     </method>
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <!--Método:main-->
     <!--Tipo de retorno: void-->
     <!--Tamaño Parametros: 0  Locales: 0  Temporales:  0-->
@@ -133,9 +142,12 @@
         <parameters num="0" />
         <locals num="0" />
       </properties>
-      <Etiqueta nombre="E_main_$" />
-      <ret />
+      <instructions>
+        <label name="E_main_$" />
+        <return ret="" />
+      </instructions>
     </method>
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
   </methods>
 </class>
 

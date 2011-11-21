@@ -1,0 +1,69 @@
+Classfile /media/Contenido/Diego/Dropbox/workspace/Ja-Decaf/Ejemplos/clase2.class
+  Last modified Nov 21, 2011; size 320 bytes
+  MD5 checksum 7a04a0d16235103704d24753e5319518
+  Compiled from "clase2.java"
+public class clase2
+  SourceFile: "clase2.java"
+  minor version: 0
+  major version: 51
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 = Methodref          #5.#15         //  java/lang/Object."<init>":()V
+   #2 = Fieldref           #4.#16         //  clase2.objetoClase:Lclase1;
+   #3 = Fieldref           #17.#18        //  clase1.a:I
+   #4 = Class              #19            //  clase2
+   #5 = Class              #20            //  java/lang/Object
+   #6 = Utf8               objetoClase
+   #7 = Utf8               Lclase1;
+   #8 = Utf8               <init>
+   #9 = Utf8               ()V
+  #10 = Utf8               Code
+  #11 = Utf8               LineNumberTable
+  #12 = Utf8               metodoX
+  #13 = Utf8               SourceFile
+  #14 = Utf8               clase2.java
+  #15 = NameAndType        #8:#9          //  "<init>":()V
+  #16 = NameAndType        #6:#7          //  objetoClase:Lclase1;
+  #17 = Class              #21            //  clase1
+  #18 = NameAndType        #22:#23        //  a:I
+  #19 = Utf8               clase2
+  #20 = Utf8               java/lang/Object
+  #21 = Utf8               clase1
+  #22 = Utf8               a
+  #23 = Utf8               I
+{
+  public clase1 objetoClase;
+    Signature: Lclase1;
+    flags: ACC_PUBLIC
+
+
+  public clase2();
+    Signature: ()V
+    flags: ACC_PUBLIC
+    LineNumberTable:
+      line 1: 0
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0       
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return        
+      LineNumberTable:
+        line 1: 0
+
+  public void metodoX();
+    Signature: ()V
+    flags: ACC_PUBLIC
+    LineNumberTable:
+      line 7: 0
+      line 8: 8
+    Code:
+      stack=1, locals=2, args_size=1
+         0: aload_0       
+         1: getfield      #2                  // Field objetoClase:Lclase1;
+         4: getfield      #3                  // Field clase1.a:I
+         7: istore_1      
+         8: return        
+      LineNumberTable:
+        line 7: 0
+        line 8: 8
+}

@@ -1,5 +1,6 @@
 public class Ejemplo
 {
+	public 
 		
 	public void mundo(int a, boolean cad, char chota, String erierer)
 	{

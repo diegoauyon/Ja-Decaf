@@ -9,11 +9,17 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+import tabla.Estructura;
+import tabla.Simbolo;
+import tabla.Tipo;
+
 public class GenXml 
 {
 	
 	private String ruta="intermedio/intermedio.xml";
-	public GenXml(LinkedList<org.jdom.Content> elementos) {
+	
+	public GenXml(LinkedList<org.jdom.Content> elementos) 
+	{
 		 
 		  try {
 	 
@@ -60,11 +66,78 @@ public class GenXml
 			// display nice nice
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, new FileWriter(ruta));
-	 
-			System.out.println("Xml Generado");
-		  } catch (IOException io) {
+			System.out.println("#############################################");
+			System.out.println("Xml Principal Generado");
+		  } 
+		  catch (IOException io) {
 			System.out.println(io.getMessage());
 		  }
+	}
+	
+	public String darTipoJ(Tipo tipo)
+	{
+		//System.out.println("Tipo: " + tipo.darNombreTipo());
+		if (tipo.darNombreSimple().equalsIgnoreCase("int"))
+			return "I"; 
+		if (tipo.darNombreSimple().equalsIgnoreCase("void"))
+			return "V";
+		if (tipo.darNombreSimple().equalsIgnoreCase("boolean"))
+			return "Z";
+		if (tipo.darNombreSimple().equalsIgnoreCase("char"))
+			return "C";
+		
+		return tipo.darNombreSimple();
+	}
+
+	public void crearXMLEstructuras(LinkedList<Estructura> estructuras)
+	{
+		for (Estructura est : estructuras)
+		{
+			String nombre = est.darId();
+			String rutaEstructura="intermedio/"+nombre+".xml";
+			
+			Element papasito = new Element ("class");
+			papasito.setAttribute("type","Program");
+			papasito.setAttribute("package","");
+			papasito.setAttribute("access","public");
+			
+			Element fields = new Element("fields");
+			for ( Simbolo sim : est.darListaVar())
+			{
+				Element field = new Element("field");
+				 if (sim.darTipo().esEstructura() == false)
+                 	field.setAttribute("access","public");
+                 else	
+                 	field.setAttribute("access","public static");
+                field.setAttribute("name",sim.darId());
+                field.setAttribute("type",""+darTipoJ(sim.darTipo() ));
+                field.setAttribute("array",""+sim.darTipo().esArreglo());
+                field.setAttribute("estructure",""+ sim.darTipo().esEstructura());
+                fields.setAttribute("size",""+sim.darTipo().darTamanioTipo());
+                fields.addContent(field);
+			}
+			papasito.addContent(fields);
+			Document doc = new Document(papasito);
+			doc.setRootElement(papasito);
+			
+			try
+			{
+				XMLOutputter xmlOutput = new XMLOutputter();
+				 
+				// display nice nice
+				xmlOutput.setFormat(Format.getPrettyFormat());
+				xmlOutput.output(doc, new FileWriter(rutaEstructura));
+		 
+				System.out.println("Xml Estructura: " + nombre+ "  Generado");
+				
+				
+			}
+			catch (IOException io)
+			{
+				System.out.println(io.getMessage());
+			}
 		}
+	
+	}
 
 }

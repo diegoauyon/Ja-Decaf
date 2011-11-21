@@ -43,6 +43,8 @@ import org.jdom.Element;
 
 
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.LinkedList;
 
 
@@ -238,7 +240,7 @@ public class Main implements GPMessageConstants
     private IDecaf padre;
     private String textToParse = "";
     private boolean error = true;
-    private boolean comentarios=false;
+    private boolean comentarios=true;
     
     private TablaSimbolos tablaSimbolos = new TablaSimbolos();
     private MetodoTabla tablaMetodos = new MetodoTabla();
@@ -300,12 +302,16 @@ public class Main implements GPMessageConstants
                     codigoX.add(new Comentario(a.darId()+" = "+b[0]+"["+b[1]+"]"));
                     //elementos.add(new Comment(a.darId()+" = "+b[0]+"["+b[1]+"]"));
                     Element fields = new Element("field");
-                    fields.setAttribute("access","public");
+                    if (a.darTipo().esEstructura() == false)
+                    	fields.setAttribute("access","public");
+                    else	
+                    	fields.setAttribute("access","public static");
                     fields.setAttribute("name",a.darId());
                     fields.setAttribute("type",""+darTipoJ(a.darTipo() ));
                     fields.setAttribute("array",""+a.darTipo().esArreglo());
                     fields.setAttribute("estructure",""+ a.darTipo().esEstructura());
                     fields.setAttribute("annotation",""+b[0]+"["+b[1]+"]");
+                    fields.setAttribute("size",""+a.darTipo().darTamanioTipo());
                     fieldsC.addContent(fields);
 
                 }
@@ -326,12 +332,29 @@ public class Main implements GPMessageConstants
     				metodos.addContent(element);
     			}
     			elementos.add(metodos);
-                new GenXml(elementos);
+               GenXml gxm= new GenXml(elementos);
+               gxm.crearXMLEstructuras(tablaEstructura.tabla);
+                
+                //Escribir cod ass en archivo
+                try
+                {
+                FileWriter fstream = new FileWriter("intermedio/intermedio.asm");
+                BufferedWriter out = new BufferedWriter(fstream);
                 
                 for(String a : darCodigoString()){
 
-                    System.out.println(a+"\n");
+                    //System.out.println(a+"\n");
+                	out.write(a+"\n");
                 }
+
+                out.close();
+                }
+                catch (Exception e)
+                {
+                	System.err.println("Fue error: " +e.getMessage()+ "quererte :(");
+                }
+
+                
                 //parser.getInterCodeStr()
                 
             }
@@ -347,7 +370,7 @@ public class Main implements GPMessageConstants
     
 public String darTipoJ(Tipo tipo)
 {
-	System.out.println("Tipo: " + tipo.darNombreTipo());
+	//System.out.println("Tipo: " + tipo.darNombreTipo());
 	if (tipo.darNombreSimple().equalsIgnoreCase("int"))
 		return "I"; 
 	if (tipo.darNombreSimple().equalsIgnoreCase("void"))

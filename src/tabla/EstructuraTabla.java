@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class EstructuraTabla {
 
-    LinkedList<Estructura> tabla = new LinkedList<Estructura>();
+    public LinkedList<Estructura> tabla = new LinkedList<Estructura>();
 
     public EstructuraTabla(){
 
