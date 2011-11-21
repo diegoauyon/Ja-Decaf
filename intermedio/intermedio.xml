@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class type="Program" package="" access="public">
   <!--Variables Globales-->
-  <fields>
+  <fields size="8" numEstruct="4" numArrayEstruct="1">
     <field access="public" name="a" type="I" array="false" estructure="false" annotation="global[a]" size="0" />
     <field access="public" name="b" type="Z" array="true" estructure="false" annotation="global[b]" size="1" />
     <field access="public" name="c" type="C" array="false" estructure="false" annotation="global[c]" size="0" />
@@ -11,13 +11,14 @@
     <field access="public static" name="vs1" type="s1" array="false" estructure="true" annotation="global[vs1]" size="0" />
     <field access="public static" name="array" type="s1" array="true" estructure="true" annotation="global[array]" size="5" />
   </fields>
-  <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
   <methods>
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <!--Método:tryout-->
     <!--Tipo de retorno: int-->
     <!--param: t1 = stack[0]-->
     <!--param: t3 = stack[1]-->
     <!--Tamaño Parametros: 2  Locales: 0  Temporales:  0-->
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <method name="tryout">
       <properties>
         <return type="I" array="false" estructure="false" />
@@ -25,18 +26,18 @@
           <parameter name="t1" type="I" array="false" estructure="false" annotation="stack[0]" />
           <parameter name="t3" type="I" array="false" estructure="false" annotation="stack[1]" />
         </parameters>
-        <locals num="0" />
+        <locals num="0" numTotal="2" numTotThis="3" />
       </properties>
       <instructions>
         <!--assign-->
         <!--locacion -> estructura-->
-        <assign dir1="global[prueba2].prueba.sa" dir2="1" />
+        <ins type="assign" dir1="global[prueba2].prueba.sa" dir2="1" />
         <!--assign-->
         <!--locacion -> estructura-->
-        <assign dir1="global[vs2]{5}" dir2="0" />
-        <return ret="1" />
-        <goto name="E_tryout_$" />
-        <label name="E_tryout_$" />
+        <ins type="assign" dir1="global[vs2]{5}" dir2="0" />
+        <ins type="return" ret="1" />
+        <ins type="goto" name="E_tryout_$" />
+        <ins type="label" name="E_tryout_$" />
         <return ret="" />
       </instructions>
     </method>
@@ -45,21 +46,22 @@
     <!--Tipo de retorno: char-->
     <!--param: t2 = stack[0]-->
     <!--Tamaño Parametros: 1  Locales: 0  Temporales:  0-->
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <method name="tryout_0">
       <properties>
         <return type="C" array="false" estructure="false" />
         <parameters num="1">
           <parameter name="t2" type="C" array="false" estructure="false" annotation="stack[0]" />
         </parameters>
-        <locals num="0" />
+        <locals num="0" numTotal="1" numTotThis="2" />
       </properties>
       <instructions>
         <!--assign-->
         <!--locacion -> estructura-->
-        <assign dir1="global[array].sa" dir2="2" />
-        <return ret="'c'" />
-        <goto name="E_tryout|0_$" />
-        <label name="E_tryout|0_$" />
+        <ins type="assign" dir1="global[array].sa" dir2="2" />
+        <ins type="return" ret="'c'" />
+        <ins type="goto" name="E_tryout|0_$" />
+        <ins type="label" name="E_tryout|0_$" />
         <return ret="" />
       </instructions>
     </method>
@@ -72,11 +74,12 @@
     <!--t|_1 = stack[3]-->
     <!--t|_2 = stack[4]-->
     <!--Tamaño Parametros: 0  Locales: 3  Temporales:  2-->
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <method name="getBool">
       <properties>
         <return type="Z" array="false" estructure="false" />
         <parameters num="0" />
-        <locals num="3">
+        <locals num="3" numTotal="5" numTotThis="6">
           <local name="methodb" type="Z" array="true" estructure="false" annotation="stack[0]" size="2" />
           <local name="methoda" type="I" array="false" estructure="false" annotation="stack[1]" size="0" />
           <local name="methodc" type="C" array="false" estructure="false" annotation="stack[2]" size="0" />
@@ -85,36 +88,36 @@
       <instructions>
         <!--assign-->
         <!--LlamadaMetodo-->
-        <ob t1="t|_2" t2="1" op="+" t3="1" />
-        <param param="t|_2" method="tryout" numArg="1" />
-        <param param="2" method="tryout" numArg="2" />
-        <call ret="t|_1" name="tryout" size="2" />
-        <assign dir1="stack[1]" dir2="t|_1" />
+        <ins type="ob" t1="t|_2" t2="1" op="+" t3="1" />
+        <ins type="param" param="t|_2" method="tryout" numArg="1" />
+        <ins type="param" param="2" method="tryout" numArg="2" />
+        <ins type="call" ret="t|_1" name="tryout" size="2" />
+        <ins type="assign" dir1="stack[1]" dir2="t|_1" />
         <!--assign-->
-        <assign dir1="stack[2]" dir2="'c'" />
+        <ins type="assign" dir1="stack[2]" dir2="'c'" />
         <!--assign-->
         <!--LlamadaMetodo-->
-        <call ret="t|_1" name="getBool" size="0" />
+        <ins type="call" ret="t|_1" name="getBool" size="0" />
         <!--locacion -> arreglo-->
-        <assign dir1="stack[0]{32}" dir2="t|_1" />
+        <ins type="assign" dir1="stack[0]{32}" dir2="t|_1" />
         <!--if (exp) bloque1 else bloque2-->
-        <if goto="E_getBool_2" dir1="1" op="&lt;" dir2="2" />
-        <assign dir1="t|_1" dir2="0" />
-        <goto name="E_getBool_3" />
-        <label name="E_getBool_2" />
-        <assign dir1="t|_1" dir2="1" />
-        <label name="E_getBool_3" />
-        <if goto="E_getBool_0" dir1="t|_1" op="==" dir2="0" />
+        <ins type="if" goto="E_getBool_2" dir1="1" op="&lt;" dir2="2" />
+        <ins type="assign" dir1="t|_1" dir2="0" />
+        <ins type="goto" name="E_getBool_3" />
+        <ins type="label" name="E_getBool_2" />
+        <ins type="assign" dir1="t|_1" dir2="1" />
+        <ins type="label" name="E_getBool_3" />
+        <ins type="if" goto="E_getBool_0" dir1="t|_1" op="==" dir2="0" />
         <!--assign-->
-        <assign dir1="stack[1]" dir2="1" />
-        <return ret="1" />
-        <goto name="E_getBool_$" />
-        <goto name="E_getBool_1" />
-        <label name="E_getBool_0" />
-        <return ret="0" />
-        <goto name="E_getBool_$" />
-        <label name="E_getBool_1" />
-        <label name="E_getBool_$" />
+        <ins type="assign" dir1="stack[1]" dir2="1" />
+        <ins type="return" ret="1" />
+        <ins type="goto" name="E_getBool_$" />
+        <ins type="goto" name="E_getBool_1" />
+        <ins type="label" name="E_getBool_0" />
+        <ins type="return" ret="0" />
+        <ins type="goto" name="E_getBool_$" />
+        <ins type="label" name="E_getBool_1" />
+        <ins type="label" name="E_getBool_$" />
         <return ret="" />
       </instructions>
     </method>
@@ -122,18 +125,18 @@
     <!--Método:main-->
     <!--Tipo de retorno: void-->
     <!--Tamaño Parametros: 0  Locales: 0  Temporales:  0-->
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <method name="main">
       <properties>
         <return type="V" array="false" estructure="false" />
         <parameters num="0" />
-        <locals num="0" />
+        <locals num="0" numTotal="0" numTotThis="1" />
       </properties>
       <instructions>
-        <label name="E_main_$" />
+        <ins type="label" name="E_main_$" />
         <return ret="" />
       </instructions>
     </method>
-    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
   </methods>
 </class>
 

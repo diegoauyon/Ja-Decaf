@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class type="Program" package="" access="public">
+<class type="s3" package="" access="public">
   <fields size="1">
     <field access="public" name="s3a" type="I" array="false" estructure="false" />
   </fields>

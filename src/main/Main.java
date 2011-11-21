@@ -291,19 +291,26 @@ public class Main implements GPMessageConstants
                 this.ambitoActual.resetearAHijo();
 
                 
-                
+             //   elementos.add(new Comment("mayor: > | menor: <  | modulo: % | division: /"));
                 //Element varGlobales = new Element("VariablesGlobales");
                 elementos.add(new Comment("Variables Globales"));
                 codigoX.add(new Comentario("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
                 Element fieldsC = new Element("fields");
+                fieldsC.setAttribute("size",""+this.darTablaSimbolos().darTodosSimbolosGlobales(ambitoActual).size());
                 codigoX.add(new Comentario("               Ámbito global"));
+                int numeroEstructurasenGlobal=0;
+                int numeroEstArray=0;
                 for(tabla.Simbolo a : this.darTablaSimbolos().darTodosSimbolosGlobales(ambitoActual)){
                     String [] b = GenCodigo.darDesplazamiento(a,this,this.ambitoActual);
                     codigoX.add(new Comentario(a.darId()+" = "+b[0]+"["+b[1]+"]"));
                     //elementos.add(new Comment(a.darId()+" = "+b[0]+"["+b[1]+"]"));
                     Element fields = new Element("field");
-                    if (a.darTipo().esEstructura() == false)
+                    if (a.darTipo().esEstructura() == false){
                     	fields.setAttribute("access","public");
+                    	numeroEstructurasenGlobal++;
+                    	if (a.darTipo().esArreglo())
+                    		numeroEstArray++;
+                    }
                     else	
                     	fields.setAttribute("access","public static");
                     fields.setAttribute("name",a.darId());
@@ -315,10 +322,12 @@ public class Main implements GPMessageConstants
                     fieldsC.addContent(fields);
 
                 }
+                fieldsC.setAttribute("numEstruct",""+numeroEstructurasenGlobal);
+                fieldsC.setAttribute("numArrayEstruct",""+numeroEstArray);
                 elementos.add(fieldsC);
                // elementos.add(papa);
                 codigoX.add(new Comentario("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n"));
-                elementos.add(new Comment("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
+               
 
                 padre.imprimir("\n--------------------------------------------\n", 2);
                 
@@ -1712,7 +1721,7 @@ public void parsea(){
                 this.codigoX.addAll(codigoMetodo.darCodigo());
 
                 this.elementosMetodos.addAll(codigoMetodo.darElementos());
-    			
+                //elementosMetodos.add(new Comment("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
                 retorno++;
                 break;
         }

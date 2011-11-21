@@ -97,9 +97,10 @@ public class GenXml
 			String rutaEstructura="intermedio/"+nombre+".xml";
 			
 			Element papasito = new Element ("class");
-			papasito.setAttribute("type","Program");
+			papasito.setAttribute("type",nombre);
 			papasito.setAttribute("package","");
 			papasito.setAttribute("access","public");
+			
 			
 			Element fields = new Element("fields");
 			for ( Simbolo sim : est.darListaVar())

@@ -1,0 +1,90 @@
+.class public Program
+.super java/lang/Object
+
+		
+
+;========================
+; fields
+;========================
+
+.field public a I					; global[a]
+.field public b [Z					; global[b]
+.field public c C					; global[c]
+.field public static vs2 Ls1		; global[vs2]
+.field public static prueba2 Ls2		; global[prueba2]
+.field public d I					; global[d]
+.field public static vs1 Ls1		; global[vs1]
+.field public static array [Ls1		; global[array]
+
+		
+
+;========================
+; constructores
+;========================
+
+.method public static <init>()V
+	  .limit locals 1
+	  .limit stack 99
+
+	  aload_0
+
+	  invokenonvirtual   java/lang/Object/<init>()V        ;push this
+	  aload_0
+	  bipush    1
+	  newarray  boolean
+	  putfield  Program/b [Z
+	  return
+
+.end method
+
+.method static <clinit>()V
+	  .limit locals 0
+	  .limit stack 1 
+ 
+	  bipush    5
+	  anewarray s1 ; Crea array del objeto
+	  putstatic Program/array [Ls1;
+	  return
+
+.end method
+
+
+		
+
+;========================
+; métodos
+;========================
+
+.method public tryout(II)I
+
+	  .limit locals 3
+	  .limit stack 99 
+ 
+haoahaoahaoahaoahaoa	  ireturn
+.end method
+
+.method public tryout_0(C)C
+
+	  .limit locals 2
+	  .limit stack 99 
+ 
+haoahaoahaoahaoa	  ireturn
+.end method
+
+.method public getBool()Z
+
+	  .limit locals 6
+	  .limit stack 99 
+ 
+haoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoahaoa	  ireturn
+.end method
+
+.method public main()V
+
+	  .limit locals 1
+	  .limit stack 99 
+ 
+haoa	  return
+.end method
+
+
