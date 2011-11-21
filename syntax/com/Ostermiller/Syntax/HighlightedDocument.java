@@ -35,6 +35,7 @@ public class HighlightedDocument extends DefaultStyledDocument {
 	 */
 	private static final long serialVersionUID = 2789061310185736547L;
 	public static final Object C_STYLE = CLexer.class;
+	//public static final Object HTML_STYLE = HTMLLexer.class;
 	public static final Object GRAYED_OUT_STYLE = new Object();
 
 	/**

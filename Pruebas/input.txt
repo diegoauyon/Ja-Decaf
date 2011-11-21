@@ -20,6 +20,7 @@ class Program{
 	struct s1 array[3];
 	int tryout(int t1, int t3){
 		prueba2.prueba.sa = 1;
+		vs2.sb[5]= false;		
 		return 1;
 	}
 	char tryout(char t2){

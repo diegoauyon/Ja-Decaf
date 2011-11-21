@@ -1,0 +1,13 @@
+public class Ejemplo
+{
+	private int a;
+	public int v;
+	int d = 1;
+	
+	public void hola()
+	{
+		int a;
+		int c;
+		int d = 3;
+	}
+}

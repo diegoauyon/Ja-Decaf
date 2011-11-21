@@ -1,0 +1,6 @@
+class Program{
+		
+	void main(){
+		a=2;
+		if(true && false){}
+}

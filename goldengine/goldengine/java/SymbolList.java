@@ -35,7 +35,8 @@ import java.util.*;
  */
 public class SymbolList
 {
-    private Vector memberList = new Vector();
+    @SuppressWarnings("rawtypes")
+	private Vector memberList = new Vector();
     private int memberCount = 0;
 
     /***************************************************************
@@ -108,7 +109,8 @@ public class SymbolList
  	 ***************************************************************/
     public Symbol getMember(String name)
     {
-        Enumeration enume = memberList.elements();
+        @SuppressWarnings("rawtypes")
+		Enumeration enume = memberList.elements();
         while(enume.hasMoreElements())
         {
             Symbol tmp = (Symbol)enume.nextElement();
@@ -131,7 +133,8 @@ public class SymbolList
  	 * @param index The index to set the Symbol to.
      * @param obj The Symbol to place in the SymbolList.
  	 ***************************************************************/
-    public void setMember(int index, Symbol obj)
+    @SuppressWarnings("unchecked")
+	public void setMember(int index, Symbol obj)
     {
         if((index >= 0) & (index < memberCount))
         {
@@ -147,7 +150,8 @@ public class SymbolList
  	 * @param newItem The Symbol to add.
  	 * @return The index in the list at which the symbol was added.
  	 ***************************************************************/
-    public int add(Symbol newItem)
+    @SuppressWarnings("unchecked")
+	public int add(Symbol newItem)
     {
         memberCount++;
         memberList.addElement(newItem);

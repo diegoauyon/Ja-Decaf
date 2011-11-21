@@ -34,7 +34,8 @@ import java.util.*;
  */
 public class LRActionTable
 {
-    private Vector memberList = new Vector();   // LRAction
+    @SuppressWarnings("rawtypes")
+	private Vector memberList = new Vector();   // LRAction
     private int memberCount = 0;
 
     /***************************************************************
@@ -84,7 +85,8 @@ public class LRActionTable
      * @param theActionConstant The action constant of the LRAction.
      * @param theValue The value of the LRAction.
  	 ***************************************************************/
-    public void addItem(Symbol theSym, int theActionConstant, int theValue)
+    @SuppressWarnings("unchecked")
+	public void addItem(Symbol theSym, int theActionConstant, int theValue)
     {
         LRAction tableEntry = new LRAction();
         tableEntry.setSymbol(theSym);

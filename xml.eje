@@ -1,0 +1,67 @@
+Asignacion
+
+                asignacion = new Element("Asignacion");
+                asignacion.setAttribute("dir1",t3);
+                asignacion.setAttribute("dir2","0");
+                elePlano.addContent(asignacion);
+
+
+OB
+
+                op = new Element("OB");
+                op.setAttribute("t1", t3);
+                op.setAttribute("t2",t1);
+                op.setAttribute("operando",operando);
+                op.setAttribute("t3",t2);
+                elePlano.addContent(op);
+
+
+OU
+
+                op = new Element("OU");
+                op.setAttribute("t2",t1);
+                op.setAttribute("operando","not");
+                op.setAttribute("t1",t1);
+                elePlano.addContent(op);
+
+
+Comentario
+
+				elePlano.addContent(new Comment("assign"));
+				
+Salto
+
+                salto = new Element("Jmp");
+                salto.setAttribute("nombre",this.darFinalEtiqueta());
+                elePlano.addContent(salto);
+                
+Retorno
+
+				retorno = new Element("Retorno");
+                retorno.setAttribute("t1",t1);
+                elePlano.addContent(retorno); 
+                
+Condicional
+
+                cond = new Element("Condicional");
+                cond.setAttribute("nombre", L2.etiqueta);
+                cond.setAttribute("dir1",t1);
+                cond.setAttribute("operador","==");
+                cond.setAttribute("dir2","0");
+                elePlano.addContent(cond);
+                
+Etiqueta
+				elePlano.addContent(new Element("Etiqueta").setAttribute("nombre",L2.etiqueta));     
+				
+Llamada
+
+				llamada = new Element("Llamada");
+                llamada.setAttribute("dir2",llamado.darSubNombre());
+                llamada.setAttribute("dir3",llamado.darParametros().size()+"");
+                elePlano.addContent(llamada);
+                
+Parametro
+
+				param = new Element("Parametro");
+                param.setAttribute("param",t1);
+                elePlano.addContent(param);                

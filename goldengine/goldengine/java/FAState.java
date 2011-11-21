@@ -34,6 +34,7 @@ import java.util.*;
  */
 public class FAState
 {
+	@SuppressWarnings("rawtypes")
 	private Vector edges = new Vector();
 	public int acceptSymbol;
 
@@ -51,7 +52,8 @@ public class FAState
      *              be created.
      * @param target The target index in this state.
  	 ***************************************************************/
-    public void addEdge(String chars, int target)
+    @SuppressWarnings("unchecked")
+	public void addEdge(String chars, int target)
     {
         FAEdge edge;
         int n, index;

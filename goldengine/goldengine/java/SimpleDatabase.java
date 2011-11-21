@@ -37,17 +37,20 @@ import java.util.*;
  *
  *-------------------------------------------------------------------------------------------<br>
  */
+@SuppressWarnings({"unused","rawtypes"})
 public class SimpleDatabase implements EntryContentConstants
 {
     private File database = null;
     private boolean bFileOpen = false;
-    private int fileNumber = 0;
+    
+	private int fileNumber = 0;
     private BufferedInputStream buff = null;
     private String fileType = "";
     private final int RecordContentMulti = 77;
 
     private int entryReadPosition = 0;
-    private Vector entryList = null;
+    
+	private Vector entryList = null;
 
     /***************************************************************
      *
@@ -388,7 +391,8 @@ public class SimpleDatabase implements EntryContentConstants
     // the byte - which itself is given in the EntryContentConstants
     // interface. Please do NOT edit this method! Nasty things will
     // happen.
-    private void readEntry() throws IOException
+    @SuppressWarnings("unchecked")
+	private void readEntry() throws IOException
     {
         Integer intA;
         int t1 = 0, t2 = 0;

@@ -5,6 +5,9 @@
 	<classpathentry kind="src" path="syntax"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/antlr-3.4-complete-no-antlrv2.jar"/>
+	<classpathentry kind="lib" path="libs/jdom.jar"/>
+	<classpathentry kind="lib" path="libs/commons-io-2.1.jar"/>
+	<classpathentry kind="lib" path="libs/xercesImpl.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/substance"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

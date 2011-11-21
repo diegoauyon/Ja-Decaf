@@ -1,7 +1,17 @@
 class Program{
+	int a;
+	boolean b[1];
+	char c;
+	struct s3{
+		int s3a;
+	}
+	int d;
+
+	char tryout(char t2){
+		return 'c';
+	}
+
 
 	void main()
-	{
-		hola(como, estas);
-	}
+	{}
 }

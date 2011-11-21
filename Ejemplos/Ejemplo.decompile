@@ -1,0 +1,81 @@
+Classfile /media/Contenido/Diego/Dropbox/workspace/Ja-Decaf/Ejemplos/Ejemplo.class
+  Last modified Nov 20, 2011; size 376 bytes
+  MD5 checksum d1c996e3e49678f9523ef35abdbb77a6
+  Compiled from "Ejemplo.java"
+public class Ejemplo
+  SourceFile: "Ejemplo.java"
+  minor version: 0
+  major version: 51
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 = Methodref          #5.#15         //  java/lang/Object."<init>":()V
+   #2 = String             #16            //  supercaliposato
+   #3 = Methodref          #4.#17         //  Ejemplo.mundo:(IZCLjava/lang/String;)V
+   #4 = Class              #18            //  Ejemplo
+   #5 = Class              #19            //  java/lang/Object
+   #6 = Utf8               <init>
+   #7 = Utf8               ()V
+   #8 = Utf8               Code
+   #9 = Utf8               LineNumberTable
+  #10 = Utf8               mundo
+  #11 = Utf8               (IZCLjava/lang/String;)V
+  #12 = Utf8               llamadordeMundo
+  #13 = Utf8               SourceFile
+  #14 = Utf8               Ejemplo.java
+  #15 = NameAndType        #6:#7          //  "<init>":()V
+  #16 = Utf8               supercaliposato
+  #17 = NameAndType        #10:#11        //  mundo:(IZCLjava/lang/String;)V
+  #18 = Utf8               Ejemplo
+  #19 = Utf8               java/lang/Object
+{
+  public Ejemplo();
+    Signature: ()V
+    flags: ACC_PUBLIC
+    LineNumberTable:
+      line 1: 0
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0       
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return        
+      LineNumberTable:
+        line 1: 0
+
+  public void mundo(int, boolean, char, java.lang.String);
+    Signature: (IZCLjava/lang/String;)V
+    flags: ACC_PUBLIC
+    LineNumberTable:
+      line 7: 0
+    Code:
+      stack=0, locals=5, args_size=5
+         0: return        
+      LineNumberTable:
+        line 7: 0
+
+  public void llamadordeMundo();
+    Signature: ()V
+    flags: ACC_PUBLIC
+    LineNumberTable:
+      line 12: 0
+      line 13: 2
+      line 14: 5
+      line 15: 14
+    Code:
+      stack=5, locals=3, args_size=1
+         0: iconst_1      
+         1: istore_1      
+         2: ldc           #2                  // String supercaliposato
+         4: astore_2      
+         5: aload_0       
+         6: iconst_2      
+         7: iload_1       
+         8: bipush        99
+        10: aload_2       
+        11: invokevirtual #3                  // Method mundo:(IZCLjava/lang/String;)V
+        14: return        
+      LineNumberTable:
+        line 12: 0
+        line 13: 2
+        line 14: 5
+        line 15: 14
+}

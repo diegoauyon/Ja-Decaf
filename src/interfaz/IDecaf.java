@@ -4,11 +4,13 @@ import goldengine.java.Reduction;
 
 
 
+import interfaz.XML.XMLTreeView;
+
 import java.awt.BorderLayout;
-import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -23,30 +25,28 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
+
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
+
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+
 
 import main.*;
 
 
 
-import com.Ostermiller.Syntax.HighlightedDocument;
+
 
 
 
@@ -73,15 +73,18 @@ public class IDecaf extends javax.swing.JFrame
 	public Main main;
 	
     /** The document holding the text being edited. */
-    private HighlightedDocument document = new HighlightedDocument();
-   // private AbstractDocument doc;
-	private JTextPane textPane ;//= new JTextPane(document);
+	
+	
 	private JMenuBar mb;
 	private JPanel botones;
 	public DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
-	public DefaultMutableTreeNode root1 = new DefaultMutableTreeNode("");
+	public DefaultMutableTreeNode root1 = new DefaultMutableTreeNode("Código Intermedio");
 	public DefaultTreeModel tree,tree2;
+	public JTree jtree2;
 	private JTextArea terminal,notas;
+	
+	//###############################################################
+	private PanelTexto textPane;
 
 	//###############################################################
 	private String rutaArchivo=null;
@@ -107,33 +110,9 @@ public class IDecaf extends javax.swing.JFrame
        // setLocation(50, 50);
         ultimoDirectorio="Pruebas/";
         setPreferredSize(new Dimension (800,520));
-       
-        JPanel jp = new JPanel();
-        jp.setLayout(new BorderLayout());        
-        textPane = new JTextPane();
-        textPane.setStyledDocument(document);
-        textPane.setBackground(new Color(51,51,51));  
-        textPane.setCaretColor(Color.WHITE);
-        textPane.setEditable(true);
-        textPane.setAutoscrolls(true);
         
-        JScrollBar hbar = new JScrollBar(JScrollBar.HORIZONTAL,30,20,0,300);
-        hbar.setUnitIncrement(2);
-        hbar.setBlockIncrement(1);
-        jp.add(hbar,BorderLayout.SOUTH);
-        //jp.add(vbar,BorderLayout.EAST);
-        jp.add(textPane,BorderLayout.CENTER);
-        hbar.setVisible(false);
-        
-        // Create a scroll pane wrapped around the text pane
-        JScrollPane scrollPane = new JScrollPane(jp);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        
-
-        LineNumber lineNumber = new LineNumber( textPane );
-        lineNumber.setPreferredSize(999);
-        scrollPane.setRowHeaderView( lineNumber );
-
+        textPane = new PanelTexto();
+  
                 
         // Add the components to the frame.
         JPanel contentPane = new JPanel(new BorderLayout());
@@ -148,7 +127,7 @@ public class IDecaf extends javax.swing.JFrame
         mb = new BarraMenu(this);
         setJMenuBar(mb);
         
-        document.setHighlightStyle( HighlightedDocument.C_STYLE);
+       
         
         //Set JTree
         
@@ -163,8 +142,13 @@ public class IDecaf extends javax.swing.JFrame
         //Set JTree 2
         
        //root1 = new DefaultMutableTreeNode("");
-        tree2 = new DefaultTreeModel(root);
-        JTree jtree2 = new JTree(tree2);
+        tree2 = new DefaultTreeModel(root1);
+        //jtree2 = new JTree(tree2);
+        XMLTreeView ne= new XMLTreeView("intermedio/intermedio.xml");
+        jtree2 = ne.getTree();
+        
+        
+        
         
         JScrollPane scrollTree2 = new JScrollPane(jtree2);
         scrollTree2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -172,6 +156,7 @@ public class IDecaf extends javax.swing.JFrame
         JTabbedPane tabbedPane1 = new JTabbedPane();
         ImageIcon icon3 = new ImageIcon("libs/data/arbol1.png");
         ImageIcon icon4 = new ImageIcon("libs/data/arbol2.png");
+        
         
         
         tabbedPane1.addTab("Arbol Parser", icon3, scrollTree,
@@ -186,7 +171,7 @@ public class IDecaf extends javax.swing.JFrame
         
        // contentPane.add(jtree,BorderLayout.EAST);
         
-        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane,
+        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, textPane,
 				tabbedPane1);
 		split.setDividerLocation(550);
 		split.setOneTouchExpandable(true);
@@ -194,13 +179,13 @@ public class IDecaf extends javax.swing.JFrame
 		
 		terminal = new JTextArea();
 		terminal.setEditable(false);
-		terminal.setDisabledTextColor(textPane.getBackground());
-		terminal.setBackground(textPane.getBackground());
+		terminal.setDisabledTextColor(textPane.getTextPane().getBackground());
+		terminal.setBackground(textPane.getTextPane().getBackground());
 		
 		notas = new JTextArea();
 		notas.setEditable(false);
-		notas.setDisabledTextColor(textPane.getBackground());
-		notas.setBackground(textPane.getBackground());
+		notas.setDisabledTextColor(textPane.getTextPane().getBackground());
+		notas.setBackground(textPane.getTextPane().getBackground());
 		
 		JScrollPane scrollTer = new JScrollPane(terminal);
         scrollTer.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -230,16 +215,18 @@ public class IDecaf extends javax.swing.JFrame
 		
 		//Create the status area.
         JPanel statusPane = new JPanel(new GridLayout(1, 1));
-        CaretListenerLabel caretListenerLabel =
-                new CaretListenerLabel("Caret !!! Status");
+        
+        CaretListenerLabel caretListenerLabel =  new CaretListenerLabel("",textPane.getTextPane());
+        textPane.getTextPane().addCaretListener(caretListenerLabel);
+        
         statusPane.add(caretListenerLabel);
 		//TODO
 		//PanelAbajo pa= new PanelAbajo(textPane);
 		contentPane.add(statusPane,BorderLayout.SOUTH);
-		textPane.addCaretListener(caretListenerLabel);
+		
         
-        // Make the window so that it can close the application
-        addWindowListener(new WindowAdapter() {
+		  // Make the window so that it can close the application
+			addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                dispose();
             }
@@ -248,19 +235,7 @@ public class IDecaf extends javax.swing.JFrame
                 textPane.requestFocus();
             }
         });
-        
-
-    /**    if (document instanceof AbstractDocument) {
-            doc = (AbstractDocument)document;
-            
-        } else {
-            System.err.println("Text pane's document isn't an AbstractDocument!");
-            System.exit(-1);
-        }
-        //Start watching for undoable edits and caret changes.
-        doc.addUndoableEditListener(new MyUndoableEditListener());
-//        doc.addDocumentListener(new MyDocumentListener());
-       **/ 
+ 
         
         this.setIconImage(new ImageIcon("libs/data/logo.png").getImage());
       
@@ -283,61 +258,7 @@ public class IDecaf extends javax.swing.JFrame
     // -----------------------------------------------------------------
 
 	
-  //This listens for and reports caret movements.
-    protected class CaretListenerLabel extends JLabel
-                                       implements CaretListener {
-        /**
-		 * 
-		 */
-		private static final long serialVersionUID = 2143745171579883941L;
-
-		public CaretListenerLabel(String label) {
-            super(label);
-        }
-
-        //Might not be invoked from the event dispatch thread.
-        public void caretUpdate(CaretEvent e) {
-            displaySelectionInfo(e.getDot(), e.getMark());
-        }
-
-        //This method can be invoked from any thread.  It 
-        //invokes the setText and modelToView methods, which 
-        //must run on the event dispatch thread. We use
-        //invokeLater to schedule the code for execution
-        //on the event dispatch thread.
-        protected void displaySelectionInfo(final int dot,
-                                            final int mark) {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    if (dot == mark) {  // no selection
-                        try {
-                            Rectangle caretCoords = textPane.modelToView(dot);
-                            int x=((caretCoords.x-3)/7)+1;
-                            int y=((caretCoords.y-3)/15)+1;
-                            int lenght= textPane.getText().length();
-                            
-                              //Convert it to view coordinates.
-                            setText(" Columna: " +x  + "  Fila:" +y
-                            		+ "   Caracteres: "+ dot + "/" +lenght
-                            		+ "    Ver locacion = ["
-                                    + caretCoords.x + ", "
-                                    + caretCoords.y + "]"
-                                    
-                                    );
-                        } catch (BadLocationException ble) {
-                            setText("Caret: Posicion Texto: " + dot );
-                        }
-                    } else if (dot < mark) {
-                        setText("Seleccion desde: " + dot
-                                + " a " + mark );
-                    } else {
-                        setText("Seleccion desde: " + mark
-                                + " a " + dot );
-                    }
-                }
-            });
-        }
-    }
+ 
     /**
      * Initialize the document with some default text and set
      * they initial type of syntax highlighting.
@@ -635,7 +556,8 @@ public class IDecaf extends javax.swing.JFrame
     public void corrrer()
     {
     	tree.reload();
-		Main ma = new Main(darRutaArchivo(),this);
+		Main ma = new Main();
+		ma.codigoIntermedio(darRutaArchivo(),this);
     	if (ma!= null && darMotor().equalsIgnoreCase("GoldP"))
     		if (ma.huboErrores()==false)
     		{
@@ -652,6 +574,18 @@ public class IDecaf extends javax.swing.JFrame
     	{
     		imprimir("Error Implementación: Todavía no se ha implementado otros Motores",1);
     	}
+    }
+    
+    public void crearArbolIntermedio(Main ma)
+    {
+    	if (ma.huboErrores()==false)
+		{
+    	tree2.reload();
+    	XMLTreeView a =new XMLTreeView("intermedio/intermedio.xml");
+    	jtree2 = a.getTree();
+    	
+    	tree2.reload();
+		}
     }
     
     /**
@@ -683,6 +617,8 @@ public class IDecaf extends javax.swing.JFrame
     	}
     	
     }
+    
+   
     
  //---------------------------------------------------------------------------
  //---------------------------------------------------------------------------   
